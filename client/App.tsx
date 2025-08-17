@@ -49,6 +49,7 @@ const App = () => (
           <Route path="/organization/login" element={<OrganizationLogin />} />
 
           {/* Admin Routes */}
+          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/hospitals" element={<ManageHospitals />} />
