@@ -16,6 +16,13 @@ import HospitalLogin from "./pages/hospital/Login";
 import OrganizationLogin from "./pages/organization/Login";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
+import ManageHospitals from "./pages/admin/ManageHospitals";
+import RegisterHospital from "./pages/admin/RegisterHospital";
+import ManageOrganizations from "./pages/admin/ManageOrganizations";
+import IPFSLogs from "./pages/admin/IPFSLogs";
+import BlockchainLogs from "./pages/admin/BlockchainLogs";
+import ResetPasswords from "./pages/admin/ResetPasswords";
+import AdminSettings from "./pages/admin/Settings";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 
 const queryClient = new QueryClient();
@@ -43,6 +50,13 @@ const App = () => (
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/hospitals" element={<ManageHospitals />} />
+          <Route path="/admin/hospitals/register" element={<RegisterHospital />} />
+          <Route path="/admin/organizations" element={<ManageOrganizations />} />
+          <Route path="/admin/ipfs-logs" element={<IPFSLogs />} />
+          <Route path="/admin/blockchain-logs" element={<BlockchainLogs />} />
+          <Route path="/admin/reset-passwords" element={<ResetPasswords />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
