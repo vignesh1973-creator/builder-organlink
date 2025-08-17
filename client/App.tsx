@@ -54,6 +54,7 @@ const App = () => (
           <Route path="/admin/hospitals" element={<ManageHospitals />} />
           <Route path="/admin/hospitals/register" element={<RegisterHospital />} />
           <Route path="/admin/organizations" element={<ManageOrganizations />} />
+          <Route path="/admin/policies" element={<AdminPolicies />} />
           <Route path="/admin/ipfs-logs" element={<IPFSLogs />} />
           <Route path="/admin/blockchain-logs" element={<BlockchainLogs />} />
           <Route path="/admin/reset-passwords" element={<ResetPasswords />} />
