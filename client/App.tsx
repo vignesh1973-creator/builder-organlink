@@ -23,6 +23,7 @@ import IPFSLogs from "./pages/admin/IPFSLogs";
 import BlockchainLogs from "./pages/admin/BlockchainLogs";
 import ResetPasswords from "./pages/admin/ResetPasswords";
 import AdminSettings from "./pages/admin/Settings";
+import AdminPolicies from "./pages/admin/Policies";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 
 const queryClient = new QueryClient();
