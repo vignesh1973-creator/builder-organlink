@@ -21,7 +21,7 @@ export default function Policies() {
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
-    total: 0
+    total: 0,
   });
 
   const columns = [
@@ -33,26 +33,26 @@ export default function Policies() {
           <div className="font-medium text-gray-900">{row.title}</div>
           <div className="text-sm text-gray-500">{row.category}</div>
         </div>
-      )
+      ),
     },
     {
       key: "status",
       label: "Status",
       render: (value: string) => (
-        <Badge 
+        <Badge
           className={
-            value === 'approved' 
-              ? 'bg-green-100 text-green-800' 
-              : value === 'voting'
-              ? 'bg-blue-100 text-blue-800'
-              : value === 'rejected'
-              ? 'bg-red-100 text-red-800'
-              : 'bg-gray-100 text-gray-800'
+            value === "approved"
+              ? "bg-green-100 text-green-800"
+              : value === "voting"
+                ? "bg-blue-100 text-blue-800"
+                : value === "rejected"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-gray-100 text-gray-800"
           }
         >
           {value}
         </Badge>
-      )
+      ),
     },
     {
       key: "votes",
@@ -62,14 +62,14 @@ export default function Policies() {
           <div className="text-green-600">For: {row.votes_for}</div>
           <div className="text-red-600">Against: {row.votes_against}</div>
         </div>
-      )
+      ),
     },
     {
       key: "proposer_name",
       label: "Proposer",
       render: (value: string) => (
-        <span className="text-sm text-gray-900">{value || 'Unknown'}</span>
-      )
+        <span className="text-sm text-gray-900">{value || "Unknown"}</span>
+      ),
     },
     {
       key: "created_date",
@@ -78,8 +78,8 @@ export default function Policies() {
         <span className="text-sm text-gray-500">
           {new Date(value).toLocaleDateString()}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   const filters = [
@@ -91,8 +91,8 @@ export default function Policies() {
         { value: "technical", label: "Technical" },
         { value: "international", label: "International" },
         { value: "emergency", label: "Emergency" },
-        { value: "legal", label: "Legal" }
-      ]
+        { value: "legal", label: "Legal" },
+      ],
     },
     {
       key: "status",
@@ -101,30 +101,34 @@ export default function Policies() {
         { value: "approved", label: "Approved" },
         { value: "voting", label: "Voting" },
         { value: "rejected", label: "Rejected" },
-        { value: "draft", label: "Draft" }
-      ]
-    }
+        { value: "draft", label: "Draft" },
+      ],
+    },
   ];
 
   useEffect(() => {
     fetchPolicies();
   }, []);
 
-  const fetchPolicies = async (filters?: Record<string, string>, search?: string, page = 1) => {
+  const fetchPolicies = async (
+    filters?: Record<string, string>,
+    search?: string,
+    page = 1,
+  ) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10',
+        limit: "10",
         ...(search && { search }),
-        ...filters
+        ...filters,
       });
 
       const response = await fetch(`/api/admin/logs/policies?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -133,14 +137,14 @@ export default function Policies() {
         setPagination(data.pagination);
       }
     } catch (error) {
-      console.error('Failed to fetch policies:', error);
+      console.error("Failed to fetch policies:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Policy Overview"
       subtitle="Monitor and manage all organizational policies and voting status"
     >
@@ -161,7 +165,7 @@ export default function Policies() {
           onSearchChange={(search) => fetchPolicies(undefined, search, 1)}
           pagination={{
             ...pagination,
-            onPageChange: (page) => fetchPolicies(undefined, undefined, page)
+            onPageChange: (page) => fetchPolicies(undefined, undefined, page),
           }}
           loading={loading}
         />

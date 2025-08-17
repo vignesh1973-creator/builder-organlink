@@ -26,7 +26,7 @@ export default function ManageHospitals() {
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
-    total: 0
+    total: 0,
   });
 
   const columns = [
@@ -38,7 +38,7 @@ export default function ManageHospitals() {
           <div className="font-medium text-gray-900">{row.name}</div>
           <div className="text-sm text-gray-500">{row.hospital_id}</div>
         </div>
-      )
+      ),
     },
     {
       key: "location",
@@ -48,7 +48,7 @@ export default function ManageHospitals() {
           <div className="text-sm text-gray-900">{row.city}</div>
           <div className="text-sm text-gray-500">{row.country}</div>
         </div>
-      )
+      ),
     },
     {
       key: "contact",
@@ -58,29 +58,29 @@ export default function ManageHospitals() {
           <div className="text-sm text-gray-900">{row.email}</div>
           <div className="text-sm text-gray-500">{row.phone}</div>
         </div>
-      )
+      ),
     },
     {
       key: "status",
       label: "Status",
       render: (value: string) => (
-        <Badge 
+        <Badge
           className={
-            value === 'active' 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
+            value === "active"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
           }
         >
           {value}
         </Badge>
-      )
+      ),
     },
     {
       key: "capacity",
       label: "Capacity",
       render: (value: number) => (
-        <span className="text-sm text-gray-900">{value || 'N/A'}</span>
-      )
+        <span className="text-sm text-gray-900">{value || "N/A"}</span>
+      ),
     },
     {
       key: "specializations",
@@ -102,17 +102,17 @@ export default function ManageHospitals() {
             </Badge>
           )}
         </div>
-      )
+      ),
     },
     {
       key: "last_activity",
       label: "Last Activity",
       render: (value: string) => (
         <span className="text-sm text-gray-500">
-          {value ? new Date(value).toLocaleDateString() : 'Never'}
+          {value ? new Date(value).toLocaleDateString() : "Never"}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   const filters = [
@@ -124,8 +124,8 @@ export default function ManageHospitals() {
         { value: "canada", label: "Canada" },
         { value: "uk", label: "United Kingdom" },
         { value: "india", label: "India" },
-        { value: "australia", label: "Australia" }
-      ]
+        { value: "australia", label: "Australia" },
+      ],
     },
     {
       key: "status",
@@ -133,9 +133,9 @@ export default function ManageHospitals() {
       options: [
         { value: "active", label: "Active" },
         { value: "inactive", label: "Inactive" },
-        { value: "pending", label: "Pending" }
-      ]
-    }
+        { value: "pending", label: "Pending" },
+      ],
+    },
   ];
 
   const actions = [
@@ -144,36 +144,40 @@ export default function ManageHospitals() {
       onClick: (hospital: Hospital) => {
         console.log("Edit hospital:", hospital);
       },
-      variant: "outline" as const
+      variant: "outline" as const,
     },
     {
       label: "Reset Password",
       onClick: (hospital: Hospital) => {
         console.log("Reset password for hospital:", hospital);
       },
-      variant: "secondary" as const
-    }
+      variant: "secondary" as const,
+    },
   ];
 
   useEffect(() => {
     fetchHospitals();
   }, []);
 
-  const fetchHospitals = async (filters?: Record<string, string>, search?: string, page = 1) => {
+  const fetchHospitals = async (
+    filters?: Record<string, string>,
+    search?: string,
+    page = 1,
+  ) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10',
+        limit: "10",
         ...(search && { search }),
-        ...filters
+        ...filters,
       });
 
       const response = await fetch(`/api/admin/hospitals?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -182,7 +186,7 @@ export default function ManageHospitals() {
         setPagination(data.pagination);
       }
     } catch (error) {
-      console.error('Failed to fetch hospitals:', error);
+      console.error("Failed to fetch hospitals:", error);
     } finally {
       setLoading(false);
     }
@@ -201,7 +205,7 @@ export default function ManageHospitals() {
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Manage Hospitals"
       subtitle="View and manage all registered hospitals"
     >
@@ -231,7 +235,7 @@ export default function ManageHospitals() {
           actions={actions}
           pagination={{
             ...pagination,
-            onPageChange: handlePageChange
+            onPageChange: handlePageChange,
           }}
           loading={loading}
         />

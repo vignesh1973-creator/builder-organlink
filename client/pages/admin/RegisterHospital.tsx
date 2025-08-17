@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -26,10 +32,24 @@ interface HospitalFormData {
 }
 
 const specializationOptions = [
-  "Cardiology", "Neurology", "Orthopedics", "Oncology", "Pediatrics",
-  "Emergency Medicine", "Anesthesiology", "Radiology", "Pathology",
-  "Gastroenterology", "Pulmonology", "Nephrology", "Endocrinology",
-  "Dermatology", "Ophthalmology", "ENT", "Urology", "Psychiatry"
+  "Cardiology",
+  "Neurology",
+  "Orthopedics",
+  "Oncology",
+  "Pediatrics",
+  "Emergency Medicine",
+  "Anesthesiology",
+  "Radiology",
+  "Pathology",
+  "Gastroenterology",
+  "Pulmonology",
+  "Nephrology",
+  "Endocrinology",
+  "Dermatology",
+  "Ophthalmology",
+  "ENT",
+  "Urology",
+  "Psychiatry",
 ];
 
 export default function RegisterHospital() {
@@ -48,19 +68,22 @@ export default function RegisterHospital() {
     capacity: 0,
     specializations: [],
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
-  const handleInputChange = (field: keyof HospitalFormData, value: string | number) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (
+    field: keyof HospitalFormData,
+    value: string | number,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSpecializationToggle = (specialization: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       specializations: prev.specializations.includes(specialization)
-        ? prev.specializations.filter(s => s !== specialization)
-        : [...prev.specializations, specialization]
+        ? prev.specializations.filter((s) => s !== specialization)
+        : [...prev.specializations, specialization],
     }));
   };
 
@@ -81,12 +104,12 @@ export default function RegisterHospital() {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch('/api/admin/hospitals', {
-        method: 'POST',
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch("/api/admin/hospitals", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: formData.name,
@@ -98,29 +121,29 @@ export default function RegisterHospital() {
           address: formData.address,
           specializations: formData.specializations,
           capacity: formData.capacity,
-          password: formData.password
-        })
+          password: formData.password,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        navigate('/admin/hospitals', { 
-          state: { message: 'Hospital registered successfully!' }
+        navigate("/admin/hospitals", {
+          state: { message: "Hospital registered successfully!" },
         });
       } else {
-        setError(data.error || 'Failed to register hospital');
+        setError(data.error || "Failed to register hospital");
       }
     } catch (error) {
-      console.error('Registration error:', error);
-      setError('Network error. Please try again.');
+      console.error("Registration error:", error);
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Register New Hospital"
       subtitle="Add a new hospital to the OrganLink network"
     >
@@ -136,14 +159,18 @@ export default function RegisterHospital() {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Basic Information */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">1. Basic Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  1. Basic Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Hospital Name *</Label>
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
                       placeholder="Central Medical Center"
                       required
                     />
@@ -153,7 +180,9 @@ export default function RegisterHospital() {
                     <Input
                       id="hospital_id"
                       value={formData.hospital_id}
-                      onChange={(e) => handleInputChange('hospital_id', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("hospital_id", e.target.value)
+                      }
                       placeholder="CMC001"
                       required
                     />
@@ -163,13 +192,17 @@ export default function RegisterHospital() {
 
               {/* Location Information */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">2. Location Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  2. Location Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="country">Country *</Label>
-                    <Select 
-                      value={formData.country} 
-                      onValueChange={(value) => handleInputChange('country', value)}
+                    <Select
+                      value={formData.country}
+                      onValueChange={(value) =>
+                        handleInputChange("country", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select country" />
@@ -188,7 +221,9 @@ export default function RegisterHospital() {
                     <Input
                       id="city"
                       value={formData.city}
-                      onChange={(e) => handleInputChange('city', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("city", e.target.value)
+                      }
                       placeholder="New York"
                       required
                     />
@@ -199,7 +234,9 @@ export default function RegisterHospital() {
                   <Textarea
                     id="address"
                     value={formData.address}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
                     placeholder="123 Medical Center Drive, New York, NY 10001"
                     rows={3}
                   />
@@ -208,7 +245,9 @@ export default function RegisterHospital() {
 
               {/* Contact Information */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">3. Contact Information</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  3. Contact Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="email">Email Address *</Label>
@@ -216,7 +255,9 @@ export default function RegisterHospital() {
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       placeholder="contact@centralmedical.com"
                       required
                     />
@@ -226,7 +267,9 @@ export default function RegisterHospital() {
                     <Input
                       id="phone"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -236,7 +279,9 @@ export default function RegisterHospital() {
                   <Input
                     id="website"
                     value={formData.website}
-                    onChange={(e) => handleInputChange('website', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("website", e.target.value)
+                    }
                     placeholder="https://www.centralmedical.com"
                   />
                 </div>
@@ -244,14 +289,21 @@ export default function RegisterHospital() {
 
               {/* Medical Specifications */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">4. Medical Specifications</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  4. Medical Specifications
+                </h3>
                 <div>
                   <Label htmlFor="capacity">Bed Capacity</Label>
                   <Input
                     id="capacity"
                     type="number"
                     value={formData.capacity}
-                    onChange={(e) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "capacity",
+                        parseInt(e.target.value) || 0,
+                      )
+                    }
                     placeholder="500"
                   />
                 </div>
@@ -259,11 +311,18 @@ export default function RegisterHospital() {
                   <Label>Specializations</Label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
                     {specializationOptions.map((specialization) => (
-                      <div key={specialization} className="flex items-center space-x-2">
+                      <div
+                        key={specialization}
+                        className="flex items-center space-x-2"
+                      >
                         <Checkbox
                           id={specialization}
-                          checked={formData.specializations.includes(specialization)}
-                          onCheckedChange={() => handleSpecializationToggle(specialization)}
+                          checked={formData.specializations.includes(
+                            specialization,
+                          )}
+                          onCheckedChange={() =>
+                            handleSpecializationToggle(specialization)
+                          }
                         />
                         <Label htmlFor={specialization} className="text-sm">
                           {specialization}
@@ -276,7 +335,9 @@ export default function RegisterHospital() {
 
               {/* Account Security */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">5. Account Security</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  5. Account Security
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="password">Password *</Label>
@@ -284,7 +345,9 @@ export default function RegisterHospital() {
                       id="password"
                       type="password"
                       value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       placeholder="Enter secure password"
                       required
                     />
@@ -295,7 +358,9 @@ export default function RegisterHospital() {
                       id="confirmPassword"
                       type="password"
                       value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
                       placeholder="Confirm password"
                       required
                     />
@@ -314,15 +379,12 @@ export default function RegisterHospital() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate('/admin/hospitals')}
+                  onClick={() => navigate("/admin/hospitals")}
                   disabled={isLoading}
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                >
+                <Button type="submit" disabled={isLoading}>
                   {isLoading ? "Registering..." : "Register Hospital"}
                 </Button>
               </div>

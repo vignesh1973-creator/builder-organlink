@@ -3,19 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { 
-  Building2, 
-  Users, 
-  FileText, 
-  Heart, 
-  Plus, 
-  Database, 
+import {
+  Building2,
+  Users,
+  FileText,
+  Heart,
+  Plus,
+  Database,
   Settings,
   TrendingUp,
   Activity,
   CheckCircle,
   AlertTriangle,
-  Clock
+  Clock,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -38,7 +38,7 @@ interface Activity {
   title: string;
   description: string;
   timestamp: Date;
-  status: 'active' | 'info' | 'warning' | 'success';
+  status: "active" | "info" | "warning" | "success";
 }
 
 export default function AdminDashboard() {
@@ -46,13 +46,13 @@ export default function AdminDashboard() {
     totalHospitals: 0,
     totalOrganizations: 0,
     activePolicies: 0,
-    successfulTransplants: 0
+    successfulTransplants: 0,
   });
   const [systemHealth, setSystemHealth] = useState<SystemHealth>({
     uptime: "99.9%",
     responseTime: "145ms",
     activeSessions: "2,647",
-    databaseSize: "1.27 TB"
+    databaseSize: "1.27 TB",
   });
   const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,11 +63,11 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch('/api/admin/dashboard/stats', {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch("/api/admin/dashboard/stats", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -77,7 +77,7 @@ export default function AdminDashboard() {
         setRecentActivities(data.recentActivities);
       }
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
+      console.error("Failed to fetch dashboard data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -85,11 +85,11 @@ export default function AdminDashboard() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success':
+      case "success":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'info':
+      case "info":
         return <Activity className="h-4 w-4 text-blue-500" />;
       default:
         return <Clock className="h-4 w-4 text-gray-500" />;
@@ -98,14 +98,14 @@ export default function AdminDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'success':
-        return 'bg-green-100 text-green-800';
-      case 'warning':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'info':
-        return 'bg-blue-100 text-blue-800';
+      case "success":
+        return "bg-green-100 text-green-800";
+      case "warning":
+        return "bg-yellow-100 text-yellow-800";
+      case "info":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Dashboard Overview"
       subtitle="Monitor and manage the entire OrganLink ecosystem"
     >
@@ -131,8 +131,12 @@ export default function AdminDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Hospitals</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalHospitals}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Hospitals
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalHospitals}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="h-3 w-3 mr-1" />
                     +8% this month
@@ -149,8 +153,12 @@ export default function AdminDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Organizations</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalOrganizations}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Organizations
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalOrganizations}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="h-3 w-3 mr-1" />
                     +12% this month
@@ -167,8 +175,12 @@ export default function AdminDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Active Policies</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.activePolicies}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Policies
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.activePolicies}
+                  </p>
                   <p className="text-xs text-blue-600 flex items-center mt-1">
                     <Activity className="h-3 w-3 mr-1" />
                     +3 new this week
@@ -185,8 +197,12 @@ export default function AdminDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Successful Transplants</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.successfulTransplants.toLocaleString()}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Successful Transplants
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.successfulTransplants.toLocaleString()}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <Heart className="h-3 w-3 mr-1" />
                     +9.1% this year
@@ -204,24 +220,34 @@ export default function AdminDashboard() {
           {/* System Health */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">System Health</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                System Health
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">System Uptime</span>
-                <Badge className="bg-green-100 text-green-800">{systemHealth.uptime}</Badge>
+                <Badge className="bg-green-100 text-green-800">
+                  {systemHealth.uptime}
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Response Time</span>
-                <Badge className="bg-blue-100 text-blue-800">{systemHealth.responseTime}</Badge>
+                <Badge className="bg-blue-100 text-blue-800">
+                  {systemHealth.responseTime}
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Active Sessions</span>
-                <Badge className="bg-purple-100 text-purple-800">{systemHealth.activeSessions}</Badge>
+                <Badge className="bg-purple-100 text-purple-800">
+                  {systemHealth.activeSessions}
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Database Size</span>
-                <Badge className="bg-gray-100 text-gray-800">{systemHealth.databaseSize}</Badge>
+                <Badge className="bg-gray-100 text-gray-800">
+                  {systemHealth.databaseSize}
+                </Badge>
               </div>
             </CardContent>
           </Card>
@@ -229,7 +255,9 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                Quick Actions
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button className="w-full justify-start" variant="outline">
@@ -254,21 +282,27 @@ export default function AdminDashboard() {
           {/* System Alerts */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">System Alerts</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                System Alerts
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-start space-x-3">
                 <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Database Load High</p>
-                  <p className="text-xs text-gray-500">Consider optimizing queries</p>
+                  <p className="text-xs text-gray-500">
+                    Consider optimizing queries
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Backup Completed</p>
-                  <p className="text-xs text-gray-500">Daily backup successful</p>
+                  <p className="text-xs text-gray-500">
+                    Daily backup successful
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -285,19 +319,30 @@ export default function AdminDashboard() {
         {/* Recent System Activities */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Recent System Activities</CardTitle>
-            <Button variant="ghost" size="sm">View All</Button>
+            <CardTitle className="text-lg font-semibold">
+              Recent System Activities
+            </CardTitle>
+            <Button variant="ghost" size="sm">
+              View All
+            </Button>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-4 p-4 border rounded-lg">
+                <div
+                  key={activity.id}
+                  className="flex items-start space-x-4 p-4 border rounded-lg"
+                >
                   <div className="flex-shrink-0">
                     {getStatusIcon(activity.status)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-sm text-gray-500">{activity.description}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {activity.title}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {activity.description}
+                    </p>
                     <p className="text-xs text-gray-400 mt-1">
                       {new Date(activity.timestamp).toLocaleString()}
                     </p>

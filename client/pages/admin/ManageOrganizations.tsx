@@ -24,7 +24,7 @@ export default function ManageOrganizations() {
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
-    total: 0
+    total: 0,
   });
 
   const columns = [
@@ -36,53 +36,51 @@ export default function ManageOrganizations() {
           <div className="font-medium text-gray-900">{row.name}</div>
           <div className="text-sm text-gray-500">{row.type}</div>
         </div>
-      )
+      ),
     },
     {
       key: "country",
       label: "Country",
       render: (value: string) => (
         <span className="text-sm text-gray-900">{value}</span>
-      )
+      ),
     },
     {
       key: "quality",
       label: "Quality",
       render: () => (
         <Badge className="bg-green-100 text-green-800">Excellent</Badge>
-      )
+      ),
     },
     {
       key: "roles",
       label: "Roles",
-      render: () => (
-        <Badge variant="outline">Policy Maker</Badge>
-      )
+      render: () => <Badge variant="outline">Policy Maker</Badge>,
     },
     {
       key: "status",
       label: "Status",
       render: (value: string) => (
-        <Badge 
+        <Badge
           className={
-            value === 'active' 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
+            value === "active"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
           }
         >
           {value}
         </Badge>
-      )
+      ),
     },
     {
       key: "last_activity",
       label: "Last Activity",
       render: (value: string) => (
         <span className="text-sm text-gray-500">
-          {value ? new Date(value).toLocaleDateString() : 'Never'}
+          {value ? new Date(value).toLocaleDateString() : "Never"}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   const filters = [
@@ -93,17 +91,17 @@ export default function ManageOrganizations() {
         { value: "foundation", label: "Foundation" },
         { value: "government", label: "Government" },
         { value: "nonprofit", label: "Non-Profit" },
-        { value: "research", label: "Research Institute" }
-      ]
+        { value: "research", label: "Research Institute" },
+      ],
     },
     {
       key: "status",
       label: "Status",
       options: [
         { value: "active", label: "Active" },
-        { value: "inactive", label: "Inactive" }
-      ]
-    }
+        { value: "inactive", label: "Inactive" },
+      ],
+    },
   ];
 
   const actions = [
@@ -112,36 +110,40 @@ export default function ManageOrganizations() {
       onClick: (org: Organization) => {
         console.log("Edit organization:", org);
       },
-      variant: "outline" as const
+      variant: "outline" as const,
     },
     {
       label: "Reset Password",
       onClick: (org: Organization) => {
         console.log("Reset password for organization:", org);
       },
-      variant: "secondary" as const
-    }
+      variant: "secondary" as const,
+    },
   ];
 
   useEffect(() => {
     fetchOrganizations();
   }, []);
 
-  const fetchOrganizations = async (filters?: Record<string, string>, search?: string, page = 1) => {
+  const fetchOrganizations = async (
+    filters?: Record<string, string>,
+    search?: string,
+    page = 1,
+  ) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10',
+        limit: "10",
         ...(search && { search }),
-        ...filters
+        ...filters,
       });
 
       const response = await fetch(`/api/admin/organizations?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -150,14 +152,14 @@ export default function ManageOrganizations() {
         setPagination(data.pagination);
       }
     } catch (error) {
-      console.error('Failed to fetch organizations:', error);
+      console.error("Failed to fetch organizations:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Manage Organizations"
       subtitle="View and manage all registered organizations"
     >
@@ -180,12 +182,15 @@ export default function ManageOrganizations() {
           columns={columns}
           filters={filters}
           searchPlaceholder="Search organizations..."
-          onFilterChange={(filters) => fetchOrganizations(filters, undefined, 1)}
+          onFilterChange={(filters) =>
+            fetchOrganizations(filters, undefined, 1)
+          }
           onSearchChange={(search) => fetchOrganizations(undefined, search, 1)}
           actions={actions}
           pagination={{
             ...pagination,
-            onPageChange: (page) => fetchOrganizations(undefined, undefined, page)
+            onPageChange: (page) =>
+              fetchOrganizations(undefined, undefined, page),
           }}
           loading={loading}
         />

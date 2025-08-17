@@ -3,54 +3,67 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { RotateCcw, Search } from "lucide-react";
 
 export default function ResetPasswords() {
-  const [searchType, setSearchType] = useState<'hospital' | 'organization'>('hospital');
-  const [searchId, setSearchId] = useState('');
+  const [searchType, setSearchType] = useState<"hospital" | "organization">(
+    "hospital",
+  );
+  const [searchId, setSearchId] = useState("");
   const [searchResult, setSearchResult] = useState<any>(null);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSearch = async () => {
     if (!searchId.trim()) {
-      setError('Please enter a Hospital ID or Organization name');
+      setError("Please enter a Hospital ID or Organization name");
       return;
     }
 
     setIsLoading(true);
-    setError('');
+    setError("");
     setSearchResult(null);
 
     try {
-      const token = localStorage.getItem('admin_token');
-      const endpoint = searchType === 'hospital' ? 'hospitals' : 'organizations';
-      const response = await fetch(`/api/admin/${endpoint}?search=${searchId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const token = localStorage.getItem("admin_token");
+      const endpoint =
+        searchType === "hospital" ? "hospitals" : "organizations";
+      const response = await fetch(
+        `/api/admin/${endpoint}?search=${searchId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
-        const results = searchType === 'hospital' ? data.hospitals : data.organizations;
-        
+        const results =
+          searchType === "hospital" ? data.hospitals : data.organizations;
+
         if (results.length > 0) {
           setSearchResult(results[0]);
         } else {
           setError(`No ${searchType} found with that identifier`);
         }
       } else {
-        setError('Search failed. Please try again.');
+        setError("Search failed. Please try again.");
       }
     } catch (error) {
-      console.error('Search error:', error);
-      setError('Network error. Please try again.');
+      console.error("Search error:", error);
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -58,57 +71,61 @@ export default function ResetPasswords() {
 
   const handleResetPassword = async () => {
     if (!searchResult) {
-      setError('Please search and select an entity first');
+      setError("Please search and select an entity first");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     if (newPassword.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     setIsLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const token = localStorage.getItem('admin_token');
-      const endpoint = searchType === 'hospital' ? 'hospitals' : 'organizations';
-      
-      const response = await fetch(`/api/admin/${endpoint}/${searchResult.id}/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+      const token = localStorage.getItem("admin_token");
+      const endpoint =
+        searchType === "hospital" ? "hospitals" : "organizations";
+
+      const response = await fetch(
+        `/api/admin/${endpoint}/${searchResult.id}/reset-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ newPassword }),
         },
-        body: JSON.stringify({ newPassword })
-      });
+      );
 
       if (response.ok) {
         setSuccess(`Password reset successfully for ${searchResult.name}`);
-        setNewPassword('');
-        setConfirmPassword('');
+        setNewPassword("");
+        setConfirmPassword("");
         setSearchResult(null);
-        setSearchId('');
+        setSearchId("");
       } else {
         const data = await response.json();
-        setError(data.error || 'Password reset failed');
+        setError(data.error || "Password reset failed");
       }
     } catch (error) {
-      console.error('Reset password error:', error);
-      setError('Network error. Please try again.');
+      console.error("Reset password error:", error);
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="Reset Hospital Password"
       subtitle="Reset login passwords for hospital accounts"
     >
@@ -125,7 +142,12 @@ export default function ResetPasswords() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Search Type</Label>
-                <Select value={searchType} onValueChange={(value) => setSearchType(value as 'hospital' | 'organization')}>
+                <Select
+                  value={searchType}
+                  onValueChange={(value) =>
+                    setSearchType(value as "hospital" | "organization")
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -137,18 +159,24 @@ export default function ResetPasswords() {
               </div>
               <div>
                 <Label>
-                  {searchType === 'hospital' ? 'Hospital ID' : 'Organization Name'}
+                  {searchType === "hospital"
+                    ? "Hospital ID"
+                    : "Organization Name"}
                 </Label>
                 <Input
                   value={searchId}
                   onChange={(e) => setSearchId(e.target.value)}
-                  placeholder={searchType === 'hospital' ? 'Enter Hospital ID (e.g., H001)' : 'Enter Organization Name'}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder={
+                    searchType === "hospital"
+                      ? "Enter Hospital ID (e.g., H001)"
+                      : "Enter Organization Name"
+                  }
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 />
               </div>
             </div>
             <Button onClick={handleSearch} disabled={isLoading}>
-              {isLoading ? 'Searching...' : 'Search Hospital'}
+              {isLoading ? "Searching..." : "Search Hospital"}
             </Button>
           </CardContent>
         </Card>
@@ -157,19 +185,24 @@ export default function ResetPasswords() {
         {searchResult && (
           <Card>
             <CardHeader>
-              <CardTitle>Found {searchType === 'hospital' ? 'Hospital' : 'Organization'}</CardTitle>
+              <CardTitle>
+                Found {searchType === "hospital" ? "Hospital" : "Organization"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900">{searchResult.name}</h3>
+                <h3 className="font-semibold text-gray-900">
+                  {searchResult.name}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {searchType === 'hospital' 
+                  {searchType === "hospital"
                     ? `${searchResult.city}, ${searchResult.country} • ${searchResult.email}`
-                    : `${searchResult.country} • ${searchResult.email}`
-                  }
+                    : `${searchResult.country} • ${searchResult.email}`}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {searchType === 'hospital' ? `Hospital ID: ${searchResult.hospital_id}` : `Type: ${searchResult.type}`}
+                  {searchType === "hospital"
+                    ? `Hospital ID: ${searchResult.hospital_id}`
+                    : `Type: ${searchResult.type}`}
                 </p>
               </div>
             </CardContent>
@@ -206,13 +239,13 @@ export default function ResetPasswords() {
                   placeholder="Confirm new password"
                 />
               </div>
-              
-              <Button 
-                onClick={handleResetPassword} 
+
+              <Button
+                onClick={handleResetPassword}
                 disabled={isLoading || !newPassword || !confirmPassword}
                 className="w-full"
               >
-                {isLoading ? 'Resetting...' : 'Reset Password'}
+                {isLoading ? "Resetting..." : "Reset Password"}
               </Button>
             </CardContent>
           </Card>

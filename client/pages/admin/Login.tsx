@@ -28,13 +28,13 @@ export default function AdminLogin() {
     setError("");
 
     const result = await login(username, password);
-    
+
     if (result.success) {
       navigate("/admin/dashboard");
     } else {
       setError(result.error || "Login failed");
     }
-    
+
     setIsLoading(false);
   };
 
@@ -49,15 +49,22 @@ export default function AdminLogin() {
                 <Heart className="h-8 w-8 text-white" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h2>
-            <p className="text-sm text-gray-600">Access OrganLink administration panel</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Admin Login
+            </h2>
+            <p className="text-sm text-gray-600">
+              Access OrganLink administration panel
+            </p>
           </div>
 
           <Card className="shadow-lg border-0">
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+                  <Label
+                    htmlFor="username"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Username *
                   </Label>
                   <Input
@@ -73,7 +80,10 @@ export default function AdminLogin() {
                 </div>
 
                 <div>
-                  <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Password *
                   </Label>
                   <div className="relative mt-1">
@@ -108,7 +118,10 @@ export default function AdminLogin() {
                 )}
 
                 <div className="text-center">
-                  <a href="#" className="text-sm text-medical-600 hover:text-medical-700">
+                  <a
+                    href="#"
+                    className="text-sm text-medical-600 hover:text-medical-700"
+                  >
                     Forgot password?
                   </a>
                 </div>
@@ -142,14 +155,15 @@ export default function AdminLogin() {
               className="w-80 h-80 object-cover rounded-2xl mx-auto mb-8"
             />
           </div>
-          
+
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">
               Administrative Control Center
             </h1>
             <p className="text-lg text-blue-100 leading-relaxed max-w-md mx-auto">
-              Manage and oversee the entire OrganLink ecosystem with comprehensive 
-              administrative tools and real-time monitoring capabilities.
+              Manage and oversee the entire OrganLink ecosystem with
+              comprehensive administrative tools and real-time monitoring
+              capabilities.
             </p>
           </div>
         </div>
@@ -166,11 +180,17 @@ export default function AdminLogin() {
           © 2025 OrganLink. All rights reserved.
         </p>
         <div className="flex justify-center space-x-4 mt-2 text-xs">
-          <a href="#" className="text-gray-500 hover:text-gray-700">Privacy Policy</a>
+          <a href="#" className="text-gray-500 hover:text-gray-700">
+            Privacy Policy
+          </a>
           <span className="text-gray-300">|</span>
-          <a href="#" className="text-gray-500 hover:text-gray-700">Terms of Service</a>
+          <a href="#" className="text-gray-500 hover:text-gray-700">
+            Terms of Service
+          </a>
           <span className="text-gray-300">|</span>
-          <a href="#" className="text-gray-500 hover:text-gray-700">Support</a>
+          <a href="#" className="text-gray-500 hover:text-gray-700">
+            Support
+          </a>
         </div>
       </div>
     </div>

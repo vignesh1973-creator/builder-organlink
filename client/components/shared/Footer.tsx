@@ -1,5 +1,14 @@
 import { Link } from "react-router-dom";
-import { Heart, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import {
+  Heart,
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
 
 export default function Footer() {
   return (
@@ -18,20 +27,33 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Leading the future of organ donation and transplantation through technology, 
-              blockchain verification, and AI-powered matching systems.
+              Leading the future of organ donation and transplantation through
+              technology, blockchain verification, and AI-powered matching
+              systems.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-medical-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-medical-400 transition-colors"
+              >
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-medical-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-medical-400 transition-colors"
+              >
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-medical-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-medical-400 transition-colors"
+              >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-medical-400 transition-colors">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-medical-400 transition-colors"
+              >
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
@@ -41,19 +63,34 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <nav className="space-y-2">
-              <Link to="/" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Home
               </Link>
-              <Link to="/about" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/about"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 About Us
               </Link>
-              <Link to="/organ-info" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/organ-info"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Organ Information
               </Link>
-              <Link to="/faqs" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/faqs"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 FAQs
               </Link>
-              <Link to="/contact" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/contact"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Contact
               </Link>
             </nav>
@@ -63,16 +100,28 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">For Organizations</h3>
             <nav className="space-y-2">
-              <Link to="/hospital/login" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/hospital/login"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Hospital Portal
               </Link>
-              <Link to="/organization/login" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/organization/login"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Organization Portal
               </Link>
-              <Link to="/admin/login" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/admin/login"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Admin Portal
               </Link>
-              <Link to="/legal" className="block text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/legal"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
                 Legal & Compliance
               </Link>
             </nav>
@@ -110,16 +159,26 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 text-sm">
-            © 2024 OrganLink. All rights reserved. Saving lives through technology.
+            © 2024 OrganLink. All rights reserved. Saving lives through
+            technology.
           </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link
+              to="/privacy"
+              className="text-gray-400 hover:text-white text-sm transition-colors"
+            >
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link
+              to="/terms"
+              className="text-gray-400 hover:text-white text-sm transition-colors"
+            >
               Terms of Service
             </Link>
-            <Link to="/legal" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link
+              to="/legal"
+              className="text-gray-400 hover:text-white text-sm transition-colors"
+            >
               Legal
             </Link>
           </div>

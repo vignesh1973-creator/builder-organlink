@@ -20,7 +20,7 @@ export default function IPFSLogs() {
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
-    total: 0
+    total: 0,
   });
 
   const columns = [
@@ -32,45 +32,43 @@ export default function IPFSLogs() {
           <div className="font-mono text-sm text-gray-900">{row.hash}</div>
           <div className="text-xs text-gray-500">IPFS Hash</div>
         </div>
-      )
+      ),
     },
     {
       key: "file_type",
       label: "File Type",
-      render: (value: string) => (
-        <Badge variant="outline">{value}</Badge>
-      )
+      render: (value: string) => <Badge variant="outline">{value}</Badge>,
     },
     {
       key: "status",
       label: "Status",
       render: (value: string) => (
-        <Badge 
+        <Badge
           className={
-            value === 'active' 
-              ? 'bg-green-100 text-green-800' 
-              : value === 'pending'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-red-100 text-red-800'
+            value === "active"
+              ? "bg-green-100 text-green-800"
+              : value === "pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-red-100 text-red-800"
           }
         >
           {value}
         </Badge>
-      )
+      ),
     },
     {
       key: "size_mb",
       label: "Size",
       render: (value: number) => (
         <span className="text-sm text-gray-900">{value} MB</span>
-      )
+      ),
     },
     {
       key: "uploaded_by",
       label: "Uploaded By",
       render: (value: string) => (
         <span className="text-sm text-gray-900">{value}</span>
-      )
+      ),
     },
     {
       key: "upload_date",
@@ -79,8 +77,8 @@ export default function IPFSLogs() {
         <span className="text-sm text-gray-500">
           {new Date(value).toLocaleDateString()}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   const filters = [
@@ -90,8 +88,8 @@ export default function IPFSLogs() {
       options: [
         { value: "signature", label: "Signature" },
         { value: "document", label: "Document" },
-        { value: "certificate", label: "Certificate" }
-      ]
+        { value: "certificate", label: "Certificate" },
+      ],
     },
     {
       key: "status",
@@ -99,30 +97,34 @@ export default function IPFSLogs() {
       options: [
         { value: "active", label: "Active" },
         { value: "pending", label: "Pending" },
-        { value: "failed", label: "Failed" }
-      ]
-    }
+        { value: "failed", label: "Failed" },
+      ],
+    },
   ];
 
   useEffect(() => {
     fetchLogs();
   }, []);
 
-  const fetchLogs = async (filters?: Record<string, string>, search?: string, page = 1) => {
+  const fetchLogs = async (
+    filters?: Record<string, string>,
+    search?: string,
+    page = 1,
+  ) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10',
+        limit: "10",
         ...(search && { search }),
-        ...filters
+        ...filters,
       });
 
       const response = await fetch(`/api/admin/logs/ipfs?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -131,14 +133,14 @@ export default function IPFSLogs() {
         setPagination(data.pagination);
       }
     } catch (error) {
-      console.error('Failed to fetch IPFS logs:', error);
+      console.error("Failed to fetch IPFS logs:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="IPFS File Logs"
       subtitle="View and monitor all IPFS file storage"
     >
@@ -159,7 +161,7 @@ export default function IPFSLogs() {
           onSearchChange={(search) => fetchLogs(undefined, search, 1)}
           pagination={{
             ...pagination,
-            onPageChange: (page) => fetchLogs(undefined, undefined, page)
+            onPageChange: (page) => fetchLogs(undefined, undefined, page),
           }}
           loading={loading}
         />

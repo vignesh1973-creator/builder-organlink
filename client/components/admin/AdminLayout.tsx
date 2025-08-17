@@ -11,10 +11,10 @@ interface AdminLayoutProps {
   subtitle?: string;
 }
 
-export default function AdminLayout({ 
-  children, 
-  title = "Dashboard", 
-  subtitle = "Monitor and manage the entire OrganLink ecosystem" 
+export default function AdminLayout({
+  children,
+  title = "Dashboard",
+  subtitle = "Monitor and manage the entire OrganLink ecosystem",
 }: AdminLayoutProps) {
   const { user, logout, isLoading } = useAdminAuth();
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function AdminLayout({
               <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
               <p className="text-sm text-gray-600 mt-1">{subtitle}</p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               {/* Search */}
               <div className="relative">
@@ -81,15 +81,17 @@ export default function AdminLayout({
               {/* User Menu */}
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">System Admin</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    System Admin
+                  </p>
                   <p className="text-xs text-gray-500">admin@organlink.org</p>
                 </div>
                 <div className="w-8 h-8 bg-medical-600 rounded-full flex items-center justify-center">
                   <User className="h-4 w-4 text-white" />
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={handleLogout}
                   className="text-gray-500 hover:text-gray-700"
                 >
@@ -101,9 +103,7 @@ export default function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
   );

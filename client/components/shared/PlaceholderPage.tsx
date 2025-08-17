@@ -10,10 +10,10 @@ interface PlaceholderPageProps {
   suggestedPrompt: string;
 }
 
-export default function PlaceholderPage({ 
-  title, 
-  description, 
-  suggestedPrompt 
+export default function PlaceholderPage({
+  title,
+  description,
+  suggestedPrompt,
 }: PlaceholderPageProps) {
   return (
     <Layout>
@@ -24,10 +24,12 @@ export default function PlaceholderPage({
               <div className="bg-medical-100 w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <Construction className="h-10 w-10 text-medical-600" />
               </div>
-              
+
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{title}</h1>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">{description}</p>
-              
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                {description}
+              </p>
+
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
                 <div className="flex items-start space-x-3">
                   <MessageCircle className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
@@ -35,13 +37,11 @@ export default function PlaceholderPage({
                     <h3 className="font-semibold text-blue-900 mb-2">
                       Continue building this page
                     </h3>
-                    <p className="text-blue-700 text-sm">
-                      {suggestedPrompt}
-                    </p>
+                    <p className="text-blue-700 text-sm">{suggestedPrompt}</p>
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild>
                   <Link to="/">

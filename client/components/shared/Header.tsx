@@ -37,25 +37,42 @@ export default function Header() {
             </div>
             <div>
               <span className="text-xl font-bold text-gray-900">OrganLink</span>
-              <p className="text-xs text-gray-500 leading-tight">Connecting Lives</p>
+              <p className="text-xs text-gray-500 leading-tight">
+                Connecting Lives
+              </p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-600 hover:text-medical-600 font-medium transition-colors">
+            <Link
+              to="/"
+              className="text-gray-600 hover:text-medical-600 font-medium transition-colors"
+            >
               Home
             </Link>
-            <Link to="/about" className="text-gray-600 hover:text-medical-600 font-medium transition-colors">
+            <Link
+              to="/about"
+              className="text-gray-600 hover:text-medical-600 font-medium transition-colors"
+            >
               About
             </Link>
-            <Link to="/organ-info" className="text-gray-600 hover:text-medical-600 font-medium transition-colors">
+            <Link
+              to="/organ-info"
+              className="text-gray-600 hover:text-medical-600 font-medium transition-colors"
+            >
               Organ Info
             </Link>
-            <Link to="/faqs" className="text-gray-600 hover:text-medical-600 font-medium transition-colors">
+            <Link
+              to="/faqs"
+              className="text-gray-600 hover:text-medical-600 font-medium transition-colors"
+            >
               FAQs
             </Link>
-            <Link to="/contact" className="text-gray-600 hover:text-medical-600 font-medium transition-colors">
+            <Link
+              to="/contact"
+              className="text-gray-600 hover:text-medical-600 font-medium transition-colors"
+            >
               Contact
             </Link>
           </nav>
@@ -127,17 +144,26 @@ export default function Header() {
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/admin/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     Admin Login
                   </Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/hospital/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/hospital/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     Hospital Login
                   </Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link to="/organization/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link
+                    to="/organization/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     Organization Login
                   </Link>
                 </Button>

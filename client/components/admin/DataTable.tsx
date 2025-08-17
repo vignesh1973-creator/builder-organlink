@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, MoreHorizontal, Filter, Search } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Filter,
+  Search,
+} from "lucide-react";
 
 interface Column {
   key: string;
@@ -30,7 +42,13 @@ interface DataTableProps {
   actions?: {
     label: string;
     onClick: (row: any) => void;
-    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+    variant?:
+      | "default"
+      | "destructive"
+      | "outline"
+      | "secondary"
+      | "ghost"
+      | "link";
   }[];
   pagination?: {
     page: number;
@@ -51,7 +69,7 @@ export default function DataTable({
   onSearchChange,
   actions = [],
   pagination,
-  loading = false
+  loading = false,
 }: DataTableProps) {
   const [search, setSearch] = useState("");
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -121,7 +139,9 @@ export default function DataTable({
                 <Select
                   key={filter.key}
                   value={filterValues[filter.key] || "all"}
-                  onValueChange={(value) => handleFilterChange(filter.key, value)}
+                  onValueChange={(value) =>
+                    handleFilterChange(filter.key, value)
+                  }
                 >
                   <SelectTrigger className="w-48">
                     <SelectValue placeholder={filter.label} />
@@ -169,8 +189,8 @@ export default function DataTable({
               <tbody className="bg-white divide-y divide-gray-200">
                 {data.length === 0 ? (
                   <tr>
-                    <td 
-                      colSpan={columns.length + (actions.length > 0 ? 1 : 0)} 
+                    <td
+                      colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
                       className="px-6 py-12 text-center text-gray-500"
                     >
                       No data available
@@ -180,17 +200,25 @@ export default function DataTable({
                   data.map((row, index) => (
                     <tr
                       key={index}
-                      className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                      className={`hover:bg-gray-50 ${onRowClick ? "cursor-pointer" : ""}`}
                       onClick={() => onRowClick?.(row)}
                     >
                       {columns.map((column) => (
-                        <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {column.render ? column.render(row[column.key], row) : row[column.key]}
+                        <td
+                          key={column.key}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          {column.render
+                            ? column.render(row[column.key], row)
+                            : row[column.key]}
                         </td>
                       ))}
                       {actions.length > 0 && (
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
+                          <div
+                            className="flex space-x-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {actions.map((action, actionIndex) => (
                               <Button
                                 key={actionIndex}
@@ -217,7 +245,8 @@ export default function DataTable({
       {pagination && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-700">
-            Showing page {pagination.page} of {pagination.pages} ({pagination.total} total results)
+            Showing page {pagination.page} of {pagination.pages} (
+            {pagination.total} total results)
           </p>
           <div className="flex space-x-2">
             <Button

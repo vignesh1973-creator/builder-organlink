@@ -1,59 +1,59 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { 
-  Heart, 
-  LayoutDashboard, 
-  Building2, 
-  Users, 
-  FileText, 
-  Database, 
-  Blocks, 
-  RotateCcw, 
+import {
+  Heart,
+  LayoutDashboard,
+  Building2,
+  Users,
+  FileText,
+  Database,
+  Blocks,
+  RotateCcw,
   Settings,
-  Bell
+  Bell,
 } from "lucide-react";
 
 const navigation = [
-  { 
-    name: "Dashboard", 
-    href: "/admin/dashboard", 
-    icon: LayoutDashboard 
+  {
+    name: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
   },
-  { 
-    name: "Manage Hospitals", 
-    href: "/admin/hospitals", 
-    icon: Building2 
+  {
+    name: "Manage Hospitals",
+    href: "/admin/hospitals",
+    icon: Building2,
   },
-  { 
-    name: "Manage Organizations", 
-    href: "/admin/organizations", 
-    icon: Users 
+  {
+    name: "Manage Organizations",
+    href: "/admin/organizations",
+    icon: Users,
   },
-  { 
-    name: "Policies", 
-    href: "/admin/policies", 
-    icon: FileText 
+  {
+    name: "Policies",
+    href: "/admin/policies",
+    icon: FileText,
   },
-  { 
-    name: "IPFS Logs", 
-    href: "/admin/ipfs-logs", 
-    icon: Database 
+  {
+    name: "IPFS Logs",
+    href: "/admin/ipfs-logs",
+    icon: Database,
   },
-  { 
-    name: "Blockchain Logs", 
-    href: "/admin/blockchain-logs", 
-    icon: Blocks 
+  {
+    name: "Blockchain Logs",
+    href: "/admin/blockchain-logs",
+    icon: Blocks,
   },
-  { 
-    name: "Reset Passwords", 
-    href: "/admin/reset-passwords", 
-    icon: RotateCcw 
+  {
+    name: "Reset Passwords",
+    href: "/admin/reset-passwords",
+    icon: RotateCcw,
   },
-  { 
-    name: "Settings", 
-    href: "/admin/settings", 
-    icon: Settings 
-  }
+  {
+    name: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
+  },
 ];
 
 interface AdminSidebarProps {
@@ -72,7 +72,9 @@ export default function AdminSidebar({ notifications = 3 }: AdminSidebarProps) {
             <Heart className="h-6 w-6 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-gray-900">OrganLink Admin</span>
+            <span className="text-lg font-bold text-gray-900">
+              OrganLink Admin
+            </span>
             <p className="text-xs text-gray-500">System Control Panel</p>
           </div>
         </div>
@@ -90,13 +92,15 @@ export default function AdminSidebar({ notifications = 3 }: AdminSidebarProps) {
                 "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors",
                 isActive
                   ? "bg-medical-50 text-medical-700 border-r-2 border-medical-600"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
               )}
             >
-              <item.icon className={cn(
-                "mr-3 h-5 w-5",
-                isActive ? "text-medical-600" : "text-gray-400"
-              )} />
+              <item.icon
+                className={cn(
+                  "mr-3 h-5 w-5",
+                  isActive ? "text-medical-600" : "text-gray-400",
+                )}
+              />
               {item.name}
               {item.name === "Dashboard" && notifications > 0 && (
                 <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">

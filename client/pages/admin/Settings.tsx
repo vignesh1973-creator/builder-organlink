@@ -9,65 +9,61 @@ import { Settings as SettingsIcon, Bell, User, Mail, Key } from "lucide-react";
 
 export default function AdminSettings() {
   const [emailSettings, setEmailSettings] = useState({
-    adminEmail: 'admin@organlink.org',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    adminEmail: "admin@organlink.org",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      title: 'Password Reset Request',
-      message: 'Metro Medical Center has requested a password reset',
-      type: 'security',
-      time: '5 mins ago',
-      read: false
+      title: "Password Reset Request",
+      message: "Metro Medical Center has requested a password reset",
+      type: "security",
+      time: "5 mins ago",
+      read: false,
     },
     {
       id: 2,
-      title: 'System Performance Alert',
-      message: 'Database query response time increased by 23%',
-      type: 'warning',
-      time: '1 hour ago',
-      read: false
+      title: "System Performance Alert",
+      message: "Database query response time increased by 23%",
+      type: "warning",
+      time: "1 hour ago",
+      read: false,
     },
     {
       id: 3,
-      title: 'Backup Completed',
-      message: 'Daily system backup completed successfully',
-      type: 'success',
-      time: '2 hours ago',
-      read: true
-    }
+      title: "Backup Completed",
+      message: "Daily system backup completed successfully",
+      type: "success",
+      time: "2 hours ago",
+      read: true,
+    },
   ]);
 
   const handlePasswordChange = async () => {
     if (emailSettings.newPassword !== emailSettings.confirmPassword) {
-      alert('Passwords do not match');
+      alert("Passwords do not match");
       return;
     }
 
     // Implement password change logic
-    console.log('Changing password...');
+    console.log("Changing password...");
   };
 
   const markAsRead = (id: number) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, read: true } : notif
-      )
+    setNotifications((prev) =>
+      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)),
     );
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notif => ({ ...notif, read: true }))
-    );
+    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="System Settings"
       subtitle="Configure system settings and administrative profiles"
     >
@@ -88,7 +84,12 @@ export default function AdminSettings() {
                 <Input
                   id="adminEmail"
                   value={emailSettings.adminEmail}
-                  onChange={(e) => setEmailSettings(prev => ({ ...prev, adminEmail: e.target.value }))}
+                  onChange={(e) =>
+                    setEmailSettings((prev) => ({
+                      ...prev,
+                      adminEmail: e.target.value,
+                    }))
+                  }
                   className="flex-1"
                 />
               </div>
@@ -106,7 +107,12 @@ export default function AdminSettings() {
                     id="currentPassword"
                     type="password"
                     value={emailSettings.currentPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, currentPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Enter current password"
                   />
                 </div>
@@ -116,7 +122,12 @@ export default function AdminSettings() {
                     id="newPassword"
                     type="password"
                     value={emailSettings.newPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, newPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Enter new password"
                   />
                 </div>
@@ -126,7 +137,12 @@ export default function AdminSettings() {
                     id="confirmPassword"
                     type="password"
                     value={emailSettings.confirmPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Confirm new password"
                   />
                 </div>
@@ -155,38 +171,46 @@ export default function AdminSettings() {
                 <div
                   key={notification.id}
                   className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                    notification.read ? 'bg-gray-50' : 'bg-white border-medical-200'
+                    notification.read
+                      ? "bg-gray-50"
+                      : "bg-white border-medical-200"
                   }`}
                   onClick={() => markAsRead(notification.id)}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className={`text-sm font-medium ${
-                          notification.read ? 'text-gray-600' : 'text-gray-900'
-                        }`}>
+                        <h4
+                          className={`text-sm font-medium ${
+                            notification.read
+                              ? "text-gray-600"
+                              : "text-gray-900"
+                          }`}
+                        >
                           {notification.title}
                         </h4>
                         {!notification.read && (
                           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                         )}
                       </div>
-                      <p className={`text-sm ${
-                        notification.read ? 'text-gray-500' : 'text-gray-700'
-                      }`}>
+                      <p
+                        className={`text-sm ${
+                          notification.read ? "text-gray-500" : "text-gray-700"
+                        }`}
+                      >
                         {notification.message}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
                         {notification.time}
                       </p>
                     </div>
-                    <Badge 
+                    <Badge
                       className={
-                        notification.type === 'security' 
-                          ? 'bg-red-100 text-red-800'
-                          : notification.type === 'warning'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
+                        notification.type === "security"
+                          ? "bg-red-100 text-red-800"
+                          : notification.type === "warning"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-100 text-green-800"
                       }
                     >
                       {notification.type}
