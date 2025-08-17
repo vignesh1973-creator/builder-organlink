@@ -2,6 +2,11 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import adminAuthRoutes from "./routes/admin-auth";
+import hospitalRoutes from "./routes/hospitals";
+import organizationRoutes from "./routes/organizations";
+import dashboardRoutes from "./routes/dashboard";
+import logsRoutes from "./routes/logs";
 
 export function createServer() {
   const app = express();
@@ -18,6 +23,13 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Admin routes
+  app.use("/api/admin/auth", adminAuthRoutes);
+  app.use("/api/admin/hospitals", hospitalRoutes);
+  app.use("/api/admin/organizations", organizationRoutes);
+  app.use("/api/admin/dashboard", dashboardRoutes);
+  app.use("/api/admin/logs", logsRoutes);
 
   return app;
 }
