@@ -45,17 +45,21 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasCheckedToken, setHasCheckedToken] = useState(false);
 
   useEffect(() => {
-    // Check for stored token on app load
-    const storedToken = localStorage.getItem("admin_token");
-    if (storedToken) {
-      setToken(storedToken);
-      verifyToken(storedToken);
-    } else {
-      setIsLoading(false);
+    // Check for stored token on app load, but only once
+    if (!hasCheckedToken) {
+      setHasCheckedToken(true);
+      const storedToken = localStorage.getItem("admin_token");
+      if (storedToken) {
+        setToken(storedToken);
+        verifyToken(storedToken);
+      } else {
+        setIsLoading(false);
+      }
     }
-  }, []);
+  }, [hasCheckedToken]);
 
   const verifyToken = async (tokenToVerify: string) => {
     try {
@@ -70,13 +74,16 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
         setUser(data.user);
       } else {
         // Token is invalid, remove it
+        console.warn('Token verification failed: Invalid token');
         localStorage.removeItem("admin_token");
         setToken(null);
+        setUser(null);
       }
     } catch (error) {
-      console.error("Token verification failed:", error);
-      localStorage.removeItem("admin_token");
-      setToken(null);
+      // Network error or server not available
+      console.warn('Token verification failed - server may not be running:', error);
+      // Don't remove token on network errors, just set loading to false
+      // This allows users to still access the app if server is temporarily down
     } finally {
       setIsLoading(false);
     }
