@@ -21,15 +21,12 @@ interface Locations {
 }
 
 export default function HospitalLogin() {
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedHospital, setSelectedHospital] = useState("");
+  const [hospitalId, setHospitalId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [locations, setLocations] = useState<Locations>({});
-  const [loadingLocations, setLoadingLocations] = useState(true);
+  const [hospitals, setHospitals] = useState<any[]>([]);
+  const [loadingHospitals, setLoadingHospitals] = useState(true);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
@@ -44,19 +41,33 @@ export default function HospitalLogin() {
   }, [hospital, navigate]);
 
   useEffect(() => {
-    fetchLocations();
+    fetchHospitals();
   }, []);
 
-  const fetchLocations = async () => {
+  const fetchHospitals = async () => {
     try {
       const response = await fetch("/api/hospital/auth/locations");
       const data = await response.json();
-      setLocations(data);
+
+      // Flatten the location structure to get all hospitals
+      const allHospitals: any[] = [];
+      Object.keys(data).forEach(country => {
+        Object.keys(data[country]).forEach(city => {
+          data[country][city].forEach((hospital: any) => {
+            allHospitals.push({
+              ...hospital,
+              location: `${city}, ${country}`
+            });
+          });
+        });
+      });
+
+      setHospitals(allHospitals);
     } catch (error) {
-      console.error("Failed to fetch locations:", error);
-      showToast("Failed to load locations", "error");
+      console.error("Failed to fetch hospitals:", error);
+      showToast("Failed to load hospitals", "error");
     } finally {
-      setLoadingLocations(false);
+      setLoadingHospitals(false);
     }
   };
 
