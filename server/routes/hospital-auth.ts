@@ -173,7 +173,7 @@ router.post("/forgot-password", async (req, res) => {
 
     // Verify hospital exists
     const hospitalResult = await pool.query(
-      "SELECT hospital_id, email FROM hospital_credentials WHERE hospital_id = $1 AND email = $2 AND is_active = true",
+      "SELECT hospital_id, email FROM hospitals WHERE hospital_id = $1 AND email = $2 AND status = 'active'",
       [hospital_id, email]
     );
 
