@@ -138,91 +138,42 @@ export default function HospitalLogin() {
                     <div className="space-y-4">
                       <Label className="text-sm font-medium text-gray-700 flex items-center">
                         <MapPin className="h-4 w-4 mr-2" />
-                        Select Location & Hospital
+                        Hospital Information
                       </Label>
-                      
-                      {loadingLocations ? (
+
+                      {loadingHospitals ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-medical-600 mx-auto"></div>
-                          <p className="text-sm text-gray-500 mt-2">Loading locations...</p>
+                          <p className="text-sm text-gray-500 mt-2">Loading hospitals...</p>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 gap-3">
-                          <Select value={selectedCountry} onValueChange={(value) => {
-                            setSelectedCountry(value);
-                            setSelectedState("");
-                            setSelectedCity("");
-                            setSelectedHospital("");
-                          }}>
-                            <SelectTrigger className="h-12">
-                              <SelectValue placeholder="Select Country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {countries.map((country) => (
-                                <SelectItem key={country} value={country}>
-                                  {country}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="hospitalId" className="text-sm font-medium text-gray-700">
+                              Hospital ID *
+                            </Label>
+                            <Input
+                              id="hospitalId"
+                              type="text"
+                              value={hospitalId}
+                              onChange={(e) => setHospitalId(e.target.value.toUpperCase())}
+                              placeholder="Enter your hospital ID (e.g., APOLLO001)"
+                              required
+                              className="mt-1 h-12"
+                              disabled={isLoading}
+                            />
+                          </div>
 
-                          <Select 
-                            value={selectedState} 
-                            onValueChange={(value) => {
-                              setSelectedState(value);
-                              setSelectedCity("");
-                              setSelectedHospital("");
-                            }}
-                            disabled={!selectedCountry}
-                          >
-                            <SelectTrigger className="h-12">
-                              <SelectValue placeholder="Select State" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {states.map((state) => (
-                                <SelectItem key={state} value={state}>
-                                  {state}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <Select 
-                            value={selectedCity} 
-                            onValueChange={(value) => {
-                              setSelectedCity(value);
-                              setSelectedHospital("");
-                            }}
-                            disabled={!selectedState}
-                          >
-                            <SelectTrigger className="h-12">
-                              <SelectValue placeholder="Select City" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {cities.map((city) => (
-                                <SelectItem key={city} value={city}>
-                                  {city}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <Select 
-                            value={selectedHospital} 
-                            onValueChange={setSelectedHospital}
-                            disabled={!selectedCity}
-                          >
-                            <SelectTrigger className="h-12">
-                              <SelectValue placeholder="Select Hospital" />
-                            </SelectTrigger>
-                            <SelectContent>
+                          {hospitals.length > 0 && (
+                            <div className="bg-blue-50 p-3 rounded-lg">
+                              <p className="text-sm text-blue-800 font-medium mb-2">Available Hospitals:</p>
                               {hospitals.map((hospital) => (
-                                <SelectItem key={hospital.id} value={hospital.id}>
-                                  {hospital.name}
-                                </SelectItem>
+                                <div key={hospital.id} className="text-sm text-blue-700">
+                                  <strong>{hospital.id}:</strong> {hospital.name} ({hospital.location})
+                                </div>
                               ))}
-                            </SelectContent>
-                          </Select>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
