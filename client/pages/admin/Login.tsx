@@ -141,8 +141,8 @@ export default function AdminLogin() {
         <div className="flex flex-col justify-center px-12 py-12 text-white relative z-10">
           <div className="mb-8">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F405002c998c64b82876ceae617ac1008%2F9f64c404ef3f455483d33e7673d78cda?format=webp&width=800"
-              alt="Admin Professional"
+              src="https://images.pexels.com/photos/33474165/pexels-photo-33474165.jpeg"
+              alt="Medical Professional"
               className="w-80 h-80 object-cover rounded-2xl mx-auto mb-8"
             />
           </div>
