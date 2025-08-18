@@ -117,15 +117,6 @@ export default function AdminLogin() {
                   </div>
                 )}
 
-                <div className="text-center">
-                  <a
-                    href="#"
-                    className="text-sm text-medical-600 hover:text-medical-700"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full h-12 bg-gray-700 hover:bg-gray-800 text-white"
