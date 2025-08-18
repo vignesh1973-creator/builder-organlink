@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
 import DataTable from "@/components/admin/DataTable";
-import { Plus, Building2 } from "lucide-react";
+import EditHospitalModal from "@/components/admin/EditHospitalModal";
+import { Plus, Building2, Edit, Trash2 } from "lucide-react";
 
 interface Hospital {
   id: string;
@@ -25,6 +26,8 @@ export default function ManageHospitals() {
   const navigate = useNavigate();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
@@ -140,20 +143,53 @@ export default function ManageHospitals() {
     },
   ];
 
+  const handleEdit = (hospital: Hospital) => {
+    setEditingHospital(hospital);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = async (hospital: Hospital) => {
+    if (!confirm(`Are you sure you want to delete ${hospital.name}?`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('admin_token');
+      const response = await fetch(`/api/admin/hospitals/${hospital.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setHospitals(prev => prev.filter(h => h.id !== hospital.id));
+        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+      } else {
+        alert('Failed to delete hospital');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const handleUpdate = (updatedHospital: Hospital) => {
+    setHospitals(prev =>
+      prev.map(h => h.id === updatedHospital.id ? updatedHospital : h)
+    );
+  };
+
   const actions = [
     {
-      label: "Edit",
-      onClick: (hospital: Hospital) => {
-        console.log("Edit hospital:", hospital);
-      },
+      label: <Edit className="h-4 w-4" />,
+      onClick: handleEdit,
       variant: "outline" as const,
     },
     {
-      label: "Reset Password",
-      onClick: (hospital: Hospital) => {
-        console.log("Reset password for hospital:", hospital);
-      },
-      variant: "secondary" as const,
+      label: <Trash2 className="h-4 w-4" />,
+      onClick: handleDelete,
+      variant: "destructive" as const,
     },
   ];
 
@@ -240,6 +276,16 @@ export default function ManageHospitals() {
             onPageChange: handlePageChange,
           }}
           loading={loading}
+        />
+
+        <EditHospitalModal
+          hospital={editingHospital}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingHospital(null);
+          }}
+          onUpdate={handleUpdate}
         />
       </div>
     </AdminLayout>
