@@ -7,7 +7,7 @@ import DataTable from "@/components/admin/DataTable";
 import EditOrganizationModal from "@/components/admin/EditOrganizationModal";
 import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
 import ToastContainer from "@/components/admin/ToastContainer";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/contexts/ToastContext";
 import { Plus, Users, Edit, Trash2 } from "lucide-react";
 
 interface Organization {
