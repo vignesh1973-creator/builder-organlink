@@ -4,14 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Eye, EyeOff, Heart, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Eye, EyeOff, Heart, MapPin, ArrowLeft, ArrowRight } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
 
@@ -26,13 +20,29 @@ interface Locations {
   };
 }
 
+interface SelectedHospital {
+  id: string;
+  name: string;
+  location: string;
+}
+
 export default function HospitalLogin() {
+  // Step 1: Location Selection
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedHospital, setSelectedHospital] = useState<SelectedHospital | null>(null);
+  const [locations, setLocations] = useState<Locations>({});
+  const [loadingLocations, setLoadingLocations] = useState(true);
+
+  // Step 2: Credentials
   const [hospitalId, setHospitalId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [hospitals, setHospitals] = useState<any[]>([]);
-  const [loadingHospitals, setLoadingHospitals] = useState(true);
+  
+  // Forgot Password
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
@@ -47,33 +57,45 @@ export default function HospitalLogin() {
   }, [hospital, navigate]);
 
   useEffect(() => {
-    fetchHospitals();
+    fetchLocations();
   }, []);
 
-  const fetchHospitals = async () => {
+  const fetchLocations = async () => {
     try {
       const response = await fetch("/api/hospital/auth/locations");
       const data = await response.json();
-
-      // Flatten the location structure to get all hospitals
-      const allHospitals: any[] = [];
-      Object.keys(data).forEach((country) => {
-        Object.keys(data[country]).forEach((city) => {
-          data[country][city].forEach((hospital: any) => {
-            allHospitals.push({
-              ...hospital,
-              location: `${city}, ${country}`,
-            });
-          });
-        });
-      });
-
-      setHospitals(allHospitals);
+      setLocations(data);
     } catch (error) {
-      console.error("Failed to fetch hospitals:", error);
-      showToast("Failed to load hospitals", "error");
+      console.error("Failed to fetch locations:", error);
+      showToast("Failed to load locations", "error");
     } finally {
-      setLoadingHospitals(false);
+      setLoadingLocations(false);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (!selectedCountry || !selectedCity || !selectedHospital) {
+      showToast("Please select country, city, and hospital", "error");
+      return;
+    }
+    setHospitalId(selectedHospital.id);
+    setCurrentStep(2);
+  };
+
+  const handleBackStep = () => {
+    setCurrentStep(1);
+    setPassword("");
+    setShowForgotPassword(false);
+  };
+
+  const handleHospitalSelect = (hospitalId: string) => {
+    const hospital = hospitals.find(h => h.id === hospitalId);
+    if (hospital) {
+      setSelectedHospital({
+        id: hospital.id,
+        name: hospital.name,
+        location: `${selectedCity}, ${selectedCountry}`
+      });
     }
   };
 
@@ -105,7 +127,7 @@ export default function HospitalLogin() {
     }
 
     const result = await requestPasswordReset(hospitalId, resetEmail);
-
+    
     if (result.success) {
       showToast("Password reset request sent to admin for approval", "success");
       setShowForgotPassword(false);
@@ -114,6 +136,14 @@ export default function HospitalLogin() {
       showToast(result.error || "Failed to send reset request", "error");
     }
   };
+
+  const countries = Object.keys(locations);
+  const states = selectedCountry ? Object.keys(locations[selectedCountry] || {}) : [];
+  const cities = selectedCountry && selectedState ? Object.keys(locations[selectedCountry][selectedState] || {}) : [];
+  const hospitals = selectedCountry && selectedState && selectedCity ? 
+    locations[selectedCountry][selectedState][selectedCity] || [] : 
+    selectedCountry && selectedCity && locations[selectedCountry][selectedCity] ? 
+    locations[selectedCountry][selectedCity] : [];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -132,173 +162,261 @@ export default function HospitalLogin() {
                 Hospital Portal
               </h2>
               <p className="text-sm text-gray-600">
-                Access your hospital management system
+                {currentStep === 1 ? "Select your hospital location" : "Enter your login credentials"}
               </p>
             </div>
 
             <Card className="shadow-lg border-0">
               <CardContent className="p-8">
-                {!showForgotPassword ? (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Step 1: Location Selection */}
+                {currentStep === 1 && (
+                  <div className="space-y-6">
                     <div className="space-y-4">
                       <Label className="text-sm font-medium text-gray-700 flex items-center">
                         <MapPin className="h-4 w-4 mr-2" />
-                        Hospital Information
+                        Select Hospital Location
                       </Label>
-
-                      {loadingHospitals ? (
+                      
+                      {loadingLocations ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-medical-600 mx-auto"></div>
-                          <p className="text-sm text-gray-500 mt-2">
-                            Loading hospitals...
-                          </p>
+                          <p className="text-sm text-gray-500 mt-2">Loading locations...</p>
                         </div>
                       ) : (
-                        <div className="space-y-3">
-                          <div>
-                            <Label
-                              htmlFor="hospitalId"
-                              className="text-sm font-medium text-gray-700"
-                            >
-                              Hospital ID *
-                            </Label>
-                            <Input
-                              id="hospitalId"
-                              type="text"
-                              value={hospitalId}
-                              onChange={(e) =>
-                                setHospitalId(e.target.value.toUpperCase())
-                              }
-                              placeholder="Enter your hospital ID (e.g., APOLLO001)"
-                              required
-                              className="mt-1 h-12"
-                              disabled={isLoading}
-                            />
-                          </div>
-
-                          {hospitals.length > 0 && (
-                            <div className="bg-blue-50 p-3 rounded-lg">
-                              <p className="text-sm text-blue-800 font-medium mb-2">
-                                Available Hospitals:
-                              </p>
-                              {hospitals.map((hospital) => (
-                                <div
-                                  key={hospital.id}
-                                  className="text-sm text-blue-700"
-                                >
-                                  <strong>{hospital.id}:</strong>{" "}
-                                  {hospital.name} ({hospital.location})
-                                </div>
+                        <div className="grid grid-cols-1 gap-3">
+                          <Select value={selectedCountry} onValueChange={(value) => {
+                            setSelectedCountry(value);
+                            setSelectedState("");
+                            setSelectedCity("");
+                            setSelectedHospital(null);
+                          }}>
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="Select Country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {countries.map((country) => (
+                                <SelectItem key={country} value={country}>
+                                  {country.charAt(0).toUpperCase() + country.slice(1)}
+                                </SelectItem>
                               ))}
-                            </div>
+                            </SelectContent>
+                          </Select>
+
+                          {/* Show state dropdown only if states exist */}
+                          {states.length > 0 && (
+                            <Select 
+                              value={selectedState} 
+                              onValueChange={(value) => {
+                                setSelectedState(value);
+                                setSelectedCity("");
+                                setSelectedHospital(null);
+                              }}
+                              disabled={!selectedCountry}
+                            >
+                              <SelectTrigger className="h-12">
+                                <SelectValue placeholder="Select State" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {states.map((state) => (
+                                  <SelectItem key={state} value={state}>
+                                    {state.charAt(0).toUpperCase() + state.slice(1)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           )}
+
+                          <Select 
+                            value={selectedCity} 
+                            onValueChange={(value) => {
+                              setSelectedCity(value);
+                              setSelectedHospital(null);
+                            }}
+                            disabled={!selectedCountry}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="Select City" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {cities.map((city) => (
+                                <SelectItem key={city} value={city}>
+                                  {city.charAt(0).toUpperCase() + city.slice(1)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <Select 
+                            value={selectedHospital?.id || ""} 
+                            onValueChange={handleHospitalSelect}
+                            disabled={!selectedCity}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="Select Hospital" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {hospitals.map((hospital) => (
+                                <SelectItem key={hospital.id} value={hospital.id}>
+                                  {hospital.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       )}
                     </div>
 
-                    <div>
-                      <Label
-                        htmlFor="password"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Password *
-                      </Label>
-                      <div className="relative mt-1">
-                        <Input
-                          id="password"
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Enter your password"
-                          required
-                          className="h-12 pr-10"
-                          disabled={isLoading}
-                        />
-                        <button
-                          type="button"
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
-                          )}
-                        </button>
+                    {selectedHospital && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h3 className="font-medium text-blue-900">{selectedHospital.name}</h3>
+                        <p className="text-sm text-blue-700">{selectedHospital.location}</p>
+                        <p className="text-xs text-blue-600 mt-1">Hospital ID: {selectedHospital.id}</p>
                       </div>
-                    </div>
-
-                    <div className="text-center">
-                      <button
-                        type="button"
-                        onClick={() => setShowForgotPassword(true)}
-                        className="text-sm text-medical-600 hover:text-medical-700"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
+                    )}
 
                     <Button
-                      type="submit"
+                      onClick={handleNextStep}
+                      disabled={!selectedHospital || loadingLocations}
                       className="w-full h-12 bg-medical-600 hover:bg-medical-700 text-white"
-                      disabled={
-                        isLoading ||
-                        !hospitalId ||
-                        !password ||
-                        loadingHospitals
-                      }
                     >
-                      {isLoading ? "Signing in..." : "Sign In"}
+                      Next
+                      <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
-                  </form>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        Request Password Reset
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Your request will be sent to admin for approval
-                      </p>
-                    </div>
-
-                    <div>
-                      <Label
-                        htmlFor="resetEmail"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Email Address *
-                      </Label>
-                      <Input
-                        id="resetEmail"
-                        type="email"
-                        value={resetEmail}
-                        onChange={(e) => setResetEmail(e.target.value)}
-                        placeholder="Enter your registered email"
-                        required
-                        className="mt-1 h-12"
-                      />
-                    </div>
-
-                    <div className="flex gap-3">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="flex-1 h-12"
-                        onClick={() => setShowForgotPassword(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        type="button"
-                        className="flex-1 h-12 bg-medical-600 hover:bg-medical-700"
-                        onClick={handleForgotPassword}
-                        disabled={!selectedHospital || !resetEmail}
-                      >
-                        Send Request
-                      </Button>
-                    </div>
                   </div>
+                )}
+
+                {/* Step 2: Credentials */}
+                {currentStep === 2 && (
+                  <>
+                    {!showForgotPassword ? (
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Selected Hospital Info */}
+                        {selectedHospital && (
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <h3 className="font-medium text-gray-900">{selectedHospital.name}</h3>
+                            <p className="text-sm text-gray-600">{selectedHospital.location}</p>
+                          </div>
+                        )}
+
+                        <div>
+                          <Label htmlFor="hospitalId" className="text-sm font-medium text-gray-700">
+                            Hospital ID *
+                          </Label>
+                          <Input
+                            id="hospitalId"
+                            type="text"
+                            value={hospitalId}
+                            onChange={(e) => setHospitalId(e.target.value)}
+                            placeholder="Enter your hospital ID"
+                            required
+                            className="mt-1 h-12"
+                            disabled={isLoading}
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                            Password *
+                          </Label>
+                          <div className="relative mt-1">
+                            <Input
+                              id="password"
+                              type={showPassword ? "text" : "password"}
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              placeholder="Enter your password"
+                              required
+                              className="h-12 pr-10"
+                              disabled={isLoading}
+                            />
+                            <button
+                              type="button"
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4 text-gray-400" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-gray-400" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="text-center">
+                          <button
+                            type="button"
+                            onClick={() => setShowForgotPassword(true)}
+                            className="text-sm text-medical-600 hover:text-medical-700"
+                          >
+                            Forgot password?
+                          </button>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleBackStep}
+                            className="flex-1 h-12"
+                          >
+                            <ArrowLeft className="h-4 w-4 mr-2" />
+                            Back
+                          </Button>
+                          <Button
+                            type="submit"
+                            className="flex-1 h-12 bg-medical-600 hover:bg-medical-700 text-white"
+                            disabled={isLoading || !hospitalId || !password}
+                          >
+                            {isLoading ? "Signing in..." : "Sign In"}
+                          </Button>
+                        </div>
+                      </form>
+                    ) : (
+                      <div className="space-y-6">
+                        <div className="text-center">
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">Request Password Reset</h3>
+                          <p className="text-sm text-gray-600">
+                            Your request will be sent to admin for approval
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="resetEmail" className="text-sm font-medium text-gray-700">
+                            Email Address *
+                          </Label>
+                          <Input
+                            id="resetEmail"
+                            type="email"
+                            value={resetEmail}
+                            onChange={(e) => setResetEmail(e.target.value)}
+                            placeholder="Enter your registered email"
+                            required
+                            className="mt-1 h-12"
+                          />
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="flex-1 h-12"
+                            onClick={() => setShowForgotPassword(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="button"
+                            className="flex-1 h-12 bg-medical-600 hover:bg-medical-700"
+                            onClick={handleForgotPassword}
+                            disabled={!hospitalId || !resetEmail}
+                          >
+                            Send Request
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 <div className="mt-6 text-center">
@@ -327,9 +445,8 @@ export default function HospitalLogin() {
                 Hospital Management Portal
               </h1>
               <p className="text-lg text-medical-100 leading-relaxed max-w-md mx-auto">
-                Securely manage patient registrations, donor coordination, and
-                organ matching with advanced blockchain verification and
-                AI-powered matching algorithms.
+                Securely manage patient registrations, donor coordination, and organ matching 
+                with advanced blockchain verification and AI-powered matching algorithms.
               </p>
             </div>
           </div>
