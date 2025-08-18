@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -21,6 +22,7 @@ interface Hospital {
 }
 
 export default function ManageHospitals() {
+  const navigate = useNavigate();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
@@ -218,7 +220,7 @@ export default function ManageHospitals() {
               Hospitals ({pagination.total})
             </span>
           </div>
-          <Button>
+          <Button onClick={() => navigate('/admin/hospitals/register')}>
             <Plus className="h-4 w-4 mr-2" />
             Add Hospital
           </Button>
