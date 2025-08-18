@@ -1,18 +1,10 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNotifications } from "@/contexts/NotificationContext";
 import { Bell, Eye, X } from "lucide-react";
 
-interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  type: 'security' | 'warning' | 'success' | 'info';
-  time: string;
-  read: boolean;
-}
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -21,50 +13,7 @@ interface NotificationDropdownProps {
 
 export default function NotificationDropdown({ isOpen, onClose }: NotificationDropdownProps) {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: 1,
-      title: 'Password Reset Request',
-      message: 'Metro Medical Center has requested a password reset',
-      type: 'security',
-      time: '5 mins ago',
-      read: false
-    },
-    {
-      id: 2,
-      title: 'System Performance Alert',
-      message: 'Database query response time increased by 23%',
-      type: 'warning',
-      time: '1 hour ago',
-      read: false
-    },
-    {
-      id: 3,
-      title: 'Backup Completed',
-      message: 'Daily system backup completed successfully',
-      type: 'success',
-      time: '2 hours ago',
-      read: true
-    },
-    {
-      id: 4,
-      title: 'New Hospital Registration',
-      message: 'Apollo Hospital has been registered and is pending approval',
-      type: 'info',
-      time: '3 hours ago',
-      read: false
-    }
-  ]);
-
-  const markAsRead = (id: number) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
-  };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const { notifications, unreadCount, markAsRead } = useNotifications();
 
   const handleViewAll = () => {
     navigate('/admin/notifications');
