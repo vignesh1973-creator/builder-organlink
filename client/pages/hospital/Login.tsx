@@ -220,7 +220,7 @@ export default function HospitalLogin() {
                     <Button
                       type="submit"
                       className="w-full h-12 bg-medical-600 hover:bg-medical-700 text-white"
-                      disabled={isLoading || !selectedHospital || !password || loadingLocations}
+                      disabled={isLoading || !hospitalId || !password || loadingHospitals}
                     >
                       {isLoading ? "Signing in..." : "Sign In"}
                     </Button>
