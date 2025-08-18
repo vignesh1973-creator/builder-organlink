@@ -29,6 +29,8 @@ import AdminNotifications from "./pages/admin/Notifications";
 import HospitalDashboard from "./pages/hospital/Dashboard";
 import RegisterPatient from "./pages/hospital/RegisterPatient";
 import RegisterDonor from "./pages/hospital/RegisterDonor";
+import ViewPatients from "./pages/hospital/ViewPatients";
+import ViewDonors from "./pages/hospital/ViewDonors";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { HospitalAuthProvider } from "./contexts/HospitalAuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
