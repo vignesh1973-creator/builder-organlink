@@ -28,6 +28,7 @@ import RegisterOrganization from "./pages/admin/RegisterOrganization";
 import AdminNotifications from "./pages/admin/Notifications";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import { ToastProvider } from "./contexts/ToastContext";
 
 const queryClient = new QueryClient();
 
@@ -36,8 +37,9 @@ const App = () => (
     <TooltipProvider>
       <AdminAuthProvider>
         <NotificationProvider>
-          <Toaster />
-          <Sonner />
+          <ToastProvider>
+            <Toaster />
+            <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -94,7 +96,8 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
+        </BrowserRouter>
+          </ToastProvider>
         </NotificationProvider>
       </AdminAuthProvider>
     </TooltipProvider>
