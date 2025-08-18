@@ -132,7 +132,7 @@ router.get("/verify", async (req, res) => {
 
     // Get updated hospital info
     const result = await pool.query(
-      "SELECT * FROM hospital_credentials WHERE hospital_id = $1 AND is_active = true",
+      "SELECT * FROM hospitals WHERE hospital_id = $1 AND status = 'active'",
       [decoded.hospital_id]
     );
 
@@ -143,7 +143,7 @@ router.get("/verify", async (req, res) => {
       });
     }
 
-    const { password_hash, ...hospitalInfo } = result.rows[0];
+    const { password, ...hospitalInfo } = result.rows[0];
 
     res.json({
       success: true,
