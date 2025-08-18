@@ -9,6 +9,12 @@ export interface AuthRequest extends Request {
     email: string;
     type: "admin" | "hospital" | "organization";
   };
+  hospital?: {
+    hospital_id: string;
+    hospital_name: string;
+    email: string;
+    wallet_address: string;
+  };
 }
 
 export const authenticateToken = (
