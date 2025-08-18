@@ -34,5 +34,10 @@ export function createServer() {
   app.use("/api/admin/dashboard", dashboardRoutes);
   app.use("/api/admin/logs", logsRoutes);
 
+  // Hospital routes
+  app.use("/api/hospital/auth", hospitalAuthRoutes);
+  app.use("/api/hospital/patients", hospitalPatientsRoutes);
+  app.use("/api/hospital/donors", hospitalDonorsRoutes);
+
   return app;
 }
