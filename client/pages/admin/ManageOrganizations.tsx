@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
 import DataTable from "@/components/admin/DataTable";
-import { Plus, Users } from "lucide-react";
+import EditOrganizationModal from "@/components/admin/EditOrganizationModal";
+import { Plus, Users, Edit, Trash2 } from "lucide-react";
 
 interface Organization {
   id: string;
@@ -23,6 +24,8 @@ export default function ManageOrganizations() {
   const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingOrganization, setEditingOrganization] = useState<Organization | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
@@ -106,20 +109,53 @@ export default function ManageOrganizations() {
     },
   ];
 
+  const handleEdit = (organization: Organization) => {
+    setEditingOrganization(organization);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = async (organization: Organization) => {
+    if (!confirm(`Are you sure you want to delete ${organization.name}?`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('admin_token');
+      const response = await fetch(`/api/admin/organizations/${organization.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setOrganizations(prev => prev.filter(o => o.id !== organization.id));
+        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+      } else {
+        alert('Failed to delete organization');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const handleUpdate = (updatedOrganization: Organization) => {
+    setOrganizations(prev =>
+      prev.map(o => o.id === updatedOrganization.id ? updatedOrganization : o)
+    );
+  };
+
   const actions = [
     {
-      label: "Edit",
-      onClick: (org: Organization) => {
-        console.log("Edit organization:", org);
-      },
+      label: <Edit className="h-4 w-4" />,
+      onClick: handleEdit,
       variant: "outline" as const,
     },
     {
-      label: "Reset Password",
-      onClick: (org: Organization) => {
-        console.log("Reset password for organization:", org);
-      },
-      variant: "secondary" as const,
+      label: <Trash2 className="h-4 w-4" />,
+      onClick: handleDelete,
+      variant: "destructive" as const,
     },
   ];
 
@@ -195,6 +231,16 @@ export default function ManageOrganizations() {
               fetchOrganizations(undefined, undefined, page),
           }}
           loading={loading}
+        />
+
+        <EditOrganizationModal
+          organization={editingOrganization}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingOrganization(null);
+          }}
+          onUpdate={handleUpdate}
         />
       </div>
     </AdminLayout>
