@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
 import DataTable from "@/components/admin/DataTable";
 import EditOrganizationModal from "@/components/admin/EditOrganizationModal";
+import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
+import ToastContainer from "@/components/admin/ToastContainer";
+import { useToast } from "@/hooks/useToast";
 import { Plus, Users, Edit, Trash2 } from "lucide-react";
 
 interface Organization {
@@ -26,6 +29,10 @@ export default function ManageOrganizations() {
   const [loading, setLoading] = useState(true);
   const [editingOrganization, setEditingOrganization] = useState<Organization | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingOrganization, setDeletingOrganization] = useState<Organization | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { success, error } = useToast();
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
@@ -114,14 +121,18 @@ export default function ManageOrganizations() {
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = async (organization: Organization) => {
-    if (!confirm(`Are you sure you want to delete ${organization.name}?`)) {
-      return;
-    }
+  const handleDeleteClick = (organization: Organization) => {
+    setDeletingOrganization(organization);
+    setIsDeleteModalOpen(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!deletingOrganization) return;
+
+    setIsDeleting(true);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`/api/admin/organizations/${organization.id}`, {
+      const response = await fetch(`/api/admin/organizations/${deletingOrganization.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -129,14 +140,19 @@ export default function ManageOrganizations() {
       });
 
       if (response.ok) {
-        setOrganizations(prev => prev.filter(o => o.id !== organization.id));
+        setOrganizations(prev => prev.filter(o => o.id !== deletingOrganization.id));
         setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+        success('Organization deleted successfully', `${deletingOrganization.name} has been removed from the system.`);
+        setIsDeleteModalOpen(false);
+        setDeletingOrganization(null);
       } else {
-        alert('Failed to delete organization');
+        error('Failed to delete organization', 'Please try again or contact support.');
       }
-    } catch (error) {
-      console.error('Delete error:', error);
-      alert('Network error. Please try again.');
+    } catch (err) {
+      console.error('Delete error:', err);
+      error('Network error', 'Please check your connection and try again.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -144,6 +160,7 @@ export default function ManageOrganizations() {
     setOrganizations(prev =>
       prev.map(o => o.id === updatedOrganization.id ? updatedOrganization : o)
     );
+    success('Organization updated successfully', `${updatedOrganization.name} information has been updated.`);
   };
 
   const actions = [
@@ -154,7 +171,7 @@ export default function ManageOrganizations() {
     },
     {
       label: <Trash2 className="h-4 w-4" />,
-      onClick: handleDelete,
+      onClick: handleDeleteClick,
       variant: "destructive" as const,
     },
   ];
@@ -242,6 +259,20 @@ export default function ManageOrganizations() {
           }}
           onUpdate={handleUpdate}
         />
+
+        <DeleteConfirmModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setDeletingOrganization(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+          title={`Delete ${deletingOrganization?.name || 'Organization'}`}
+          description={`Are you sure you want to delete "${deletingOrganization?.name}"? This will permanently remove the organization and all associated data from the system.`}
+          isLoading={isDeleting}
+        />
+
+        <ToastContainer />
       </div>
     </AdminLayout>
   );
