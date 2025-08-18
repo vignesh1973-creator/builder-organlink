@@ -9,34 +9,30 @@ const router = express.Router();
 router.get("/locations", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT DISTINCT 
-        country, 
-        state, 
+      SELECT DISTINCT
+        country,
         city,
         hospital_id,
-        hospital_name 
-      FROM hospital_credentials 
-      WHERE is_active = true 
-      ORDER BY country, state, city, hospital_name
+        name as hospital_name
+      FROM hospitals
+      WHERE status = 'active'
+      ORDER BY country, city, name
     `);
 
     // Group data hierarchically
     const locations: any = {};
-    
+
     result.rows.forEach((row) => {
-      const { country, state, city, hospital_id, hospital_name } = row;
-      
+      const { country, city, hospital_id, hospital_name } = row;
+
       if (!locations[country]) {
         locations[country] = {};
       }
-      if (!locations[country][state]) {
-        locations[country][state] = {};
+      if (!locations[country][city]) {
+        locations[country][city] = [];
       }
-      if (!locations[country][state][city]) {
-        locations[country][state][city] = [];
-      }
-      
-      locations[country][state][city].push({
+
+      locations[country][city].push({
         id: hospital_id,
         name: hospital_name
       });
@@ -45,9 +41,9 @@ router.get("/locations", async (req, res) => {
     res.json(locations);
   } catch (error) {
     console.error("Error fetching locations:", error);
-    res.status(500).json({ 
-      success: false, 
-      error: "Failed to fetch locations" 
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch locations"
     });
   }
 });
