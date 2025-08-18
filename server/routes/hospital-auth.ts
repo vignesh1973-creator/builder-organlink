@@ -143,7 +143,7 @@ router.get("/verify", async (req, res) => {
       });
     }
 
-    const { password, ...hospitalInfo } = result.rows[0];
+    const { password: hospitalPassword, ...hospitalInfo } = result.rows[0];
 
     res.json({
       success: true,
