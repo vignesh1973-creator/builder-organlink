@@ -11,6 +11,7 @@ import hospitalAuthRoutes from "./routes/hospital-auth";
 import hospitalPatientsRoutes from "./routes/hospital-patients";
 import hospitalDonorsRoutes from "./routes/hospital-donors";
 import hospitalDashboardRoutes from "./routes/hospital-dashboard";
+import fileUploadRoutes from "./routes/file-upload";
 
 export function createServer() {
   const app = express();
