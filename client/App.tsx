@@ -26,6 +26,7 @@ import AdminSettings from "./pages/admin/Settings";
 import AdminPolicies from "./pages/admin/Policies";
 import RegisterOrganization from "./pages/admin/RegisterOrganization";
 import AdminNotifications from "./pages/admin/Notifications";
+import HospitalDashboard from "./pages/hospital/Dashboard";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { HospitalAuthProvider } from "./contexts/HospitalAuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
@@ -37,7 +38,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AdminAuthProvider>
-        <NotificationProvider>
+        <HospitalAuthProvider>
+          <NotificationProvider>
           <ToastProvider>
             <Toaster />
             <Sonner />
@@ -51,6 +53,7 @@ const App = () => (
 
               {/* Hospital Routes */}
               <Route path="/hospital/login" element={<HospitalLogin />} />
+              <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
 
               {/* Organization Routes */}
               <Route
@@ -99,7 +102,8 @@ const App = () => (
             </Routes>
         </BrowserRouter>
           </ToastProvider>
-        </NotificationProvider>
+          </NotificationProvider>
+        </HospitalAuthProvider>
       </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
