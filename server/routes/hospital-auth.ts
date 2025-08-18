@@ -99,7 +99,7 @@ router.post("/login", async (req, res) => {
     );
 
     // Return hospital info without password
-    const { password, ...hospitalInfo } = hospital;
+    const { password: hospitalPassword, ...hospitalInfo } = hospital;
 
     res.json({
       success: true,
