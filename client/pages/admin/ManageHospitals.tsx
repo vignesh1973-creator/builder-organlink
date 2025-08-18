@@ -7,7 +7,7 @@ import DataTable from "@/components/admin/DataTable";
 import EditHospitalModal from "@/components/admin/EditHospitalModal";
 import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
 import ToastContainer from "@/components/admin/ToastContainer";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/contexts/ToastContext";
 import { Plus, Building2, Edit, Trash2 } from "lucide-react";
 
 interface Hospital {
