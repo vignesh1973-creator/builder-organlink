@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -19,6 +20,7 @@ interface Organization {
 }
 
 export default function ManageOrganizations() {
+  const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
@@ -171,7 +173,7 @@ export default function ManageOrganizations() {
               Organizations ({pagination.total})
             </span>
           </div>
-          <Button>
+          <Button onClick={() => navigate('/admin/organizations/register')}>
             <Plus className="h-4 w-4 mr-2" />
             Add Organization
           </Button>
