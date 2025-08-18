@@ -12,7 +12,7 @@ const CONTRACT_ABI = [
   "function getStats() external view returns (uint256, uint256)",
   "event PatientRegistered(string indexed patientId, string fullName, string signatureIpfsHash, address indexed hospital, uint256 timestamp)",
   "event DonorRegistered(string indexed donorId, string fullName, string signatureIpfsHash, address indexed hospital, uint256 timestamp)",
-  "event SignatureVerified(string indexed recordId, bool isPatient, bool verified)"
+  "event SignatureVerified(string indexed recordId, bool isPatient, bool verified)",
 ];
 
 export class BlockchainService {
@@ -24,7 +24,8 @@ export class BlockchainService {
   constructor() {
     // Initialize provider
     this.provider = new ethers.JsonRpcProvider(
-      process.env.INFURA_API_URL || "https://sepolia.infura.io/v3/6587311a93fe4c34adcef72bd583ea46"
+      process.env.INFURA_API_URL ||
+        "https://sepolia.infura.io/v3/6587311a93fe4c34adcef72bd583ea46",
     );
 
     // Initialize wallet
@@ -32,10 +33,16 @@ export class BlockchainService {
     this.wallet = new ethers.Wallet(privateKey, this.provider);
 
     // Contract address (you'll need to deploy and update this)
-    this.contractAddress = process.env.CONTRACT_ADDRESS || "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    this.contractAddress =
+      process.env.CONTRACT_ADDRESS ||
+      "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
     // Initialize contract
-    this.contract = new ethers.Contract(this.contractAddress, CONTRACT_ABI, this.wallet);
+    this.contract = new ethers.Contract(
+      this.contractAddress,
+      CONTRACT_ABI,
+      this.wallet,
+    );
   }
 
   // Register patient on blockchain
@@ -45,7 +52,7 @@ export class BlockchainService {
     bloodType: string,
     organNeeded: string,
     urgencyLevel: string,
-    signatureIpfsHash: string
+    signatureIpfsHash: string,
   ): Promise<string> {
     try {
       console.log("Registering patient on blockchain:", {
@@ -54,7 +61,7 @@ export class BlockchainService {
         bloodType,
         organNeeded,
         urgencyLevel,
-        signatureIpfsHash
+        signatureIpfsHash,
       });
 
       const tx = await this.contract.registerPatient(
@@ -63,11 +70,11 @@ export class BlockchainService {
         bloodType,
         organNeeded,
         urgencyLevel,
-        signatureIpfsHash
+        signatureIpfsHash,
       );
 
       console.log("Transaction sent:", tx.hash);
-      
+
       // Wait for transaction confirmation
       const receipt = await tx.wait();
       console.log("Transaction confirmed:", receipt.hash);
@@ -84,25 +91,25 @@ export class BlockchainService {
     donorId: string,
     fullName: string,
     bloodType: string,
-    signatureIpfsHash: string
+    signatureIpfsHash: string,
   ): Promise<string> {
     try {
       console.log("Registering donor on blockchain:", {
         donorId,
         fullName,
         bloodType,
-        signatureIpfsHash
+        signatureIpfsHash,
       });
 
       const tx = await this.contract.registerDonor(
         donorId,
         fullName,
         bloodType,
-        signatureIpfsHash
+        signatureIpfsHash,
       );
 
       console.log("Transaction sent:", tx.hash);
-      
+
       // Wait for transaction confirmation
       const receipt = await tx.wait();
       console.log("Transaction confirmed:", receipt.hash);
@@ -115,9 +122,15 @@ export class BlockchainService {
   }
 
   // Verify patient signature on blockchain
-  async verifyPatientSignature(patientId: string, verified: boolean): Promise<string> {
+  async verifyPatientSignature(
+    patientId: string,
+    verified: boolean,
+  ): Promise<string> {
     try {
-      const tx = await this.contract.verifyPatientSignature(patientId, verified);
+      const tx = await this.contract.verifyPatientSignature(
+        patientId,
+        verified,
+      );
       const receipt = await tx.wait();
       return receipt.hash;
     } catch (error) {
@@ -127,7 +140,10 @@ export class BlockchainService {
   }
 
   // Verify donor signature on blockchain
-  async verifyDonorSignature(donorId: string, verified: boolean): Promise<string> {
+  async verifyDonorSignature(
+    donorId: string,
+    verified: boolean,
+  ): Promise<string> {
     try {
       const tx = await this.contract.verifyDonorSignature(donorId, verified);
       const receipt = await tx.wait();
@@ -152,7 +168,7 @@ export class BlockchainService {
         hospitalAddress: patient.hospitalAddress,
         registrationTime: Number(patient.registrationTime),
         isActive: patient.isActive,
-        signatureVerified: patient.signatureVerified
+        signatureVerified: patient.signatureVerified,
       };
     } catch (error) {
       console.error("Blockchain get patient error:", error);
@@ -172,7 +188,7 @@ export class BlockchainService {
         hospitalAddress: donor.hospitalAddress,
         registrationTime: Number(donor.registrationTime),
         isActive: donor.isActive,
-        signatureVerified: donor.signatureVerified
+        signatureVerified: donor.signatureVerified,
       };
     } catch (error) {
       console.error("Blockchain get donor error:", error);
@@ -196,7 +212,7 @@ export class BlockchainService {
       const stats = await this.contract.getStats();
       return {
         totalPatients: Number(stats[0]),
-        totalDonors: Number(stats[1])
+        totalDonors: Number(stats[1]),
       };
     } catch (error) {
       console.error("Blockchain stats error:", error);

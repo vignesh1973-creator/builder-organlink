@@ -18,10 +18,10 @@ router.get("/stats", authenticateHospital, async (req, res) => {
         COUNT(CASE WHEN urgency_level = 'High' THEN 1 END) as urgent_patients
        FROM patients 
        WHERE hospital_id = $1`,
-      [hospital_id]
+      [hospital_id],
     );
 
-    // Get donor statistics  
+    // Get donor statistics
     const donorStats = await pool.query(
       `SELECT 
         COUNT(*) as total_donors,
@@ -29,7 +29,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
         COUNT(CASE WHEN signature_verified = true THEN 1 END) as verified_donors
        FROM donors 
        WHERE hospital_id = $1`,
-      [hospital_id]
+      [hospital_id],
     );
 
     // Get matching requests statistics
@@ -41,7 +41,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
         COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected_requests
        FROM matching_requests 
        WHERE requesting_hospital_id = $1`,
-      [hospital_id]
+      [hospital_id],
     );
 
     // Get recent activities
@@ -65,7 +65,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
        WHERE hospital_id = $1
        ORDER BY created_at DESC 
        LIMIT 10`,
-      [hospital_id]
+      [hospital_id],
     );
 
     // Get organ distribution
@@ -77,7 +77,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
        WHERE hospital_id = $1 AND is_active = true
        GROUP BY organ_needed
        ORDER BY count DESC`,
-      [hospital_id]
+      [hospital_id],
     );
 
     // Get blood type distribution
@@ -90,7 +90,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
        WHERE hospital_id = $1 AND is_active = true
        GROUP BY blood_type
        ORDER BY patient_count DESC`,
-      [hospital_id]
+      [hospital_id],
     );
 
     // Get notifications count
@@ -98,7 +98,7 @@ router.get("/stats", authenticateHospital, async (req, res) => {
       `SELECT COUNT(*) as unread_count
        FROM notifications 
        WHERE hospital_id = $1 AND is_read = false`,
-      [hospital_id]
+      [hospital_id],
     );
 
     res.json({
@@ -107,18 +107,17 @@ router.get("/stats", authenticateHospital, async (req, res) => {
         patients: patientStats.rows[0],
         donors: donorStats.rows[0],
         matching: matchingStats.rows[0],
-        notifications: notificationCount.rows[0]
+        notifications: notificationCount.rows[0],
       },
       recentActivities: recentActivities.rows,
       organDistribution: organDistribution.rows,
-      bloodTypeDistribution: bloodTypeDistribution.rows
+      bloodTypeDistribution: bloodTypeDistribution.rows,
     });
-
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch dashboard statistics"
+      error: "Failed to fetch dashboard statistics",
     });
   }
 });
@@ -130,13 +129,13 @@ router.get("/profile", authenticateHospital, async (req, res) => {
 
     const result = await pool.query(
       "SELECT * FROM hospital_credentials WHERE hospital_id = $1",
-      [hospital_id]
+      [hospital_id],
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        error: "Hospital not found"
+        error: "Hospital not found",
       });
     }
 
@@ -144,14 +143,13 @@ router.get("/profile", authenticateHospital, async (req, res) => {
 
     res.json({
       success: true,
-      profile: hospitalProfile
+      profile: hospitalProfile,
     });
-
   } catch (error) {
     console.error("Error fetching hospital profile:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch hospital profile"
+      error: "Failed to fetch hospital profile",
     });
   }
 });
@@ -167,48 +165,50 @@ router.get("/notifications", authenticateHospital, async (req, res) => {
        WHERE hospital_id = $1 
        ORDER BY created_at DESC 
        LIMIT $2 OFFSET $3`,
-      [hospital_id, limit, offset]
+      [hospital_id, limit, offset],
     );
 
     res.json({
       success: true,
-      notifications: result.rows
+      notifications: result.rows,
     });
-
   } catch (error) {
     console.error("Error fetching notifications:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch notifications"
+      error: "Failed to fetch notifications",
     });
   }
 });
 
 // Mark notification as read
-router.patch("/notifications/:notification_id/read", authenticateHospital, async (req, res) => {
-  try {
-    const hospital_id = req.hospital?.hospital_id;
-    const { notification_id } = req.params;
+router.patch(
+  "/notifications/:notification_id/read",
+  authenticateHospital,
+  async (req, res) => {
+    try {
+      const hospital_id = req.hospital?.hospital_id;
+      const { notification_id } = req.params;
 
-    await pool.query(
-      `UPDATE notifications 
+      await pool.query(
+        `UPDATE notifications 
        SET is_read = true 
        WHERE notification_id = $1 AND hospital_id = $2`,
-      [notification_id, hospital_id]
-    );
+        [notification_id, hospital_id],
+      );
 
-    res.json({
-      success: true,
-      message: "Notification marked as read"
-    });
-
-  } catch (error) {
-    console.error("Error marking notification as read:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to mark notification as read"
-    });
-  }
-});
+      res.json({
+        success: true,
+        message: "Notification marked as read",
+      });
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to mark notification as read",
+      });
+    }
+  },
+);
 
 export default router;

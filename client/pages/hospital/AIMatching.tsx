@@ -4,20 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Search, 
-  Heart, 
-  Users, 
-  Clock, 
-  CheckCircle, 
+import {
+  Search,
+  Heart,
+  Users,
+  Clock,
+  CheckCircle,
   XCircle,
   AlertTriangle,
   TrendingUp,
   Bell,
   MapPin,
-  Phone
+  Phone,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -83,7 +89,9 @@ export default function AIMatching() {
 
       if (response.ok) {
         const data = await response.json();
-        setPatients(data.patients.filter((p: Patient) => p.urgency_level !== 'Low'));
+        setPatients(
+          data.patients.filter((p: Patient) => p.urgency_level !== "Low"),
+        );
       }
     } catch (error) {
       console.error("Failed to fetch patients:", error);
@@ -123,8 +131,8 @@ export default function AIMatching() {
           patient_id: patient.patient_id,
           organ_type: patient.organ_needed,
           blood_type: patient.blood_type,
-          urgency_level: patient.urgency_level
-        })
+          urgency_level: patient.urgency_level,
+        }),
       });
 
       const data = await response.json();
@@ -134,7 +142,10 @@ export default function AIMatching() {
         if (data.total_matches === 0) {
           showToast("No matches found for this patient", "warning");
         } else {
-          showToast(`Found ${data.total_matches} potential matches!`, "success");
+          showToast(
+            `Found ${data.total_matches} potential matches!`,
+            "success",
+          );
         }
       } else {
         showToast(data.error || "Failed to search matches", "error");
@@ -160,8 +171,8 @@ export default function AIMatching() {
           patient_id: patient.patient_id,
           organ_type: patient.organ_needed,
           blood_type: patient.blood_type,
-          urgency_level: patient.urgency_level
-        })
+          urgency_level: patient.urgency_level,
+        }),
       });
 
       const data = await response.json();
@@ -177,7 +188,11 @@ export default function AIMatching() {
     }
   };
 
-  const respondToMatch = async (match: IncomingMatch, response: 'accept' | 'reject', donorId?: string) => {
+  const respondToMatch = async (
+    match: IncomingMatch,
+    response: "accept" | "reject",
+    donorId?: string,
+  ) => {
     try {
       const token = localStorage.getItem("hospital_token");
       const res = await fetch("/api/hospital/matching/respond", {
@@ -189,8 +204,8 @@ export default function AIMatching() {
         body: JSON.stringify({
           request_id: match.notification_id,
           donor_id: donorId,
-          response: response
-        })
+          response: response,
+        }),
       });
 
       const data = await res.json();
@@ -209,17 +224,21 @@ export default function AIMatching() {
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency.toLowerCase()) {
-      case 'critical': return 'bg-red-100 text-red-800';
-      case 'high': return 'bg-orange-100 text-orange-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "critical":
+        return "bg-red-100 text-red-800";
+      case "high":
+        return "bg-orange-100 text-orange-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getMatchScoreColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100 text-green-800';
-    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-red-100 text-red-800';
+    if (score >= 80) return "bg-green-100 text-green-800";
+    if (score >= 60) return "bg-yellow-100 text-yellow-800";
+    return "bg-red-100 text-red-800";
   };
 
   return (
@@ -227,9 +246,12 @@ export default function AIMatching() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">AI Organ Matching</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            AI Organ Matching
+          </h1>
           <p className="text-gray-600 mt-1">
-            {hospital?.hospital_name} • Advanced AI-powered organ matching system
+            {hospital?.hospital_name} • Advanced AI-powered organ matching
+            system
           </p>
         </div>
 
@@ -264,20 +286,25 @@ export default function AIMatching() {
                         key={patient.patient_id}
                         className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                           selectedPatient?.patient_id === patient.patient_id
-                            ? 'border-medical-600 bg-medical-50'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? "border-medical-600 bg-medical-50"
+                            : "border-gray-200 hover:border-gray-300"
                         }`}
                         onClick={() => searchMatches(patient)}
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-medium text-gray-900">{patient.full_name}</h3>
+                            <h3 className="font-medium text-gray-900">
+                              {patient.full_name}
+                            </h3>
                             <p className="text-sm text-gray-500">
-                              Age: {patient.age} • Blood Type: {patient.blood_type}
+                              Age: {patient.age} • Blood Type:{" "}
+                              {patient.blood_type}
                             </p>
                           </div>
                           <div className="flex space-x-2">
-                            <Badge className={getUrgencyColor(patient.urgency_level)}>
+                            <Badge
+                              className={getUrgencyColor(patient.urgency_level)}
+                            >
                               {patient.urgency_level}
                             </Badge>
                             <Badge className="bg-blue-100 text-blue-800">
@@ -288,7 +315,9 @@ export default function AIMatching() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-8">No patients requiring organs found</p>
+                    <p className="text-gray-500 text-center py-8">
+                      No patients requiring organs found
+                    </p>
                   )}
                 </CardContent>
               </Card>
@@ -309,37 +338,54 @@ export default function AIMatching() {
                     <div className="space-y-4">
                       <div className="p-3 bg-blue-50 rounded-lg">
                         <p className="text-sm font-medium text-blue-900">
-                          Searching for: {selectedPatient.organ_needed} • {selectedPatient.blood_type}
+                          Searching for: {selectedPatient.organ_needed} •{" "}
+                          {selectedPatient.blood_type}
                         </p>
                         <p className="text-sm text-blue-700">
-                          Patient: {selectedPatient.full_name} ({selectedPatient.urgency_level} priority)
+                          Patient: {selectedPatient.full_name} (
+                          {selectedPatient.urgency_level} priority)
                         </p>
                       </div>
 
                       {matches.length > 0 ? (
                         <div className="space-y-3">
                           {matches.slice(0, 5).map((match, index) => (
-                            <div key={match.donor_id} className="border rounded-lg p-4">
+                            <div
+                              key={match.donor_id}
+                              className="border rounded-lg p-4"
+                            >
                               <div className="flex items-center justify-between mb-3">
                                 <div>
-                                  <h4 className="font-medium text-gray-900">{match.donor_name}</h4>
+                                  <h4 className="font-medium text-gray-900">
+                                    {match.donor_name}
+                                  </h4>
                                   <p className="text-sm text-gray-500">
                                     {match.hospital_name} • {match.blood_type}
                                   </p>
                                 </div>
-                                <Badge className={getMatchScoreColor(match.match_score)}>
+                                <Badge
+                                  className={getMatchScoreColor(
+                                    match.match_score,
+                                  )}
+                                >
                                   {match.match_score}% Match
                                 </Badge>
                               </div>
 
                               <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-                                <div>Compatibility: {match.compatibility_score}%</div>
+                                <div>
+                                  Compatibility: {match.compatibility_score}%
+                                </div>
                                 <div>Distance: {match.distance_score}%</div>
                               </div>
 
                               <div className="flex flex-wrap gap-1 mb-3">
                                 {match.organs_available.map((organ) => (
-                                  <Badge key={organ} variant="outline" className="text-xs">
+                                  <Badge
+                                    key={organ}
+                                    variant="outline"
+                                    className="text-xs"
+                                  >
                                     {organ}
                                   </Badge>
                                 ))}
@@ -348,7 +394,9 @@ export default function AIMatching() {
                               <Button
                                 size="sm"
                                 className="w-full bg-medical-600 hover:bg-medical-700"
-                                onClick={() => createMatchingRequest(selectedPatient, match)}
+                                onClick={() =>
+                                  createMatchingRequest(selectedPatient, match)
+                                }
                               >
                                 Send Match Request
                               </Button>
@@ -364,7 +412,9 @@ export default function AIMatching() {
                       ) : (
                         !searchingMatches && (
                           <p className="text-gray-500 text-center py-8">
-                            {selectedPatient ? "No matches found" : "Click on a patient to search for matches"}
+                            {selectedPatient
+                              ? "No matches found"
+                              : "Click on a patient to search for matches"}
                           </p>
                         )
                       )}
@@ -391,7 +441,9 @@ export default function AIMatching() {
                           <div className="flex items-center space-x-3 mb-4">
                             <Bell className="h-5 w-5 text-medical-600" />
                             <div>
-                              <h3 className="text-lg font-semibold text-gray-900">{match.title}</h3>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {match.title}
+                              </h3>
                               <p className="text-sm text-gray-500">
                                 From: {match.requesting_hospital_name}
                               </p>
@@ -402,44 +454,72 @@ export default function AIMatching() {
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <div>
-                              <Label className="text-xs text-gray-500">Organ Needed</Label>
+                              <Label className="text-xs text-gray-500">
+                                Organ Needed
+                              </Label>
                               <p className="font-medium">{match.organ_type}</p>
                             </div>
                             <div>
-                              <Label className="text-xs text-gray-500">Blood Type</Label>
+                              <Label className="text-xs text-gray-500">
+                                Blood Type
+                              </Label>
                               <p className="font-medium">{match.blood_type}</p>
                             </div>
                             <div>
-                              <Label className="text-xs text-gray-500">Urgency</Label>
-                              <Badge className={getUrgencyColor(match.urgency_level)}>
+                              <Label className="text-xs text-gray-500">
+                                Urgency
+                              </Label>
+                              <Badge
+                                className={getUrgencyColor(match.urgency_level)}
+                              >
                                 {match.urgency_level}
                               </Badge>
                             </div>
                             <div>
-                              <Label className="text-xs text-gray-500">Received</Label>
-                              <p className="text-sm">{new Date(match.created_at).toLocaleDateString()}</p>
+                              <Label className="text-xs text-gray-500">
+                                Received
+                              </Label>
+                              <p className="text-sm">
+                                {new Date(
+                                  match.created_at,
+                                ).toLocaleDateString()}
+                              </p>
                             </div>
                           </div>
 
                           {match.metadata?.matches && (
                             <div className="mb-4">
-                              <Label className="text-sm font-medium text-gray-700">Your Matching Donors:</Label>
+                              <Label className="text-sm font-medium text-gray-700">
+                                Your Matching Donors:
+                              </Label>
                               <div className="mt-2 space-y-2">
-                                {match.metadata.matches.slice(0, 3).map((donor: any) => (
-                                  <div key={donor.donor_id} className="p-3 bg-gray-50 rounded-lg">
-                                    <div className="flex items-center justify-between">
-                                      <div>
-                                        <p className="font-medium">{donor.donor_name}</p>
-                                        <p className="text-sm text-gray-500">
-                                          {donor.blood_type} • {donor.organs_available.join(", ")}
-                                        </p>
+                                {match.metadata.matches
+                                  .slice(0, 3)
+                                  .map((donor: any) => (
+                                    <div
+                                      key={donor.donor_id}
+                                      className="p-3 bg-gray-50 rounded-lg"
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <div>
+                                          <p className="font-medium">
+                                            {donor.donor_name}
+                                          </p>
+                                          <p className="text-sm text-gray-500">
+                                            {donor.blood_type} •{" "}
+                                            {donor.organs_available.join(", ")}
+                                          </p>
+                                        </div>
+                                        <Badge
+                                          className={getMatchScoreColor(
+                                            donor.match_score,
+                                          )}
+                                        >
+                                          {donor.match_score}% Match
+                                        </Badge>
                                       </div>
-                                      <Badge className={getMatchScoreColor(donor.match_score)}>
-                                        {donor.match_score}% Match
-                                      </Badge>
                                     </div>
-                                  </div>
-                                ))}
+                                  ))}
                               </div>
                             </div>
                           )}
@@ -449,7 +529,7 @@ export default function AIMatching() {
                           <Button
                             size="sm"
                             className="bg-green-600 hover:bg-green-700"
-                            onClick={() => respondToMatch(match, 'accept')}
+                            onClick={() => respondToMatch(match, "accept")}
                           >
                             <CheckCircle className="h-4 w-4 mr-2" />
                             Accept
@@ -457,7 +537,7 @@ export default function AIMatching() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => respondToMatch(match, 'reject')}
+                            onClick={() => respondToMatch(match, "reject")}
                           >
                             <XCircle className="h-4 w-4 mr-2" />
                             Decline
@@ -471,7 +551,9 @@ export default function AIMatching() {
                 <Card>
                   <CardContent className="p-12 text-center">
                     <Bell className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Incoming Requests</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No Incoming Requests
+                    </h3>
                     <p className="text-gray-600">
                       No hospitals have requested organs from your donors yet.
                     </p>

@@ -4,20 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Upload, 
-  FileText, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Upload,
+  FileText,
+  CheckCircle,
+  AlertCircle,
   Loader2,
   User,
   Heart,
   Phone,
   Mail,
-  UserPlus
+  UserPlus,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -57,17 +63,19 @@ export default function RegisterPatient() {
     contact_phone: "",
     contact_email: "",
     emergency_contact: "",
-    emergency_phone: ""
+    emergency_phone: "",
   });
 
-  const [signatureStatus, setSignatureStatus] = useState<SignatureUploadStatus>({
-    uploading: false,
-    uploaded: false,
-    ipfsHash: "",
-    ocrVerified: false,
-    blockchainTxHash: "",
-    fileName: ""
-  });
+  const [signatureStatus, setSignatureStatus] = useState<SignatureUploadStatus>(
+    {
+      uploading: false,
+      uploaded: false,
+      ipfsHash: "",
+      ocrVerified: false,
+      blockchainTxHash: "",
+      fileName: "",
+    },
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -77,11 +85,16 @@ export default function RegisterPatient() {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const handleInputChange = (field: keyof PatientFormData, value: string | number) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (
+    field: keyof PatientFormData,
+    value: string | number,
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -90,14 +103,14 @@ export default function RegisterPatient() {
       return;
     }
 
-    setSignatureStatus(prev => ({ ...prev, uploading: true }));
+    setSignatureStatus((prev) => ({ ...prev, uploading: true }));
 
     try {
       const formData = new FormData();
-      formData.append('signature', file);
-      formData.append('record_type', 'patient');
-      formData.append('record_id', registeredPatientId);
-      formData.append('patient_name', formData.full_name);
+      formData.append("signature", file);
+      formData.append("record_type", "patient");
+      formData.append("record_id", registeredPatientId);
+      formData.append("patient_name", formData.full_name);
 
       const token = localStorage.getItem("hospital_token");
       const response = await fetch("/api/hospital/upload/signature", {
@@ -105,19 +118,19 @@ export default function RegisterPatient() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData
+        body: formData,
       });
 
       const result = await response.json();
 
       if (result.success) {
-        setSignatureStatus(prev => ({
+        setSignatureStatus((prev) => ({
           ...prev,
           uploading: false,
           uploaded: true,
           ipfsHash: result.ipfsHash,
           fileName: result.fileName,
-          ocrVerified: result.ocrVerification?.isValid || false
+          ocrVerified: result.ocrVerification?.isValid || false,
         }));
 
         // Update patient record with IPFS hash
@@ -132,11 +145,14 @@ export default function RegisterPatient() {
       console.error("Upload error:", error);
       showToast("Failed to upload signature", "error");
     } finally {
-      setSignatureStatus(prev => ({ ...prev, uploading: false }));
+      setSignatureStatus((prev) => ({ ...prev, uploading: false }));
     }
   };
 
-  const updatePatientSignature = async (patientId: string, ipfsHash: string) => {
+  const updatePatientSignature = async (
+    patientId: string,
+    ipfsHash: string,
+  ) => {
     try {
       const token = localStorage.getItem("hospital_token");
       await fetch(`/api/hospital/patients/${patientId}/signature`, {
@@ -147,8 +163,8 @@ export default function RegisterPatient() {
         },
         body: JSON.stringify({
           signature_ipfs_hash: ipfsHash,
-          signature_verified: signatureStatus.ocrVerified
-        })
+          signature_verified: signatureStatus.ocrVerified,
+        }),
       });
     } catch (error) {
       console.error("Failed to update patient signature:", error);
@@ -178,20 +194,23 @@ export default function RegisterPatient() {
           blood_type: formData.blood_type,
           organ_needed: formData.organ_needed,
           urgency_level: formData.urgency_level,
-          ipfs_hash: signatureStatus.ipfsHash
-        })
+          ipfs_hash: signatureStatus.ipfsHash,
+        }),
       });
 
       const result = await response.json();
 
       if (result.success) {
-        setSignatureStatus(prev => ({
+        setSignatureStatus((prev) => ({
           ...prev,
-          blockchainTxHash: result.blockchainTxHash
+          blockchainTxHash: result.blockchainTxHash,
         }));
 
         // Update patient record with blockchain hash
-        await updatePatientSignature(registeredPatientId, signatureStatus.ipfsHash);
+        await updatePatientSignature(
+          registeredPatientId,
+          signatureStatus.ipfsHash,
+        );
 
         showToast("Patient registered on blockchain successfully!", "success");
         setTimeout(() => {
@@ -220,7 +239,7 @@ export default function RegisterPatient() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -241,7 +260,15 @@ export default function RegisterPatient() {
   };
 
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-  const organTypes = ["Kidney", "Liver", "Heart", "Lung", "Pancreas", "Cornea", "Bone Marrow"];
+  const organTypes = [
+    "Kidney",
+    "Liver",
+    "Heart",
+    "Lung",
+    "Pancreas",
+    "Cornea",
+    "Bone Marrow",
+  ];
   const urgencyLevels = ["Low", "Medium", "High", "Critical"];
 
   return (
@@ -251,9 +278,12 @@ export default function RegisterPatient() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Register Patient</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Register Patient
+              </h1>
               <p className="text-gray-600 mt-1">
-                {hospital?.hospital_name} • Complete patient registration with blockchain verification
+                {hospital?.hospital_name} • Complete patient registration with
+                blockchain verification
               </p>
             </div>
             <Badge variant="outline" className="text-medical-600">
@@ -265,31 +295,45 @@ export default function RegisterPatient() {
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center space-x-4">
-            <div className={`flex items-center space-x-2 ${currentStep >= 1 ? 'text-medical-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 1 ? 'bg-medical-600 text-white' : 'bg-gray-200'
-              }`}>
+            <div
+              className={`flex items-center space-x-2 ${currentStep >= 1 ? "text-medical-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 1 ? "bg-medical-600 text-white" : "bg-gray-200"
+                }`}
+              >
                 <User className="h-4 w-4" />
               </div>
               <span className="text-sm font-medium">Patient Details</span>
             </div>
             <div className="flex-1 h-0.5 bg-gray-200"></div>
-            <div className={`flex items-center space-x-2 ${currentStep >= 2 ? 'text-medical-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 2 ? 'bg-medical-600 text-white' : 'bg-gray-200'
-              }`}>
+            <div
+              className={`flex items-center space-x-2 ${currentStep >= 2 ? "text-medical-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 2 ? "bg-medical-600 text-white" : "bg-gray-200"
+                }`}
+              >
                 <FileText className="h-4 w-4" />
               </div>
               <span className="text-sm font-medium">Signature Upload</span>
             </div>
             <div className="flex-1 h-0.5 bg-gray-200"></div>
-            <div className={`flex items-center space-x-2 ${currentStep >= 3 ? 'text-medical-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                currentStep >= 3 ? 'bg-medical-600 text-white' : 'bg-gray-200'
-              }`}>
+            <div
+              className={`flex items-center space-x-2 ${currentStep >= 3 ? "text-medical-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 3 ? "bg-medical-600 text-white" : "bg-gray-200"
+                }`}
+              >
                 <CheckCircle className="h-4 w-4" />
               </div>
-              <span className="text-sm font-medium">Blockchain Verification</span>
+              <span className="text-sm font-medium">
+                Blockchain Verification
+              </span>
             </div>
           </div>
         </div>
@@ -308,14 +352,18 @@ export default function RegisterPatient() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Personal Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
-                    
+                    <h3 className="text-lg font-medium text-gray-900">
+                      Personal Information
+                    </h3>
+
                     <div>
                       <Label htmlFor="full_name">Full Name *</Label>
                       <Input
                         id="full_name"
                         value={formData.full_name}
-                        onChange={(e) => handleInputChange("full_name", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("full_name", e.target.value)
+                        }
                         placeholder="Enter patient's full name"
                         required
                         className="mt-1"
@@ -329,7 +377,9 @@ export default function RegisterPatient() {
                           id="age"
                           type="number"
                           value={formData.age || ""}
-                          onChange={(e) => handleInputChange("age", parseInt(e.target.value))}
+                          onChange={(e) =>
+                            handleInputChange("age", parseInt(e.target.value))
+                          }
                           placeholder="Age"
                           required
                           min="1"
@@ -340,7 +390,12 @@ export default function RegisterPatient() {
 
                       <div>
                         <Label htmlFor="gender">Gender *</Label>
-                        <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+                        <Select
+                          value={formData.gender}
+                          onValueChange={(value) =>
+                            handleInputChange("gender", value)
+                          }
+                        >
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
@@ -356,13 +411,20 @@ export default function RegisterPatient() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="blood_type">Blood Type *</Label>
-                        <Select value={formData.blood_type} onValueChange={(value) => handleInputChange("blood_type", value)}>
+                        <Select
+                          value={formData.blood_type}
+                          onValueChange={(value) =>
+                            handleInputChange("blood_type", value)
+                          }
+                        >
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Select blood type" />
                           </SelectTrigger>
                           <SelectContent>
                             {bloodTypes.map((type) => (
-                              <SelectItem key={type} value={type}>{type}</SelectItem>
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -370,13 +432,20 @@ export default function RegisterPatient() {
 
                       <div>
                         <Label htmlFor="organ_needed">Organ Needed *</Label>
-                        <Select value={formData.organ_needed} onValueChange={(value) => handleInputChange("organ_needed", value)}>
+                        <Select
+                          value={formData.organ_needed}
+                          onValueChange={(value) =>
+                            handleInputChange("organ_needed", value)
+                          }
+                        >
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Select organ" />
                           </SelectTrigger>
                           <SelectContent>
                             {organTypes.map((organ) => (
-                              <SelectItem key={organ} value={organ}>{organ}</SelectItem>
+                              <SelectItem key={organ} value={organ}>
+                                {organ}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -385,24 +454,35 @@ export default function RegisterPatient() {
 
                     <div>
                       <Label htmlFor="urgency_level">Urgency Level *</Label>
-                      <Select value={formData.urgency_level} onValueChange={(value) => handleInputChange("urgency_level", value)}>
+                      <Select
+                        value={formData.urgency_level}
+                        onValueChange={(value) =>
+                          handleInputChange("urgency_level", value)
+                        }
+                      >
                         <SelectTrigger className="mt-1">
                           <SelectValue placeholder="Select urgency" />
                         </SelectTrigger>
                         <SelectContent>
                           {urgencyLevels.map((level) => (
-                            <SelectItem key={level} value={level}>{level}</SelectItem>
+                            <SelectItem key={level} value={level}>
+                              {level}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="medical_condition">Medical Condition</Label>
+                      <Label htmlFor="medical_condition">
+                        Medical Condition
+                      </Label>
                       <Textarea
                         id="medical_condition"
                         value={formData.medical_condition}
-                        onChange={(e) => handleInputChange("medical_condition", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("medical_condition", e.target.value)
+                        }
                         placeholder="Describe the patient's medical condition"
                         className="mt-1"
                         rows={3}
@@ -412,14 +492,18 @@ export default function RegisterPatient() {
 
                   {/* Contact Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Contact Information</h3>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      Contact Information
+                    </h3>
 
                     <div>
                       <Label htmlFor="contact_phone">Phone Number *</Label>
                       <Input
                         id="contact_phone"
                         value={formData.contact_phone}
-                        onChange={(e) => handleInputChange("contact_phone", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("contact_phone", e.target.value)
+                        }
                         placeholder="+1 (555) 123-4567"
                         required
                         className="mt-1"
@@ -432,18 +516,24 @@ export default function RegisterPatient() {
                         id="contact_email"
                         type="email"
                         value={formData.contact_email}
-                        onChange={(e) => handleInputChange("contact_email", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("contact_email", e.target.value)
+                        }
                         placeholder="patient@example.com"
                         className="mt-1"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="emergency_contact">Emergency Contact Name *</Label>
+                      <Label htmlFor="emergency_contact">
+                        Emergency Contact Name *
+                      </Label>
                       <Input
                         id="emergency_contact"
                         value={formData.emergency_contact}
-                        onChange={(e) => handleInputChange("emergency_contact", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("emergency_contact", e.target.value)
+                        }
                         placeholder="Emergency contact full name"
                         required
                         className="mt-1"
@@ -451,11 +541,15 @@ export default function RegisterPatient() {
                     </div>
 
                     <div>
-                      <Label htmlFor="emergency_phone">Emergency Contact Phone *</Label>
+                      <Label htmlFor="emergency_phone">
+                        Emergency Contact Phone *
+                      </Label>
                       <Input
                         id="emergency_phone"
                         value={formData.emergency_phone}
-                        onChange={(e) => handleInputChange("emergency_phone", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("emergency_phone", e.target.value)
+                        }
                         placeholder="+1 (555) 987-6543"
                         required
                         className="mt-1"
@@ -501,9 +595,12 @@ export default function RegisterPatient() {
                     <div className="space-y-4">
                       <Upload className="h-12 w-12 text-gray-400 mx-auto" />
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Upload Patient Consent Document</h3>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Upload Patient Consent Document
+                        </h3>
                         <p className="text-gray-600">
-                          Upload a signed consent form, signature document, or authorization letter
+                          Upload a signed consent form, signature document, or
+                          authorization letter
                         </p>
                       </div>
                       <input
@@ -544,11 +641,21 @@ export default function RegisterPatient() {
                     <div className="space-y-4">
                       <CheckCircle className="h-12 w-12 text-green-600 mx-auto" />
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">Document Uploaded Successfully</h3>
-                        <p className="text-gray-600">{signatureStatus.fileName}</p>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Document Uploaded Successfully
+                        </h3>
+                        <p className="text-gray-600">
+                          {signatureStatus.fileName}
+                        </p>
                       </div>
                       <div className="flex justify-center space-x-2">
-                        <Badge className={signatureStatus.ocrVerified ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+                        <Badge
+                          className={
+                            signatureStatus.ocrVerified
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }
+                        >
                           {signatureStatus.ocrVerified ? (
                             <>
                               <CheckCircle className="h-3 w-3 mr-1" />
@@ -602,7 +709,8 @@ export default function RegisterPatient() {
                         Ready for Blockchain Registration
                       </h3>
                       <p className="text-gray-600">
-                        Register this patient record on the blockchain for permanent verification and immutable record keeping.
+                        Register this patient record on the blockchain for
+                        permanent verification and immutable record keeping.
                       </p>
                     </div>
 
@@ -640,9 +748,12 @@ export default function RegisterPatient() {
                   <>
                     <CheckCircle className="h-16 w-16 text-green-600 mx-auto" />
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">Registration Complete!</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">
+                        Registration Complete!
+                      </h3>
                       <p className="text-gray-600 mt-2">
-                        Patient has been successfully registered and verified on the blockchain.
+                        Patient has been successfully registered and verified on
+                        the blockchain.
                       </p>
                     </div>
 
@@ -651,7 +762,8 @@ export default function RegisterPatient() {
                         Patient ID: {registeredPatientId}
                       </Badge>
                       <Badge variant="outline">
-                        Blockchain TX: {signatureStatus.blockchainTxHash.substring(0, 20)}...
+                        Blockchain TX:{" "}
+                        {signatureStatus.blockchainTxHash.substring(0, 20)}...
                       </Badge>
                     </div>
 

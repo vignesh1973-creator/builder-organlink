@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Eye, EyeOff, Heart, MapPin } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -51,12 +57,12 @@ export default function HospitalLogin() {
 
       // Flatten the location structure to get all hospitals
       const allHospitals: any[] = [];
-      Object.keys(data).forEach(country => {
-        Object.keys(data[country]).forEach(city => {
+      Object.keys(data).forEach((country) => {
+        Object.keys(data[country]).forEach((city) => {
           data[country][city].forEach((hospital: any) => {
             allHospitals.push({
               ...hospital,
-              location: `${city}, ${country}`
+              location: `${city}, ${country}`,
             });
           });
         });
@@ -109,7 +115,6 @@ export default function HospitalLogin() {
     }
   };
 
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* Main Content */}
@@ -144,19 +149,26 @@ export default function HospitalLogin() {
                       {loadingHospitals ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-medical-600 mx-auto"></div>
-                          <p className="text-sm text-gray-500 mt-2">Loading hospitals...</p>
+                          <p className="text-sm text-gray-500 mt-2">
+                            Loading hospitals...
+                          </p>
                         </div>
                       ) : (
                         <div className="space-y-3">
                           <div>
-                            <Label htmlFor="hospitalId" className="text-sm font-medium text-gray-700">
+                            <Label
+                              htmlFor="hospitalId"
+                              className="text-sm font-medium text-gray-700"
+                            >
                               Hospital ID *
                             </Label>
                             <Input
                               id="hospitalId"
                               type="text"
                               value={hospitalId}
-                              onChange={(e) => setHospitalId(e.target.value.toUpperCase())}
+                              onChange={(e) =>
+                                setHospitalId(e.target.value.toUpperCase())
+                              }
                               placeholder="Enter your hospital ID (e.g., APOLLO001)"
                               required
                               className="mt-1 h-12"
@@ -166,10 +178,16 @@ export default function HospitalLogin() {
 
                           {hospitals.length > 0 && (
                             <div className="bg-blue-50 p-3 rounded-lg">
-                              <p className="text-sm text-blue-800 font-medium mb-2">Available Hospitals:</p>
+                              <p className="text-sm text-blue-800 font-medium mb-2">
+                                Available Hospitals:
+                              </p>
                               {hospitals.map((hospital) => (
-                                <div key={hospital.id} className="text-sm text-blue-700">
-                                  <strong>{hospital.id}:</strong> {hospital.name} ({hospital.location})
+                                <div
+                                  key={hospital.id}
+                                  className="text-sm text-blue-700"
+                                >
+                                  <strong>{hospital.id}:</strong>{" "}
+                                  {hospital.name} ({hospital.location})
                                 </div>
                               ))}
                             </div>
@@ -179,7 +197,10 @@ export default function HospitalLogin() {
                     </div>
 
                     <div>
-                      <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                      <Label
+                        htmlFor="password"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Password *
                       </Label>
                       <div className="relative mt-1">
@@ -220,7 +241,12 @@ export default function HospitalLogin() {
                     <Button
                       type="submit"
                       className="w-full h-12 bg-medical-600 hover:bg-medical-700 text-white"
-                      disabled={isLoading || !hospitalId || !password || loadingHospitals}
+                      disabled={
+                        isLoading ||
+                        !hospitalId ||
+                        !password ||
+                        loadingHospitals
+                      }
                     >
                       {isLoading ? "Signing in..." : "Sign In"}
                     </Button>
@@ -228,14 +254,19 @@ export default function HospitalLogin() {
                 ) : (
                   <div className="space-y-6">
                     <div className="text-center">
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Request Password Reset</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        Request Password Reset
+                      </h3>
                       <p className="text-sm text-gray-600">
                         Your request will be sent to admin for approval
                       </p>
                     </div>
 
                     <div>
-                      <Label htmlFor="resetEmail" className="text-sm font-medium text-gray-700">
+                      <Label
+                        htmlFor="resetEmail"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Email Address *
                       </Label>
                       <Input
@@ -296,8 +327,9 @@ export default function HospitalLogin() {
                 Hospital Management Portal
               </h1>
               <p className="text-lg text-medical-100 leading-relaxed max-w-md mx-auto">
-                Securely manage patient registrations, donor coordination, and organ matching 
-                with advanced blockchain verification and AI-powered matching algorithms.
+                Securely manage patient registrations, donor coordination, and
+                organ matching with advanced blockchain verification and
+                AI-powered matching algorithms.
               </p>
             </div>
           </div>

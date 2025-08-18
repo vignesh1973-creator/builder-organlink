@@ -14,20 +14,21 @@ router.post("/find-matches", authenticateHospital, async (req, res) => {
     if (!patient_id || !organ_type || !blood_type || !urgency_level) {
       return res.status(400).json({
         success: false,
-        error: "Missing required fields: patient_id, organ_type, blood_type, urgency_level"
+        error:
+          "Missing required fields: patient_id, organ_type, blood_type, urgency_level",
       });
     }
 
     // Verify patient belongs to this hospital
     const patientResult = await pool.query(
       "SELECT patient_id FROM patients WHERE patient_id = $1 AND hospital_id = $2",
-      [patient_id, hospital_id]
+      [patient_id, hospital_id],
     );
 
     if (patientResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        error: "Patient not found or doesn't belong to your hospital"
+        error: "Patient not found or doesn't belong to your hospital",
       });
     }
 
@@ -36,19 +37,18 @@ router.post("/find-matches", authenticateHospital, async (req, res) => {
       organ_type,
       blood_type,
       urgency_level,
-      hospital_id: hospital_id!
+      hospital_id: hospital_id!,
     });
 
     res.json({
       success: true,
-      ...matchingResult
+      ...matchingResult,
     });
-
   } catch (error) {
     console.error("Find matches error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to find matches"
+      error: "Failed to find matches",
     });
   }
 });
@@ -62,20 +62,20 @@ router.post("/create-request", authenticateHospital, async (req, res) => {
     if (!patient_id || !organ_type || !blood_type || !urgency_level) {
       return res.status(400).json({
         success: false,
-        error: "Missing required fields"
+        error: "Missing required fields",
       });
     }
 
     // Verify patient belongs to this hospital
     const patientResult = await pool.query(
       "SELECT patient_id FROM patients WHERE patient_id = $1 AND hospital_id = $2",
-      [patient_id, hospital_id]
+      [patient_id, hospital_id],
     );
 
     if (patientResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        error: "Patient not found or doesn't belong to your hospital"
+        error: "Patient not found or doesn't belong to your hospital",
       });
     }
 
@@ -84,20 +84,19 @@ router.post("/create-request", authenticateHospital, async (req, res) => {
       organ_type,
       blood_type,
       urgency_level,
-      hospital_id: hospital_id!
+      hospital_id: hospital_id!,
     });
 
     res.json({
       success: true,
       request_id: requestId,
-      message: "Matching request created successfully"
+      message: "Matching request created successfully",
     });
-
   } catch (error) {
     console.error("Create matching request error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to create matching request"
+      error: "Failed to create matching request",
     });
   }
 });
@@ -111,14 +110,13 @@ router.get("/requests", authenticateHospital, async (req, res) => {
 
     res.json({
       success: true,
-      requests
+      requests,
     });
-
   } catch (error) {
     console.error("Get matching requests error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to get matching requests"
+      error: "Failed to get matching requests",
     });
   }
 });
@@ -137,19 +135,18 @@ router.get("/incoming-matches", authenticateHospital, async (req, res) => {
        LEFT JOIN hospital_credentials h ON mr.requesting_hospital_id = h.hospital_id
        WHERE n.hospital_id = $1 AND n.type = 'organ_match' AND n.is_read = false
        ORDER BY n.created_at DESC`,
-      [hospital_id]
+      [hospital_id],
     );
 
     res.json({
       success: true,
-      incoming_matches: result.rows
+      incoming_matches: result.rows,
     });
-
   } catch (error) {
     console.error("Get incoming matches error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to get incoming matches"
+      error: "Failed to get incoming matches",
     });
   }
 });
@@ -160,24 +157,25 @@ router.post("/respond", authenticateHospital, async (req, res) => {
     const hospital_id = req.hospital?.hospital_id;
     const { request_id, donor_id, response, notes } = req.body;
 
-    if (!request_id || !response || !['accept', 'reject'].includes(response)) {
+    if (!request_id || !response || !["accept", "reject"].includes(response)) {
       return res.status(400).json({
         success: false,
-        error: "Invalid request. Required: request_id, response (accept/reject)"
+        error:
+          "Invalid request. Required: request_id, response (accept/reject)",
       });
     }
 
     // If accepting, verify donor belongs to this hospital
-    if (response === 'accept' && donor_id) {
+    if (response === "accept" && donor_id) {
       const donorResult = await pool.query(
         "SELECT donor_id FROM donors WHERE donor_id = $1 AND hospital_id = $2",
-        [donor_id, hospital_id]
+        [donor_id, hospital_id],
       );
 
       if (donorResult.rows.length === 0) {
         return res.status(404).json({
           success: false,
-          error: "Donor not found or doesn't belong to your hospital"
+          error: "Donor not found or doesn't belong to your hospital",
         });
       }
     }
@@ -187,12 +185,17 @@ router.post("/respond", authenticateHospital, async (req, res) => {
       `UPDATE matching_requests 
        SET status = $1, matched_donor_id = $2, matched_hospital_id = $3, updated_at = CURRENT_TIMESTAMP
        WHERE request_id = $4`,
-      [response === 'accept' ? 'accepted' : 'rejected', donor_id || null, hospital_id, request_id]
+      [
+        response === "accept" ? "accepted" : "rejected",
+        donor_id || null,
+        hospital_id,
+        request_id,
+      ],
     );
 
     // Create notification for requesting hospital
     const notificationId = `NOTIF_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     await pool.query(
       `INSERT INTO notifications (notification_id, hospital_id, type, title, message, related_id)
        SELECT $1, requesting_hospital_id, 'match_response', 
@@ -203,25 +206,24 @@ router.post("/respond", authenticateHospital, async (req, res) => {
               END,
               $3
        FROM matching_requests WHERE request_id = $3`,
-      [notificationId, response, request_id]
+      [notificationId, response, request_id],
     );
 
     // Mark the original notification as read
     await pool.query(
       "UPDATE notifications SET is_read = true WHERE related_id = $1 AND hospital_id = $2",
-      [request_id, hospital_id]
+      [request_id, hospital_id],
     );
 
     res.json({
       success: true,
-      message: `Match request ${response === 'accept' ? 'accepted' : 'rejected'} successfully`
+      message: `Match request ${response === "accept" ? "accepted" : "rejected"} successfully`,
     });
-
   } catch (error) {
     console.error("Respond to match error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to respond to match request"
+      error: "Failed to respond to match request",
     });
   }
 });
@@ -237,30 +239,29 @@ router.get("/stats", authenticateHospital, async (req, res) => {
        FROM matching_requests 
        WHERE requesting_hospital_id = $1 
        GROUP BY status`,
-      [hospital_id]
+      [hospital_id],
     );
 
-    // Get incoming requests stats  
+    // Get incoming requests stats
     const incomingStats = await pool.query(
       `SELECT COUNT(*) as total_incoming
        FROM notifications 
        WHERE hospital_id = $1 AND type = 'organ_match'`,
-      [hospital_id]
+      [hospital_id],
     );
 
     res.json({
       success: true,
       stats: {
         outgoing: outgoingStats.rows,
-        incoming: incomingStats.rows[0]?.total_incoming || 0
-      }
+        incoming: incomingStats.rows[0]?.total_incoming || 0,
+      },
     });
-
   } catch (error) {
     console.error("Get match stats error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to get match statistics"
+      error: "Failed to get match statistics",
     });
   }
 });

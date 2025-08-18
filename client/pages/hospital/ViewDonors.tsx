@@ -4,11 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Heart, 
-  Plus, 
-  Search, 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Heart,
+  Plus,
+  Search,
   Filter,
   Calendar,
   Phone,
@@ -16,7 +22,7 @@ import {
   CheckCircle,
   Eye,
   ExternalLink,
-  UserCheck
+  UserCheck,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -92,23 +98,26 @@ export default function ViewDonors() {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(donor =>
-        donor.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donor.donor_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donor.contact_email.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (donor) =>
+          donor.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          donor.donor_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          donor.contact_email.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     // Organ filter
     if (filterOrgan) {
-      filtered = filtered.filter(donor => 
-        donor.organs_to_donate.includes(filterOrgan)
+      filtered = filtered.filter((donor) =>
+        donor.organs_to_donate.includes(filterOrgan),
       );
     }
 
     // Blood type filter
     if (filterBloodType) {
-      filtered = filtered.filter(donor => donor.blood_type === filterBloodType);
+      filtered = filtered.filter(
+        (donor) => donor.blood_type === filterBloodType,
+      );
     }
 
     setFilteredDonors(filtered);
@@ -118,11 +127,21 @@ export default function ViewDonors() {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
-      day: "numeric"
+      day: "numeric",
     });
   };
 
-  const organTypes = ["Kidney", "Liver", "Heart", "Lung", "Pancreas", "Cornea", "Bone Marrow", "Skin", "Bone"];
+  const organTypes = [
+    "Kidney",
+    "Liver",
+    "Heart",
+    "Lung",
+    "Pancreas",
+    "Cornea",
+    "Bone Marrow",
+    "Skin",
+    "Bone",
+  ];
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
   if (loading) {
@@ -172,7 +191,9 @@ export default function ViewDonors() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Active Donors</p>
-                  <p className="text-2xl font-bold">{donors.filter(d => d.is_active).length}</p>
+                  <p className="text-2xl font-bold">
+                    {donors.filter((d) => d.is_active).length}
+                  </p>
                 </div>
                 <UserCheck className="h-8 w-8 text-blue-600" />
               </div>
@@ -183,7 +204,9 @@ export default function ViewDonors() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Verified</p>
-                  <p className="text-2xl font-bold">{donors.filter(d => d.signature_verified).length}</p>
+                  <p className="text-2xl font-bold">
+                    {donors.filter((d) => d.signature_verified).length}
+                  </p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-purple-600" />
               </div>
@@ -195,7 +218,10 @@ export default function ViewDonors() {
                 <div>
                   <p className="text-sm text-gray-600">Total Organs</p>
                   <p className="text-2xl font-bold">
-                    {donors.reduce((total, donor) => total + donor.organs_to_donate.length, 0)}
+                    {donors.reduce(
+                      (total, donor) => total + donor.organs_to_donate.length,
+                      0,
+                    )}
                   </p>
                 </div>
                 <Heart className="h-8 w-8 text-red-600" />
@@ -217,7 +243,7 @@ export default function ViewDonors() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={filterOrgan} onValueChange={setFilterOrgan}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by organ" />
@@ -225,19 +251,26 @@ export default function ViewDonors() {
                 <SelectContent>
                   <SelectItem value="">All Organs</SelectItem>
                   {organTypes.map((organ) => (
-                    <SelectItem key={organ} value={organ}>{organ}</SelectItem>
+                    <SelectItem key={organ} value={organ}>
+                      {organ}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={filterBloodType} onValueChange={setFilterBloodType}>
+              <Select
+                value={filterBloodType}
+                onValueChange={setFilterBloodType}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by blood type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All Blood Types</SelectItem>
                   {bloodTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -261,7 +294,10 @@ export default function ViewDonors() {
         <div className="space-y-4">
           {filteredDonors.length > 0 ? (
             filteredDonors.map((donor) => (
-              <Card key={donor.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={donor.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -271,13 +307,12 @@ export default function ViewDonors() {
                             {donor.full_name}
                           </h3>
                           <p className="text-sm text-gray-500">
-                            ID: {donor.donor_id} • Age: {donor.age} • {donor.gender}
+                            ID: {donor.donor_id} • Age: {donor.age} •{" "}
+                            {donor.gender}
                           </p>
                         </div>
                         <div className="flex space-x-2">
-                          <Badge variant="outline">
-                            {donor.blood_type}
-                          </Badge>
+                          <Badge variant="outline">{donor.blood_type}</Badge>
                           {donor.signature_verified && (
                             <Badge className="bg-green-100 text-green-800">
                               <CheckCircle className="h-3 w-3 mr-1" />
@@ -293,10 +328,15 @@ export default function ViewDonors() {
                       </div>
 
                       <div className="mb-4">
-                        <p className="text-sm font-medium text-gray-700 mb-2">Organs to Donate:</p>
+                        <p className="text-sm font-medium text-gray-700 mb-2">
+                          Organs to Donate:
+                        </p>
                         <div className="flex flex-wrap gap-2">
                           {donor.organs_to_donate.map((organ) => (
-                            <Badge key={organ} className="bg-red-100 text-red-800">
+                            <Badge
+                              key={organ}
+                              className="bg-red-100 text-red-800"
+                            >
                               <Heart className="h-3 w-3 mr-1" />
                               {organ}
                             </Badge>
@@ -324,14 +364,16 @@ export default function ViewDonors() {
                       {donor.medical_history && (
                         <div className="mt-3">
                           <p className="text-sm text-gray-600">
-                            <strong>Medical History:</strong> {donor.medical_history}
+                            <strong>Medical History:</strong>{" "}
+                            {donor.medical_history}
                           </p>
                         </div>
                       )}
 
                       <div className="mt-3">
                         <p className="text-sm text-gray-600">
-                          <strong>Emergency Contact:</strong> {donor.emergency_contact} - {donor.emergency_phone}
+                          <strong>Emergency Contact:</strong>{" "}
+                          {donor.emergency_contact} - {donor.emergency_phone}
                         </p>
                       </div>
                     </div>
@@ -341,12 +383,17 @@ export default function ViewDonors() {
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </Button>
-                      
+
                       {donor.signature_ipfs_hash && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(`/api/hospital/upload/ipfs/${donor.signature_ipfs_hash}`, '_blank')}
+                          onClick={() =>
+                            window.open(
+                              `/api/hospital/upload/ipfs/${donor.signature_ipfs_hash}`,
+                              "_blank",
+                            )
+                          }
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           View Document
@@ -357,7 +404,12 @@ export default function ViewDonors() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(`https://sepolia.etherscan.io/tx/${donor.blockchain_tx_hash}`, '_blank')}
+                          onClick={() =>
+                            window.open(
+                              `https://sepolia.etherscan.io/tx/${donor.blockchain_tx_hash}`,
+                              "_blank",
+                            )
+                          }
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           View on Blockchain
@@ -372,12 +424,13 @@ export default function ViewDonors() {
             <Card>
               <CardContent className="p-12 text-center">
                 <Heart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Donors Found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No Donors Found
+                </h3>
                 <p className="text-gray-600 mb-6">
                   {donors.length === 0
                     ? "No donors have been registered yet."
-                    : "No donors match your current filter criteria."
-                  }
+                    : "No donors match your current filter criteria."}
                 </p>
                 <Link to="/hospital/donors/register">
                   <Button className="bg-medical-600 hover:bg-medical-700">

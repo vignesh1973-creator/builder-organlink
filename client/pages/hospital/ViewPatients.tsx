@@ -4,11 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Users, 
-  Plus, 
-  Search, 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Users,
+  Plus,
+  Search,
   Filter,
   Calendar,
   Phone,
@@ -16,7 +22,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Eye,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -94,26 +100,35 @@ export default function ViewPatients() {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(patient =>
-        patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        patient.patient_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        patient.contact_email.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (patient) =>
+          patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          patient.patient_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          patient.contact_email
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()),
       );
     }
 
     // Organ filter
     if (filterOrgan) {
-      filtered = filtered.filter(patient => patient.organ_needed === filterOrgan);
+      filtered = filtered.filter(
+        (patient) => patient.organ_needed === filterOrgan,
+      );
     }
 
     // Urgency filter
     if (filterUrgency) {
-      filtered = filtered.filter(patient => patient.urgency_level === filterUrgency);
+      filtered = filtered.filter(
+        (patient) => patient.urgency_level === filterUrgency,
+      );
     }
 
     // Blood type filter
     if (filterBloodType) {
-      filtered = filtered.filter(patient => patient.blood_type === filterBloodType);
+      filtered = filtered.filter(
+        (patient) => patient.blood_type === filterBloodType,
+      );
     }
 
     setFilteredPatients(filtered);
@@ -121,11 +136,16 @@ export default function ViewPatients() {
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency.toLowerCase()) {
-      case 'critical': return 'bg-red-100 text-red-800';
-      case 'high': return 'bg-orange-100 text-orange-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "critical":
+        return "bg-red-100 text-red-800";
+      case "high":
+        return "bg-orange-100 text-orange-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -133,11 +153,19 @@ export default function ViewPatients() {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
-      day: "numeric"
+      day: "numeric",
     });
   };
 
-  const organTypes = ["Kidney", "Liver", "Heart", "Lung", "Pancreas", "Cornea", "Bone Marrow"];
+  const organTypes = [
+    "Kidney",
+    "Liver",
+    "Heart",
+    "Lung",
+    "Pancreas",
+    "Cornea",
+    "Bone Marrow",
+  ];
   const urgencyLevels = ["Low", "Medium", "High", "Critical"];
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -188,7 +216,9 @@ export default function ViewPatients() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Active Cases</p>
-                  <p className="text-2xl font-bold">{patients.filter(p => p.is_active).length}</p>
+                  <p className="text-2xl font-bold">
+                    {patients.filter((p) => p.is_active).length}
+                  </p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
@@ -199,7 +229,9 @@ export default function ViewPatients() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Verified</p>
-                  <p className="text-2xl font-bold">{patients.filter(p => p.signature_verified).length}</p>
+                  <p className="text-2xl font-bold">
+                    {patients.filter((p) => p.signature_verified).length}
+                  </p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-purple-600" />
               </div>
@@ -211,7 +243,11 @@ export default function ViewPatients() {
                 <div>
                   <p className="text-sm text-gray-600">Urgent Cases</p>
                   <p className="text-2xl font-bold">
-                    {patients.filter(p => ['High', 'Critical'].includes(p.urgency_level)).length}
+                    {
+                      patients.filter((p) =>
+                        ["High", "Critical"].includes(p.urgency_level),
+                      ).length
+                    }
                   </p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-red-600" />
@@ -233,7 +269,7 @@ export default function ViewPatients() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={filterOrgan} onValueChange={setFilterOrgan}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by organ" />
@@ -241,7 +277,9 @@ export default function ViewPatients() {
                 <SelectContent>
                   <SelectItem value="">All Organs</SelectItem>
                   {organTypes.map((organ) => (
-                    <SelectItem key={organ} value={organ}>{organ}</SelectItem>
+                    <SelectItem key={organ} value={organ}>
+                      {organ}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -253,19 +291,26 @@ export default function ViewPatients() {
                 <SelectContent>
                   <SelectItem value="">All Urgency</SelectItem>
                   {urgencyLevels.map((level) => (
-                    <SelectItem key={level} value={level}>{level}</SelectItem>
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={filterBloodType} onValueChange={setFilterBloodType}>
+              <Select
+                value={filterBloodType}
+                onValueChange={setFilterBloodType}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by blood type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All Blood Types</SelectItem>
                   {bloodTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -290,7 +335,10 @@ export default function ViewPatients() {
         <div className="space-y-4">
           {filteredPatients.length > 0 ? (
             filteredPatients.map((patient) => (
-              <Card key={patient.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={patient.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -300,16 +348,17 @@ export default function ViewPatients() {
                             {patient.full_name}
                           </h3>
                           <p className="text-sm text-gray-500">
-                            ID: {patient.patient_id} • Age: {patient.age} • {patient.gender}
+                            ID: {patient.patient_id} • Age: {patient.age} •{" "}
+                            {patient.gender}
                           </p>
                         </div>
                         <div className="flex space-x-2">
-                          <Badge className={getUrgencyColor(patient.urgency_level)}>
+                          <Badge
+                            className={getUrgencyColor(patient.urgency_level)}
+                          >
                             {patient.urgency_level}
                           </Badge>
-                          <Badge variant="outline">
-                            {patient.blood_type}
-                          </Badge>
+                          <Badge variant="outline">{patient.blood_type}</Badge>
                           <Badge className="bg-blue-100 text-blue-800">
                             {patient.organ_needed}
                           </Badge>
@@ -342,14 +391,17 @@ export default function ViewPatients() {
                       {patient.medical_condition && (
                         <div className="mt-3">
                           <p className="text-sm text-gray-600">
-                            <strong>Medical Condition:</strong> {patient.medical_condition}
+                            <strong>Medical Condition:</strong>{" "}
+                            {patient.medical_condition}
                           </p>
                         </div>
                       )}
 
                       <div className="mt-3">
                         <p className="text-sm text-gray-600">
-                          <strong>Emergency Contact:</strong> {patient.emergency_contact} - {patient.emergency_phone}
+                          <strong>Emergency Contact:</strong>{" "}
+                          {patient.emergency_contact} -{" "}
+                          {patient.emergency_phone}
                         </p>
                       </div>
                     </div>
@@ -359,12 +411,17 @@ export default function ViewPatients() {
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </Button>
-                      
+
                       {patient.signature_ipfs_hash && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(`/api/hospital/upload/ipfs/${patient.signature_ipfs_hash}`, '_blank')}
+                          onClick={() =>
+                            window.open(
+                              `/api/hospital/upload/ipfs/${patient.signature_ipfs_hash}`,
+                              "_blank",
+                            )
+                          }
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           View Document
@@ -375,7 +432,12 @@ export default function ViewPatients() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(`https://sepolia.etherscan.io/tx/${patient.blockchain_tx_hash}`, '_blank')}
+                          onClick={() =>
+                            window.open(
+                              `https://sepolia.etherscan.io/tx/${patient.blockchain_tx_hash}`,
+                              "_blank",
+                            )
+                          }
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
                           View on Blockchain
@@ -390,12 +452,13 @@ export default function ViewPatients() {
             <Card>
               <CardContent className="p-12 text-center">
                 <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Patients Found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No Patients Found
+                </h3>
                 <p className="text-gray-600 mb-6">
                   {patients.length === 0
                     ? "No patients have been registered yet."
-                    : "No patients match your current filter criteria."
-                  }
+                    : "No patients match your current filter criteria."}
                 </p>
                 <Link to="/hospital/patients/register">
                   <Button className="bg-medical-600 hover:bg-medical-700">

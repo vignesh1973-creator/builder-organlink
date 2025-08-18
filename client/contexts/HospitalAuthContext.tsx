@@ -21,23 +21,35 @@ interface Hospital {
 
 interface HospitalAuthContextType {
   hospital: Hospital | null;
-  login: (hospital_id: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (
+    hospital_id: string,
+    password: string,
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   loading: boolean;
-  requestPasswordReset: (hospital_id: string, email: string) => Promise<{ success: boolean; error?: string }>;
+  requestPasswordReset: (
+    hospital_id: string,
+    email: string,
+  ) => Promise<{ success: boolean; error?: string }>;
 }
 
-const HospitalAuthContext = createContext<HospitalAuthContextType | undefined>(undefined);
+const HospitalAuthContext = createContext<HospitalAuthContextType | undefined>(
+  undefined,
+);
 
 export const useHospitalAuth = () => {
   const context = useContext(HospitalAuthContext);
   if (!context) {
-    throw new Error("useHospitalAuth must be used within a HospitalAuthProvider");
+    throw new Error(
+      "useHospitalAuth must be used within a HospitalAuthProvider",
+    );
   }
   return context;
 };
 
-export const HospitalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const HospitalAuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [hospital, setHospital] = useState<Hospital | null>(null);
   const [loading, setLoading] = useState(true);
 

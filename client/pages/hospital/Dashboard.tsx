@@ -3,18 +3,18 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Users, 
-  Heart, 
-  UserCheck, 
-  AlertTriangle, 
-  Plus, 
-  Search, 
+import {
+  Users,
+  Heart,
+  UserCheck,
+  AlertTriangle,
+  Plus,
+  Search,
   Activity,
   TrendingUp,
   Clock,
   CheckCircle,
-  PieChart
+  PieChart,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
@@ -63,9 +63,15 @@ interface BloodTypeDistribution {
 
 export default function HospitalDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
-  const [organDistribution, setOrganDistribution] = useState<OrganDistribution[]>([]);
-  const [bloodTypeDistribution, setBloodTypeDistribution] = useState<BloodTypeDistribution[]>([]);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
+    [],
+  );
+  const [organDistribution, setOrganDistribution] = useState<
+    OrganDistribution[]
+  >([]);
+  const [bloodTypeDistribution, setBloodTypeDistribution] = useState<
+    BloodTypeDistribution[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   const { hospital } = useHospitalAuth();
@@ -106,7 +112,7 @@ export default function HospitalDashboard() {
       month: "short",
       day: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
   };
 
@@ -156,7 +162,9 @@ export default function HospitalDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Patients</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Patients
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
                     {stats?.patients.total_patients || 0}
                   </p>
@@ -176,7 +184,9 @@ export default function HospitalDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Donors</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Donors
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
                     {stats?.donors.total_donors || 0}
                   </p>
@@ -196,9 +206,12 @@ export default function HospitalDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Verified Records</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Verified Records
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {(stats?.patients.verified_patients || 0) + (stats?.donors.verified_donors || 0)}
+                    {(stats?.patients.verified_patients || 0) +
+                      (stats?.donors.verified_donors || 0)}
                   </p>
                   <p className="text-sm text-gray-500 mt-1">
                     Blockchain verified
@@ -216,7 +229,9 @@ export default function HospitalDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Urgent Cases</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Urgent Cases
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
                     {stats?.patients.urgent_patients || 0}
                   </p>
@@ -245,25 +260,37 @@ export default function HospitalDashboard() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <Link to="/hospital/patients">
-                  <Button variant="outline" className="w-full h-20 flex flex-col">
+                  <Button
+                    variant="outline"
+                    className="w-full h-20 flex flex-col"
+                  >
                     <Users className="h-6 w-6 mb-2" />
                     View Patients
                   </Button>
                 </Link>
                 <Link to="/hospital/donors">
-                  <Button variant="outline" className="w-full h-20 flex flex-col">
+                  <Button
+                    variant="outline"
+                    className="w-full h-20 flex flex-col"
+                  >
                     <Heart className="h-6 w-6 mb-2" />
                     View Donors
                   </Button>
                 </Link>
                 <Link to="/hospital/ai-matching">
-                  <Button variant="outline" className="w-full h-20 flex flex-col">
+                  <Button
+                    variant="outline"
+                    className="w-full h-20 flex flex-col"
+                  >
                     <Search className="h-6 w-6 mb-2" />
                     AI Matching
                   </Button>
                 </Link>
                 <Link to="/hospital/faqs">
-                  <Button variant="outline" className="w-full h-20 flex flex-col">
+                  <Button
+                    variant="outline"
+                    className="w-full h-20 flex flex-col"
+                  >
                     <PieChart className="h-6 w-6 mb-2" />
                     View Reports
                   </Button>
@@ -283,16 +310,26 @@ export default function HospitalDashboard() {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Pending Requests</span>
-                  <Badge variant="secondary">{stats?.matching.pending_requests || 0}</Badge>
+                  <span className="text-sm text-gray-600">
+                    Pending Requests
+                  </span>
+                  <Badge variant="secondary">
+                    {stats?.matching.pending_requests || 0}
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Successful Matches</span>
-                  <Badge className="bg-green-100 text-green-800">{stats?.matching.successful_matches || 0}</Badge>
+                  <span className="text-sm text-gray-600">
+                    Successful Matches
+                  </span>
+                  <Badge className="bg-green-100 text-green-800">
+                    {stats?.matching.successful_matches || 0}
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Total Requests</span>
-                  <Badge variant="outline">{stats?.matching.total_requests || 0}</Badge>
+                  <Badge variant="outline">
+                    {stats?.matching.total_requests || 0}
+                  </Badge>
                 </div>
                 <Link to="/hospital/ai-matching">
                   <Button className="w-full mt-4 bg-medical-600 hover:bg-medical-700">
@@ -319,20 +356,33 @@ export default function HospitalDashboard() {
               <div className="space-y-4">
                 {recentActivities.length > 0 ? (
                   recentActivities.slice(0, 5).map((activity, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <div className={`p-2 rounded-lg ${
-                        activity.type === 'patient' ? 'bg-blue-100' : 'bg-green-100'
-                      }`}>
-                        {activity.type === 'patient' ? (
-                          <Users className={`h-4 w-4 ${
-                            activity.type === 'patient' ? 'text-blue-600' : 'text-green-600'
-                          }`} />
+                    <div
+                      key={index}
+                      className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div
+                        className={`p-2 rounded-lg ${
+                          activity.type === "patient"
+                            ? "bg-blue-100"
+                            : "bg-green-100"
+                        }`}
+                      >
+                        {activity.type === "patient" ? (
+                          <Users
+                            className={`h-4 w-4 ${
+                              activity.type === "patient"
+                                ? "text-blue-600"
+                                : "text-green-600"
+                            }`}
+                          />
                         ) : (
                           <Heart className="h-4 w-4 text-green-600" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">{activity.activity}</p>
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.activity}
+                        </p>
                         <p className="text-sm text-gray-500">{activity.name}</p>
                       </div>
                       <div className="text-xs text-gray-400">
@@ -341,7 +391,9 @@ export default function HospitalDashboard() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-center py-4">No recent activities</p>
+                  <p className="text-gray-500 text-center py-4">
+                    No recent activities
+                  </p>
                 )}
               </div>
             </CardContent>
@@ -358,12 +410,19 @@ export default function HospitalDashboard() {
             <CardContent>
               <div className="space-y-3">
                 {bloodTypeDistribution.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  >
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-medical-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-bold text-medical-600">{item.blood_type}</span>
+                        <span className="text-xs font-bold text-medical-600">
+                          {item.blood_type}
+                        </span>
                       </div>
-                      <span className="text-sm font-medium">Type {item.blood_type}</span>
+                      <span className="text-sm font-medium">
+                        Type {item.blood_type}
+                      </span>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium text-gray-900">

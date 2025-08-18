@@ -16,16 +16,23 @@ export class IPFSService {
   }
 
   // Pin file to IPFS
-  async pinFile(fileBuffer: Buffer, fileName: string, metadata?: any): Promise<string> {
+  async pinFile(
+    fileBuffer: Buffer,
+    fileName: string,
+    metadata?: any,
+  ): Promise<string> {
     try {
       const formData = new FormData();
       formData.append("file", fileBuffer, fileName);
 
       if (metadata) {
-        formData.append("pinataMetadata", JSON.stringify({
-          name: fileName,
-          keyvalues: metadata
-        }));
+        formData.append(
+          "pinataMetadata",
+          JSON.stringify({
+            name: fileName,
+            keyvalues: metadata,
+          }),
+        );
       }
 
       const response = await axios.post(
@@ -34,9 +41,9 @@ export class IPFSService {
         {
           headers: {
             ...formData.getHeaders(),
-            Authorization: `Bearer ${this.jwtToken}`
-          }
-        }
+            Authorization: `Bearer ${this.jwtToken}`,
+          },
+        },
       );
 
       return response.data.IpfsHash;
@@ -54,15 +61,15 @@ export class IPFSService {
         {
           pinataContent: jsonData,
           pinataMetadata: {
-            name: name
-          }
+            name: name,
+          },
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${this.jwtToken}`
-          }
-        }
+            Authorization: `Bearer ${this.jwtToken}`,
+          },
+        },
       );
 
       return response.data.IpfsHash;
@@ -76,7 +83,7 @@ export class IPFSService {
   async getFile(ipfsHash: string): Promise<Buffer> {
     try {
       const response = await axios.get(`${PINATA_GATEWAY}/${ipfsHash}`, {
-        responseType: 'arraybuffer'
+        responseType: "arraybuffer",
       });
 
       return Buffer.from(response.data);
@@ -94,11 +101,14 @@ export class IPFSService {
   // Test connection
   async testConnection(): Promise<boolean> {
     try {
-      const response = await axios.get(`${PINATA_API_URL}/data/testAuthentication`, {
-        headers: {
-          Authorization: `Bearer ${this.jwtToken}`
-        }
-      });
+      const response = await axios.get(
+        `${PINATA_API_URL}/data/testAuthentication`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.jwtToken}`,
+          },
+        },
+      );
 
       return response.status === 200;
     } catch (error) {
@@ -112,8 +122,8 @@ export class IPFSService {
     try {
       await axios.delete(`${PINATA_API_URL}/pinning/unpin/${ipfsHash}`, {
         headers: {
-          Authorization: `Bearer ${this.jwtToken}`
-        }
+          Authorization: `Bearer ${this.jwtToken}`,
+        },
       });
 
       return true;
