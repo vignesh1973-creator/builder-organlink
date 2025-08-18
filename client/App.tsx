@@ -27,6 +27,7 @@ import AdminPolicies from "./pages/admin/Policies";
 import RegisterOrganization from "./pages/admin/RegisterOrganization";
 import AdminNotifications from "./pages/admin/Notifications";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
+import { HospitalAuthProvider } from "./contexts/HospitalAuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { ToastProvider } from "./contexts/ToastContext";
 
