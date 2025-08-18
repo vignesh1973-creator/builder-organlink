@@ -130,12 +130,12 @@ export default function ResetPasswords() {
       subtitle="Reset login passwords for hospital accounts"
     >
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Search Hospital */}
+        {/* Search Hospital/Organization */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Search className="h-5 w-5 text-medical-600" />
-              <span>Search Hospital</span>
+              <span>Search {searchType === 'hospital' ? 'Hospital' : 'Organization'}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -176,7 +176,7 @@ export default function ResetPasswords() {
               </div>
             </div>
             <Button onClick={handleSearch} disabled={isLoading}>
-              {isLoading ? "Searching..." : "Search Hospital"}
+              {isLoading ? "Searching..." : `Search ${searchType === 'hospital' ? 'Hospital' : 'Organization'}`}
             </Button>
           </CardContent>
         </Card>
