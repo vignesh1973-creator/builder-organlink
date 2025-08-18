@@ -1,0 +1,413 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Users, 
+  Plus, 
+  Search, 
+  Filter,
+  Calendar,
+  Phone,
+  Mail,
+  AlertTriangle,
+  CheckCircle,
+  Eye,
+  ExternalLink
+} from "lucide-react";
+import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
+import { useToast } from "@/contexts/ToastContext";
+
+interface Patient {
+  id: number;
+  patient_id: string;
+  hospital_id: string;
+  full_name: string;
+  age: number;
+  gender: string;
+  blood_type: string;
+  organ_needed: string;
+  urgency_level: string;
+  medical_condition: string;
+  contact_phone: string;
+  contact_email: string;
+  emergency_contact: string;
+  emergency_phone: string;
+  signature_file_path?: string;
+  signature_ipfs_hash?: string;
+  blockchain_tx_hash?: string;
+  signature_verified: boolean;
+  registration_date: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export default function ViewPatients() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterOrgan, setFilterOrgan] = useState("");
+  const [filterUrgency, setFilterUrgency] = useState("");
+  const [filterBloodType, setFilterBloodType] = useState("");
+
+  const { hospital } = useHospitalAuth();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  useEffect(() => {
+    filterPatients();
+  }, [patients, searchTerm, filterOrgan, filterUrgency, filterBloodType]);
+
+  const fetchPatients = async () => {
+    try {
+      const token = localStorage.getItem("hospital_token");
+      const response = await fetch("/api/hospital/patients", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPatients(data.patients);
+      } else {
+        showToast("Failed to load patients", "error");
+      }
+    } catch (error) {
+      console.error("Failed to fetch patients:", error);
+      showToast("Failed to load patients", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterPatients = () => {
+    let filtered = patients;
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(patient =>
+        patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        patient.patient_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        patient.contact_email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Organ filter
+    if (filterOrgan) {
+      filtered = filtered.filter(patient => patient.organ_needed === filterOrgan);
+    }
+
+    // Urgency filter
+    if (filterUrgency) {
+      filtered = filtered.filter(patient => patient.urgency_level === filterUrgency);
+    }
+
+    // Blood type filter
+    if (filterBloodType) {
+      filtered = filtered.filter(patient => patient.blood_type === filterBloodType);
+    }
+
+    setFilteredPatients(filtered);
+  };
+
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency.toLowerCase()) {
+      case 'critical': return 'bg-red-100 text-red-800';
+      case 'high': return 'bg-orange-100 text-orange-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+
+  const organTypes = ["Kidney", "Liver", "Heart", "Lung", "Pancreas", "Cornea", "Bone Marrow"];
+  const urgencyLevels = ["Low", "Medium", "High", "Critical"];
+  const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-medical-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Patients</h1>
+              <p className="text-gray-600 mt-1">
+                {hospital?.hospital_name} • Manage your patient registrations
+              </p>
+            </div>
+            <Link to="/hospital/patients/register">
+              <Button className="bg-medical-600 hover:bg-medical-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Register New Patient
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total Patients</p>
+                  <p className="text-2xl font-bold">{patients.length}</p>
+                </div>
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Active Cases</p>
+                  <p className="text-2xl font-bold">{patients.filter(p => p.is_active).length}</p>
+                </div>
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Verified</p>
+                  <p className="text-2xl font-bold">{patients.filter(p => p.signature_verified).length}</p>
+                </div>
+                <CheckCircle className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Urgent Cases</p>
+                  <p className="text-2xl font-bold">
+                    {patients.filter(p => ['High', 'Critical'].includes(p.urgency_level)).length}
+                  </p>
+                </div>
+                <AlertTriangle className="h-8 w-8 text-red-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Filters */}
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search patients..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              
+              <Select value={filterOrgan} onValueChange={setFilterOrgan}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by organ" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Organs</SelectItem>
+                  {organTypes.map((organ) => (
+                    <SelectItem key={organ} value={organ}>{organ}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filterUrgency} onValueChange={setFilterUrgency}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by urgency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Urgency</SelectItem>
+                  {urgencyLevels.map((level) => (
+                    <SelectItem key={level} value={level}>{level}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filterBloodType} onValueChange={setFilterBloodType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by blood type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Blood Types</SelectItem>
+                  {bloodTypes.map((type) => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterOrgan("");
+                  setFilterUrgency("");
+                  setFilterBloodType("");
+                }}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Clear Filters
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Patients List */}
+        <div className="space-y-4">
+          {filteredPatients.length > 0 ? (
+            filteredPatients.map((patient) => (
+              <Card key={patient.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-4 mb-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {patient.full_name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            ID: {patient.patient_id} • Age: {patient.age} • {patient.gender}
+                          </p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Badge className={getUrgencyColor(patient.urgency_level)}>
+                            {patient.urgency_level}
+                          </Badge>
+                          <Badge variant="outline">
+                            {patient.blood_type}
+                          </Badge>
+                          <Badge className="bg-blue-100 text-blue-800">
+                            {patient.organ_needed}
+                          </Badge>
+                          {patient.signature_verified && (
+                            <Badge className="bg-green-100 text-green-800">
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Verified
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div className="flex items-center text-gray-600">
+                          <Phone className="h-4 w-4 mr-2" />
+                          {patient.contact_phone}
+                        </div>
+                        {patient.contact_email && (
+                          <div className="flex items-center text-gray-600">
+                            <Mail className="h-4 w-4 mr-2" />
+                            {patient.contact_email}
+                          </div>
+                        )}
+                        <div className="flex items-center text-gray-600">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Registered: {formatDate(patient.registration_date)}
+                        </div>
+                      </div>
+
+                      {patient.medical_condition && (
+                        <div className="mt-3">
+                          <p className="text-sm text-gray-600">
+                            <strong>Medical Condition:</strong> {patient.medical_condition}
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-600">
+                          <strong>Emergency Contact:</strong> {patient.emergency_contact} - {patient.emergency_phone}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-2 ml-6">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </Button>
+                      
+                      {patient.signature_ipfs_hash && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(`/api/hospital/upload/ipfs/${patient.signature_ipfs_hash}`, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          View Document
+                        </Button>
+                      )}
+
+                      {patient.blockchain_tx_hash && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(`https://sepolia.etherscan.io/tx/${patient.blockchain_tx_hash}`, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          View on Blockchain
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card>
+              <CardContent className="p-12 text-center">
+                <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No Patients Found</h3>
+                <p className="text-gray-600 mb-6">
+                  {patients.length === 0
+                    ? "No patients have been registered yet."
+                    : "No patients match your current filter criteria."
+                  }
+                </p>
+                <Link to="/hospital/patients/register">
+                  <Button className="bg-medical-600 hover:bg-medical-700">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Register First Patient
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
