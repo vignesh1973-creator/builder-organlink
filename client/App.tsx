@@ -27,6 +27,7 @@ import AdminPolicies from "./pages/admin/Policies";
 import RegisterOrganization from "./pages/admin/RegisterOrganization";
 import AdminNotifications from "./pages/admin/Notifications";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 const queryClient = new QueryClient();
 
@@ -34,8 +35,9 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AdminAuthProvider>
-        <Toaster />
-        <Sonner />
+        <NotificationProvider>
+          <Toaster />
+          <Sonner />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -81,6 +83,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        </NotificationProvider>
       </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
