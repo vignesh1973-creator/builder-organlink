@@ -8,24 +8,24 @@ import { User, Mail, Key } from "lucide-react";
 
 export default function AdminSettings() {
   const [emailSettings, setEmailSettings] = useState({
-    adminEmail: 'admin@organlink.org',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    adminEmail: "admin@organlink.org",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const handlePasswordChange = async () => {
     if (emailSettings.newPassword !== emailSettings.confirmPassword) {
-      alert('Passwords do not match');
+      alert("Passwords do not match");
       return;
     }
 
     // Implement password change logic
-    console.log('Changing password...');
+    console.log("Changing password...");
   };
 
   return (
-    <AdminLayout 
+    <AdminLayout
       title="System Settings"
       subtitle="Configure system settings and administrative profiles"
     >
@@ -46,7 +46,12 @@ export default function AdminSettings() {
                 <Input
                   id="adminEmail"
                   value={emailSettings.adminEmail}
-                  onChange={(e) => setEmailSettings(prev => ({ ...prev, adminEmail: e.target.value }))}
+                  onChange={(e) =>
+                    setEmailSettings((prev) => ({
+                      ...prev,
+                      adminEmail: e.target.value,
+                    }))
+                  }
                   className="flex-1"
                 />
               </div>
@@ -64,7 +69,12 @@ export default function AdminSettings() {
                     id="currentPassword"
                     type="password"
                     value={emailSettings.currentPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, currentPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Enter current password"
                   />
                 </div>
@@ -74,7 +84,12 @@ export default function AdminSettings() {
                     id="newPassword"
                     type="password"
                     value={emailSettings.newPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, newPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Enter new password"
                   />
                 </div>
@@ -84,7 +99,12 @@ export default function AdminSettings() {
                     id="confirmPassword"
                     type="password"
                     value={emailSettings.confirmPassword}
-                    onChange={(e) => setEmailSettings(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    onChange={(e) =>
+                      setEmailSettings((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
                     placeholder="Confirm new password"
                   />
                 </div>

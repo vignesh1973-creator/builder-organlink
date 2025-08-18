@@ -38,51 +38,63 @@ const App = () => (
         <NotificationProvider>
           <Toaster />
           <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/organ-info" element={<OrganInfo />} />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/organ-info" element={<OrganInfo />} />
 
-            {/* Hospital Routes */}
-            <Route path="/hospital/login" element={<HospitalLogin />} />
+              {/* Hospital Routes */}
+              <Route path="/hospital/login" element={<HospitalLogin />} />
 
-            {/* Organization Routes */}
-            <Route path="/organization/login" element={<OrganizationLogin />} />
+              {/* Organization Routes */}
+              <Route
+                path="/organization/login"
+                element={<OrganizationLogin />}
+              />
 
-            {/* Admin Routes */}
-            <Route
-              path="/admin"
-              element={<Navigate to="/admin/login" replace />}
-            />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/hospitals" element={<ManageHospitals />} />
-            <Route
-              path="/admin/hospitals/register"
-              element={<RegisterHospital />}
-            />
-            <Route
-              path="/admin/organizations"
-              element={<ManageOrganizations />}
-            />
-            <Route
-              path="/admin/organizations/register"
-              element={<RegisterOrganization />}
-            />
-            <Route path="/admin/policies" element={<AdminPolicies />} />
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
-            <Route path="/admin/ipfs-logs" element={<IPFSLogs />} />
-            <Route path="/admin/blockchain-logs" element={<BlockchainLogs />} />
-            <Route path="/admin/reset-passwords" element={<ResetPasswords />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={<Navigate to="/admin/login" replace />}
+              />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/hospitals" element={<ManageHospitals />} />
+              <Route
+                path="/admin/hospitals/register"
+                element={<RegisterHospital />}
+              />
+              <Route
+                path="/admin/organizations"
+                element={<ManageOrganizations />}
+              />
+              <Route
+                path="/admin/organizations/register"
+                element={<RegisterOrganization />}
+              />
+              <Route path="/admin/policies" element={<AdminPolicies />} />
+              <Route
+                path="/admin/notifications"
+                element={<AdminNotifications />}
+              />
+              <Route path="/admin/ipfs-logs" element={<IPFSLogs />} />
+              <Route
+                path="/admin/blockchain-logs"
+                element={<BlockchainLogs />}
+              />
+              <Route
+                path="/admin/reset-passwords"
+                element={<ResetPasswords />}
+              />
+              <Route path="/admin/settings" element={<AdminSettings />} />
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </NotificationProvider>
       </AdminAuthProvider>
     </TooltipProvider>

@@ -267,7 +267,7 @@ export default function AdminDashboard() {
               <Button
                 className="w-full justify-start"
                 variant="outline"
-                onClick={() => navigate('/admin/hospitals/register')}
+                onClick={() => navigate("/admin/hospitals/register")}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Hospital
@@ -275,7 +275,7 @@ export default function AdminDashboard() {
               <Button
                 className="w-full justify-start"
                 variant="outline"
-                onClick={() => navigate('/admin/organizations/register')}
+                onClick={() => navigate("/admin/organizations/register")}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Organization
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
               <Button
                 className="w-full justify-start"
                 variant="outline"
-                onClick={() => navigate('/admin/ipfs-logs')}
+                onClick={() => navigate("/admin/ipfs-logs")}
               >
                 <Database className="mr-2 h-4 w-4" />
                 View IPFS Logs
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
               <Button
                 className="w-full justify-start"
                 variant="outline"
-                onClick={() => navigate('/admin/settings')}
+                onClick={() => navigate("/admin/settings")}
               >
                 <Settings className="mr-2 h-4 w-4" />
                 System Settings

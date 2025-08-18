@@ -31,7 +31,9 @@ export default function ManageHospitals() {
   const [loading, setLoading] = useState(true);
   const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [deletingHospital, setDeletingHospital] = useState<Hospital | null>(null);
+  const [deletingHospital, setDeletingHospital] = useState<Hospital | null>(
+    null,
+  );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { success, error } = useToast();
@@ -165,36 +167,50 @@ export default function ManageHospitals() {
 
     setIsDeleting(true);
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch(`/api/admin/hospitals/${deletingHospital.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(
+        `/api/admin/hospitals/${deletingHospital.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       if (response.ok) {
-        setHospitals(prev => prev.filter(h => h.id !== deletingHospital.id));
-        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
-        success('Hospital deleted successfully', `${deletingHospital.name} has been removed from the system.`);
+        setHospitals((prev) =>
+          prev.filter((h) => h.id !== deletingHospital.id),
+        );
+        setPagination((prev) => ({ ...prev, total: prev.total - 1 }));
+        success(
+          "Hospital deleted successfully",
+          `${deletingHospital.name} has been removed from the system.`,
+        );
         setIsDeleteModalOpen(false);
         setDeletingHospital(null);
       } else {
-        error('Failed to delete hospital', 'Please try again or contact support.');
+        error(
+          "Failed to delete hospital",
+          "Please try again or contact support.",
+        );
       }
     } catch (err) {
-      console.error('Delete error:', err);
-      error('Network error', 'Please check your connection and try again.');
+      console.error("Delete error:", err);
+      error("Network error", "Please check your connection and try again.");
     } finally {
       setIsDeleting(false);
     }
   };
 
   const handleUpdate = (updatedHospital: Hospital) => {
-    setHospitals(prev =>
-      prev.map(h => h.id === updatedHospital.id ? updatedHospital : h)
+    setHospitals((prev) =>
+      prev.map((h) => (h.id === updatedHospital.id ? updatedHospital : h)),
     );
-    success('Hospital updated successfully', `${updatedHospital.name} information has been updated.`);
+    success(
+      "Hospital updated successfully",
+      `${updatedHospital.name} information has been updated.`,
+    );
   };
 
   const actions = [
@@ -273,7 +289,7 @@ export default function ManageHospitals() {
               Hospitals ({pagination.total})
             </span>
           </div>
-          <Button onClick={() => navigate('/admin/hospitals/register')}>
+          <Button onClick={() => navigate("/admin/hospitals/register")}>
             <Plus className="h-4 w-4 mr-2" />
             Add Hospital
           </Button>
@@ -312,7 +328,7 @@ export default function ManageHospitals() {
             setDeletingHospital(null);
           }}
           onConfirm={handleDeleteConfirm}
-          title={`Delete ${deletingHospital?.name || 'Hospital'}`}
+          title={`Delete ${deletingHospital?.name || "Hospital"}`}
           description={`Are you sure you want to delete "${deletingHospital?.name}"? This will permanently remove the hospital and all associated data from the system.`}
           isLoading={isDeleting}
         />

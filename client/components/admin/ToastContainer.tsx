@@ -10,32 +10,34 @@ interface ToastItemProps {
 function ToastItem({ toast, onRemove }: ToastItemProps) {
   const getIcon = () => {
     switch (toast.type) {
-      case 'success':
+      case "success":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'error':
+      case "error":
         return <XCircle className="h-5 w-5 text-red-500" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
-      case 'info':
+      case "info":
         return <Info className="h-5 w-5 text-blue-500" />;
     }
   };
 
   const getBackgroundColor = () => {
     switch (toast.type) {
-      case 'success':
-        return 'bg-green-50 border-green-200';
-      case 'error':
-        return 'bg-red-50 border-red-200';
-      case 'warning':
-        return 'bg-yellow-50 border-yellow-200';
-      case 'info':
-        return 'bg-blue-50 border-blue-200';
+      case "success":
+        return "bg-green-50 border-green-200";
+      case "error":
+        return "bg-red-50 border-red-200";
+      case "warning":
+        return "bg-yellow-50 border-yellow-200";
+      case "info":
+        return "bg-blue-50 border-blue-200";
     }
   };
 
   return (
-    <div className={`p-4 rounded-lg border ${getBackgroundColor()} shadow-lg mb-2 animate-slide-up`}>
+    <div
+      className={`p-4 rounded-lg border ${getBackgroundColor()} shadow-lg mb-2 animate-slide-up`}
+    >
       <div className="flex items-start space-x-3">
         {getIcon()}
         <div className="flex-1 min-w-0">

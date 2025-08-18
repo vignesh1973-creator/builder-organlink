@@ -27,9 +27,11 @@ export default function ManageOrganizations() {
   const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingOrganization, setEditingOrganization] = useState<Organization | null>(null);
+  const [editingOrganization, setEditingOrganization] =
+    useState<Organization | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [deletingOrganization, setDeletingOrganization] = useState<Organization | null>(null);
+  const [deletingOrganization, setDeletingOrganization] =
+    useState<Organization | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { success, error } = useToast();
@@ -131,36 +133,52 @@ export default function ManageOrganizations() {
 
     setIsDeleting(true);
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch(`/api/admin/organizations/${deletingOrganization.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(
+        `/api/admin/organizations/${deletingOrganization.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       if (response.ok) {
-        setOrganizations(prev => prev.filter(o => o.id !== deletingOrganization.id));
-        setPagination(prev => ({ ...prev, total: prev.total - 1 }));
-        success('Organization deleted successfully', `${deletingOrganization.name} has been removed from the system.`);
+        setOrganizations((prev) =>
+          prev.filter((o) => o.id !== deletingOrganization.id),
+        );
+        setPagination((prev) => ({ ...prev, total: prev.total - 1 }));
+        success(
+          "Organization deleted successfully",
+          `${deletingOrganization.name} has been removed from the system.`,
+        );
         setIsDeleteModalOpen(false);
         setDeletingOrganization(null);
       } else {
-        error('Failed to delete organization', 'Please try again or contact support.');
+        error(
+          "Failed to delete organization",
+          "Please try again or contact support.",
+        );
       }
     } catch (err) {
-      console.error('Delete error:', err);
-      error('Network error', 'Please check your connection and try again.');
+      console.error("Delete error:", err);
+      error("Network error", "Please check your connection and try again.");
     } finally {
       setIsDeleting(false);
     }
   };
 
   const handleUpdate = (updatedOrganization: Organization) => {
-    setOrganizations(prev =>
-      prev.map(o => o.id === updatedOrganization.id ? updatedOrganization : o)
+    setOrganizations((prev) =>
+      prev.map((o) =>
+        o.id === updatedOrganization.id ? updatedOrganization : o,
+      ),
     );
-    success('Organization updated successfully', `${updatedOrganization.name} information has been updated.`);
+    success(
+      "Organization updated successfully",
+      `${updatedOrganization.name} information has been updated.`,
+    );
   };
 
   const actions = [
@@ -226,7 +244,7 @@ export default function ManageOrganizations() {
               Organizations ({pagination.total})
             </span>
           </div>
-          <Button onClick={() => navigate('/admin/organizations/register')}>
+          <Button onClick={() => navigate("/admin/organizations/register")}>
             <Plus className="h-4 w-4 mr-2" />
             Add Organization
           </Button>
@@ -267,7 +285,7 @@ export default function ManageOrganizations() {
             setDeletingOrganization(null);
           }}
           onConfirm={handleDeleteConfirm}
-          title={`Delete ${deletingOrganization?.name || 'Organization'}`}
+          title={`Delete ${deletingOrganization?.name || "Organization"}`}
           description={`Are you sure you want to delete "${deletingOrganization?.name}"? This will permanently remove the organization and all associated data from the system.`}
           isLoading={isDeleting}
         />

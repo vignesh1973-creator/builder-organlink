@@ -2,8 +2,20 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
 interface Organization {
@@ -25,7 +37,12 @@ interface EditOrganizationModalProps {
   onUpdate: (organization: Organization) => void;
 }
 
-export default function EditOrganizationModal({ organization, isOpen, onClose, onUpdate }: EditOrganizationModalProps) {
+export default function EditOrganizationModal({
+  organization,
+  isOpen,
+  onClose,
+  onUpdate,
+}: EditOrganizationModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -36,7 +53,7 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
     phone: "",
     address: "",
     website: "",
-    status: "active"
+    status: "active",
   });
 
   useEffect(() => {
@@ -49,13 +66,13 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
         phone: organization.phone || "",
         address: organization.address || "",
         website: organization.website || "",
-        status: organization.status || "active"
+        status: organization.status || "active",
       });
     }
   }, [organization]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,15 +83,18 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
     setError("");
 
     try {
-      const token = localStorage.getItem('admin_token');
-      const response = await fetch(`/api/admin/organizations/${organization.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(
+        `/api/admin/organizations/${organization.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData)
-      });
+      );
 
       const data = await response.json();
 
@@ -82,11 +102,11 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
         onUpdate({ ...organization, ...formData });
         onClose();
       } else {
-        setError(data.error || 'Failed to update organization');
+        setError(data.error || "Failed to update organization");
       }
     } catch (error) {
-      console.error('Update error:', error);
-      setError('Network error. Please try again.');
+      console.error("Update error:", error);
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +120,7 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
         <DialogHeader>
           <DialogTitle>Edit Organization - {organization.name}</DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -108,13 +128,16 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                onChange={(e) => handleInputChange("name", e.target.value)}
                 required
               />
             </div>
             <div>
               <Label htmlFor="type">Type *</Label>
-              <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+              <Select
+                value={formData.type}
+                onValueChange={(value) => handleInputChange("type", value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -132,7 +155,10 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="country">Country *</Label>
-              <Select value={formData.country} onValueChange={(value) => handleInputChange('country', value)}>
+              <Select
+                value={formData.country}
+                onValueChange={(value) => handleInputChange("country", value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -151,7 +177,7 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                onChange={(e) => handleInputChange("email", e.target.value)}
                 required
               />
             </div>
@@ -163,7 +189,7 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
               <Input
                 id="phone"
                 value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
               />
             </div>
             <div>
@@ -171,7 +197,7 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
               <Input
                 id="website"
                 value={formData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
+                onChange={(e) => handleInputChange("website", e.target.value)}
               />
             </div>
           </div>
@@ -181,14 +207,17 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
             <Textarea
               id="address"
               value={formData.address}
-              onChange={(e) => handleInputChange('address', e.target.value)}
+              onChange={(e) => handleInputChange("address", e.target.value)}
               rows={3}
             />
           </div>
 
           <div>
             <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => handleInputChange("status", value)}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -206,7 +235,12 @@ export default function EditOrganizationModal({ organization, isOpen, onClose, o
           )}
 
           <DialogFooter className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
