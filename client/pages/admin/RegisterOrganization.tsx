@@ -14,7 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/contexts/ToastContext";
 import ToastContainer from "@/components/admin/ToastContainer";
 import { Users, Eye, EyeOff } from "lucide-react";
 
