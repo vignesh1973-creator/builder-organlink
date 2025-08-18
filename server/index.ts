@@ -7,6 +7,9 @@ import hospitalRoutes from "./routes/hospitals";
 import organizationRoutes from "./routes/organizations";
 import dashboardRoutes from "./routes/dashboard";
 import logsRoutes from "./routes/logs";
+import hospitalAuthRoutes from "./routes/hospital-auth";
+import hospitalPatientsRoutes from "./routes/hospital-patients";
+import hospitalDonorsRoutes from "./routes/hospital-donors";
 
 export function createServer() {
   const app = express();
