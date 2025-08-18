@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
 
     // Find hospital by ID
     const result = await pool.query(
-      "SELECT * FROM hospital_credentials WHERE hospital_id = $1 AND is_active = true",
+      "SELECT * FROM hospitals WHERE hospital_id = $1 AND status = 'active'",
       [hospital_id]
     );
 
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
     const hospital = result.rows[0];
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, hospital.password_hash);
+    const isValidPassword = await bcrypt.compare(password, hospital.password);
 
     if (!isValidPassword) {
       return res.status(401).json({
