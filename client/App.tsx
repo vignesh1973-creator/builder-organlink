@@ -24,6 +24,8 @@ import BlockchainLogs from "./pages/admin/BlockchainLogs";
 import ResetPasswords from "./pages/admin/ResetPasswords";
 import AdminSettings from "./pages/admin/Settings";
 import AdminPolicies from "./pages/admin/Policies";
+import RegisterOrganization from "./pages/admin/RegisterOrganization";
+import AdminNotifications from "./pages/admin/Notifications";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 
 const queryClient = new QueryClient();
@@ -64,7 +66,12 @@ const App = () => (
               path="/admin/organizations"
               element={<ManageOrganizations />}
             />
+            <Route
+              path="/admin/organizations/register"
+              element={<RegisterOrganization />}
+            />
             <Route path="/admin/policies" element={<AdminPolicies />} />
+            <Route path="/admin/notifications" element={<AdminNotifications />} />
             <Route path="/admin/ipfs-logs" element={<IPFSLogs />} />
             <Route path="/admin/blockchain-logs" element={<BlockchainLogs />} />
             <Route path="/admin/reset-passwords" element={<ResetPasswords />} />
