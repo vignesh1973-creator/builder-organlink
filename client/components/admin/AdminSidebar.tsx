@@ -56,11 +56,7 @@ const navigation = [
   },
 ];
 
-interface AdminSidebarProps {
-  notifications?: number;
-}
-
-export default function AdminSidebar({ notifications = 3 }: AdminSidebarProps) {
+export default function AdminSidebar() {
   const location = useLocation();
 
   return (
@@ -102,11 +98,6 @@ export default function AdminSidebar({ notifications = 3 }: AdminSidebarProps) {
                 )}
               />
               {item.name}
-              {item.name === "Dashboard" && notifications > 0 && (
-                <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
-                  {notifications}
-                </span>
-              )}
             </Link>
           );
         })}
