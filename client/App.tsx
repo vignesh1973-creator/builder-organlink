@@ -60,6 +60,8 @@ const App = () => (
               <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
               <Route path="/hospital/patients/register" element={<RegisterPatient />} />
               <Route path="/hospital/donors/register" element={<RegisterDonor />} />
+              <Route path="/hospital/patients" element={<ViewPatients />} />
+              <Route path="/hospital/donors" element={<ViewDonors />} />
 
               {/* Organization Routes */}
               <Route
