@@ -93,13 +93,13 @@ export default function HospitalLogin() {
   };
 
   const handleForgotPassword = async () => {
-    if (!selectedHospital || !resetEmail) {
-      showToast("Please select hospital and enter email", "error");
+    if (!hospitalId || !resetEmail) {
+      showToast("Please enter hospital ID and email", "error");
       return;
     }
 
-    const result = await requestPasswordReset(selectedHospital, resetEmail);
-    
+    const result = await requestPasswordReset(hospitalId, resetEmail);
+
     if (result.success) {
       showToast("Password reset request sent to admin for approval", "success");
       setShowForgotPassword(false);
