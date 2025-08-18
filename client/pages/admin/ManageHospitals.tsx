@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import AdminLayout from "@/components/admin/AdminLayout";
 import DataTable from "@/components/admin/DataTable";
 import EditHospitalModal from "@/components/admin/EditHospitalModal";
+import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
+import ToastContainer from "@/components/admin/ToastContainer";
+import { useToast } from "@/hooks/useToast";
 import { Plus, Building2, Edit, Trash2 } from "lucide-react";
 
 interface Hospital {
@@ -28,6 +31,10 @@ export default function ManageHospitals() {
   const [loading, setLoading] = useState(true);
   const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingHospital, setDeletingHospital] = useState<Hospital | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { success, error } = useToast();
   const [pagination, setPagination] = useState({
     page: 1,
     pages: 1,
@@ -148,14 +155,18 @@ export default function ManageHospitals() {
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = async (hospital: Hospital) => {
-    if (!confirm(`Are you sure you want to delete ${hospital.name}?`)) {
-      return;
-    }
+  const handleDeleteClick = (hospital: Hospital) => {
+    setDeletingHospital(hospital);
+    setIsDeleteModalOpen(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!deletingHospital) return;
+
+    setIsDeleting(true);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`/api/admin/hospitals/${hospital.id}`, {
+      const response = await fetch(`/api/admin/hospitals/${deletingHospital.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -163,14 +174,19 @@ export default function ManageHospitals() {
       });
 
       if (response.ok) {
-        setHospitals(prev => prev.filter(h => h.id !== hospital.id));
+        setHospitals(prev => prev.filter(h => h.id !== deletingHospital.id));
         setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+        success('Hospital deleted successfully', `${deletingHospital.name} has been removed from the system.`);
+        setIsDeleteModalOpen(false);
+        setDeletingHospital(null);
       } else {
-        alert('Failed to delete hospital');
+        error('Failed to delete hospital', 'Please try again or contact support.');
       }
-    } catch (error) {
-      console.error('Delete error:', error);
-      alert('Network error. Please try again.');
+    } catch (err) {
+      console.error('Delete error:', err);
+      error('Network error', 'Please check your connection and try again.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -178,6 +194,7 @@ export default function ManageHospitals() {
     setHospitals(prev =>
       prev.map(h => h.id === updatedHospital.id ? updatedHospital : h)
     );
+    success('Hospital updated successfully', `${updatedHospital.name} information has been updated.`);
   };
 
   const actions = [
@@ -188,7 +205,7 @@ export default function ManageHospitals() {
     },
     {
       label: <Trash2 className="h-4 w-4" />,
-      onClick: handleDelete,
+      onClick: handleDeleteClick,
       variant: "destructive" as const,
     },
   ];
@@ -287,6 +304,20 @@ export default function ManageHospitals() {
           }}
           onUpdate={handleUpdate}
         />
+
+        <DeleteConfirmModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setDeletingHospital(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+          title={`Delete ${deletingHospital?.name || 'Hospital'}`}
+          description={`Are you sure you want to delete "${deletingHospital?.name}"? This will permanently remove the hospital and all associated data from the system.`}
+          isLoading={isDeleting}
+        />
+
+        <ToastContainer />
       </div>
     </AdminLayout>
   );
