@@ -1,8 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, LogOut, User } from "lucide-react";
+import { Bell, LogOut, User } from "lucide-react";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useNotifications } from "@/contexts/NotificationContext";
 import AdminSidebar from "./AdminSidebar";
 import NotificationDropdown from "./NotificationDropdown";
 
@@ -18,6 +19,7 @@ export default function AdminLayout({
   subtitle = "Monitor and manage the entire OrganLink ecosystem",
 }: AdminLayoutProps) {
   const { user, logout, isLoading } = useAdminAuth();
+  const { unreadCount } = useNotifications();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
@@ -62,16 +64,6 @@ export default function AdminLayout({
             </div>
 
             <div className="flex items-center space-x-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-transparent"
-                />
-              </div>
-
               {/* Notifications */}
               <div className="relative">
                 <Button
@@ -81,9 +73,11 @@ export default function AdminLayout({
                   onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                 >
                   <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                    3
-                  </span>
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
                 </Button>
                 <NotificationDropdown
                   isOpen={isNotificationOpen}
