@@ -87,18 +87,19 @@ router.post("/login", async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
+      {
         hospital_id: hospital.hospital_id,
-        hospital_name: hospital.hospital_name,
+        hospital_name: hospital.name,
         email: hospital.email,
-        wallet_address: hospital.wallet_address
+        city: hospital.city,
+        country: hospital.country
       },
       process.env.JWT_SECRET || "hospital-secret",
       { expiresIn: "24h" }
     );
 
     // Return hospital info without password
-    const { password_hash, ...hospitalInfo } = hospital;
+    const { password, ...hospitalInfo } = hospital;
 
     res.json({
       success: true,
