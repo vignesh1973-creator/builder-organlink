@@ -1,4 +1,4 @@
-import { useToast, Toast } from "@/hooks/useToast";
+import { useToast, Toast } from "@/contexts/ToastContext";
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
