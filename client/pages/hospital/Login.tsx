@@ -73,14 +73,14 @@ export default function HospitalLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedHospital || !password) {
-      showToast("Please select hospital and enter password", "error");
+    if (!hospitalId || !password) {
+      showToast("Please enter hospital ID and password", "error");
       return;
     }
 
     setIsLoading(true);
 
-    const result = await login(selectedHospital, password);
+    const result = await login(hospitalId, password);
 
     if (result.success) {
       showToast("Login successful! Welcome to OrganLink", "success");
