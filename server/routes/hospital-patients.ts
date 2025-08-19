@@ -289,4 +289,42 @@ router.put("/:patient_id", authenticateHospital, async (req, res) => {
   }
 });
 
+// Delete patient
+router.delete("/:patient_id", authenticateHospital, async (req, res) => {
+  try {
+    const hospital_id = req.hospital?.hospital_id;
+    const { patient_id } = req.params;
+
+    // Verify patient belongs to this hospital
+    const patientCheck = await pool.query(
+      "SELECT patient_id FROM patients WHERE patient_id = $1 AND hospital_id = $2",
+      [patient_id, hospital_id],
+    );
+
+    if (patientCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Patient not found or doesn't belong to your hospital",
+      });
+    }
+
+    // Delete the patient
+    await pool.query(
+      "DELETE FROM patients WHERE patient_id = $1 AND hospital_id = $2",
+      [patient_id, hospital_id],
+    );
+
+    res.json({
+      success: true,
+      message: "Patient deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting patient:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to delete patient",
+    });
+  }
+});
+
 export default router;
