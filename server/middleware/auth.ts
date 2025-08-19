@@ -68,6 +68,7 @@ export const authenticateHospital = (
       return res.status(403).json({ error: "Invalid or expired token" });
     }
     req.hospital = hospital;
+    req.hospitalId = hospital.hospital_id; // For convenience
     next();
   });
 };
