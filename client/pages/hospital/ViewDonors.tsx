@@ -107,14 +107,14 @@ export default function ViewDonors() {
     }
 
     // Organ filter
-    if (filterOrgan) {
+    if (filterOrgan && filterOrgan !== "all") {
       filtered = filtered.filter((donor) =>
         donor.organs_to_donate.includes(filterOrgan),
       );
     }
 
     // Blood type filter
-    if (filterBloodType) {
+    if (filterBloodType && filterBloodType !== "all") {
       filtered = filtered.filter(
         (donor) => donor.blood_type === filterBloodType,
       );
