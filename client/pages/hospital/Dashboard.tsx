@@ -76,7 +76,7 @@ export default function HospitalDashboard() {
   const [loading, setLoading] = useState(true);
 
   const { hospital } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError } = useToast();
 
   useEffect(() => {
     fetchDashboardData();
