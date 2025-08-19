@@ -74,7 +74,7 @@ export default function RegisterDonor() {
   const [registeredDonorId, setRegisteredDonorId] = useState("");
 
   const { hospital } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
   const navigate = useNavigate();
 
   const handleInputChange = (field: keyof DonorFormData, value: string | number | string[]) => {
@@ -95,7 +95,7 @@ export default function RegisterDonor() {
     if (!file) return;
 
     if (!registeredDonorId) {
-      showToast("Please register donor details first", "error");
+      showError("Please register donor details first");
       return;
     }
 
@@ -132,14 +132,14 @@ export default function RegisterDonor() {
         // Update donor record with IPFS hash
         await updateDonorSignature(registeredDonorId, result.ipfsHash);
 
-        showToast("Signature uploaded successfully!", "success");
+        showSuccess("Signature uploaded successfully!");
         setCurrentStep(3);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
       console.error("Upload error:", error);
-      showToast("Failed to upload signature", "error");
+      showError("Failed to upload signature");
     } finally {
       setSignatureStatus(prev => ({ ...prev, uploading: false }));
     }
@@ -166,7 +166,7 @@ export default function RegisterDonor() {
 
   const registerToBlockchain = async () => {
     if (!signatureStatus.ipfsHash) {
-      showToast("Please upload signature first", "error");
+      showError("Please upload signature first");
       return;
     }
 
@@ -197,7 +197,7 @@ export default function RegisterDonor() {
           blockchainTxHash: result.blockchainTxHash
         }));
 
-        showToast("Donor registered on blockchain successfully!", "success");
+        showSuccess("Donor registered on blockchain successfully!");
         setTimeout(() => {
           navigate("/hospital/donors");
         }, 2000);
@@ -206,7 +206,7 @@ export default function RegisterDonor() {
       }
     } catch (error) {
       console.error("Blockchain registration error:", error);
-      showToast("Failed to register on blockchain", "error");
+      showError("Failed to register on blockchain");
     } finally {
       setIsSubmitting(false);
     }
@@ -231,14 +231,14 @@ export default function RegisterDonor() {
 
       if (result.success) {
         setRegisteredDonorId(result.donor.donor_id);
-        showToast("Donor details registered successfully!", "success");
+        showSuccess("Donor details registered successfully!");
         setCurrentStep(2);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
       console.error("Registration error:", error);
-      showToast("Failed to register donor", "error");
+      showError("Failed to register donor");
     } finally {
       setIsSubmitting(false);
     }
