@@ -141,17 +141,51 @@ router.get("/", authenticateHospital, async (req, res) => {
 
     const organDistribution = Array.from(organMap.values());
 
-    // Blood type stats
-    const bloodTypeStats = [
-      { bloodType: "A+", patients: 28, donors: 15, compatibility: 85 },
-      { bloodType: "O+", patients: 35, donors: 22, compatibility: 90 },
-      { bloodType: "B+", patients: 20, donors: 12, compatibility: 75 },
-      { bloodType: "AB+", patients: 8, donors: 5, compatibility: 65 },
-      { bloodType: "A-", patients: 12, donors: 8, compatibility: 70 },
-      { bloodType: "O-", patients: 15, donors: 18, compatibility: 95 },
-      { bloodType: "B-", patients: 6, donors: 4, compatibility: 60 },
-      { bloodType: "AB-", patients: 4, donors: 2, compatibility: 50 },
-    ];
+    // Get actual blood type stats from database
+    const bloodPatientsQuery = `
+      SELECT
+        blood_type,
+        COUNT(*) as patients
+      FROM patients
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY blood_type
+    `;
+
+    const bloodDonorsQuery = `
+      SELECT
+        blood_type,
+        COUNT(*) as donors
+      FROM donors
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY blood_type
+    `;
+
+    const [bloodPatientsResult, bloodDonorsResult] = await Promise.all([
+      pool.query(bloodPatientsQuery, [hospitalId]),
+      pool.query(bloodDonorsQuery, [hospitalId])
+    ]);
+
+    // Combine blood type data
+    const bloodTypeMap = new Map();
+    const allBloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+    allBloodTypes.forEach(type => {
+      bloodTypeMap.set(type, { bloodType: type, patients: 0, donors: 0, compatibility: 75 });
+    });
+
+    bloodPatientsResult.rows.forEach(row => {
+      if (bloodTypeMap.has(row.blood_type)) {
+        bloodTypeMap.get(row.blood_type).patients = parseInt(row.patients);
+      }
+    });
+
+    bloodDonorsResult.rows.forEach(row => {
+      if (bloodTypeMap.has(row.blood_type)) {
+        bloodTypeMap.get(row.blood_type).donors = parseInt(row.donors);
+      }
+    });
+
+    const bloodTypeStats = Array.from(bloodTypeMap.values()).filter(item => item.patients > 0 || item.donors > 0);
 
     // Urgency stats
     const urgencyStats = [
