@@ -426,9 +426,13 @@ export default function ViewPatients() {
                     </div>
 
                     <div className="flex flex-col space-y-2 ml-6">
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditPatient(patient)}
+                      >
                         <Eye className="h-4 w-4 mr-2" />
-                        View Details
+                        Edit Details
                       </Button>
 
                       {patient.signature_ipfs_hash && (
