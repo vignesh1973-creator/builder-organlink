@@ -27,6 +27,7 @@ import {
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
 import HospitalLayout from "@/components/hospital/HospitalLayout";
+import EditPatientModal from "@/components/hospital/EditPatientModal";
 
 interface Patient {
   id: number;
