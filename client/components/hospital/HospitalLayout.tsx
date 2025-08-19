@@ -19,7 +19,9 @@ export default function HospitalLayout({
   subtitle,
 }: HospitalLayoutProps) {
   const { hospital, logout, loading } = useHospitalAuth();
+  const { unreadCount } = useHospitalNotifications();
   const navigate = useNavigate();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !hospital) {
