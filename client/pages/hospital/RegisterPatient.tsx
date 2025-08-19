@@ -83,7 +83,7 @@ export default function RegisterPatient() {
   const [registeredPatientId, setRegisteredPatientId] = useState("");
 
   const { hospital } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
   const navigate = useNavigate();
 
   const handleInputChange = (
@@ -100,7 +100,7 @@ export default function RegisterPatient() {
     if (!file) return;
 
     if (!registeredPatientId) {
-      showToast("Please register patient details first", "error");
+      showError("Please register patient details first");
       return;
     }
 
@@ -137,14 +137,14 @@ export default function RegisterPatient() {
         // Update patient record with IPFS hash
         await updatePatientSignature(registeredPatientId, result.ipfsHash);
 
-        showToast("Signature uploaded successfully!", "success");
+        showSuccess("Signature uploaded successfully!");
         setCurrentStep(3);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
       console.error("Upload error:", error);
-      showToast("Failed to upload signature", "error");
+      showError("Failed to upload signature");
     } finally {
       setSignatureStatus((prev) => ({ ...prev, uploading: false }));
     }
@@ -174,7 +174,7 @@ export default function RegisterPatient() {
 
   const registerToBlockchain = async () => {
     if (!signatureStatus.ipfsHash) {
-      showToast("Please upload signature first", "error");
+      showError("Please upload signature first");
       return;
     }
 
@@ -213,7 +213,7 @@ export default function RegisterPatient() {
           signatureStatus.ipfsHash,
         );
 
-        showToast("Patient registered on blockchain successfully!", "success");
+        showSuccess("Patient registered on blockchain successfully!");
         setTimeout(() => {
           navigate("/hospital/patients");
         }, 2000);
@@ -222,7 +222,7 @@ export default function RegisterPatient() {
       }
     } catch (error) {
       console.error("Blockchain registration error:", error);
-      showToast("Failed to register on blockchain", "error");
+      showError("Failed to register on blockchain");
     } finally {
       setIsSubmitting(false);
     }
@@ -247,14 +247,14 @@ export default function RegisterPatient() {
 
       if (result.success) {
         setRegisteredPatientId(result.patient.patient_id);
-        showToast("Patient details registered successfully!", "success");
+        showSuccess("Patient details registered successfully!");
         setCurrentStep(2);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
       console.error("Registration error:", error);
-      showToast("Failed to register patient", "error");
+      showError("Failed to register patient");
     } finally {
       setIsSubmitting(false);
     }
