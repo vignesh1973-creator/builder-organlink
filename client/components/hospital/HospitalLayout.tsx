@@ -65,13 +65,25 @@ export default function HospitalLayout({
 
             <div className="flex items-center space-x-4">
               {/* Notifications */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative"
-              >
-                <Bell className="h-5 w-5" />
-              </Button>
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative"
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </Button>
+                <HospitalNotificationDropdown
+                  isOpen={isNotificationOpen}
+                  onClose={() => setIsNotificationOpen(false)}
+                />
+              </div>
 
               {/* User Menu */}
               <div className="flex items-center space-x-3">
