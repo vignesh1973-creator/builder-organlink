@@ -23,6 +23,7 @@ import {
   CheckCircle,
   Eye,
   ExternalLink,
+  Trash2,
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
