@@ -138,12 +138,9 @@ export default function HospitalLogin() {
   };
 
   const countries = Object.keys(locations);
-  const states = selectedCountry ? Object.keys(locations[selectedCountry] || {}) : [];
-  const cities = selectedCountry && selectedState ? Object.keys(locations[selectedCountry][selectedState] || {}) : [];
-  const hospitals = selectedCountry && selectedState && selectedCity ? 
-    locations[selectedCountry][selectedState][selectedCity] || [] : 
-    selectedCountry && selectedCity && locations[selectedCountry][selectedCity] ? 
-    locations[selectedCountry][selectedCity] : [];
+  const cities = selectedCountry ? Object.keys(locations[selectedCountry] || {}) : [];
+  const hospitals = selectedCountry && selectedCity ?
+    locations[selectedCountry][selectedCity] || [] : [];
 
   return (
     <div className="min-h-screen flex flex-col">
