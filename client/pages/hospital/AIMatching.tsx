@@ -215,6 +215,10 @@ export default function AIMatching() {
         }),
       });
 
+      if (!res.ok) {
+        throw new Error(`Response failed with status ${res.status}`);
+      }
+
       const data = await res.json();
 
       if (data.success) {
