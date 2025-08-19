@@ -359,11 +359,18 @@ export default function AIMatching() {
                                 </Badge>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-                                <div>
-                                  Compatibility: {match.compatibility_score}%
+                              <div className="space-y-2 mb-3">
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div>Blood: {match.compatibility_score}%</div>
+                                  <div>Distance: {match.distance_score}%</div>
+                                  <div>Urgency: {match.urgency_bonus}%</div>
+                                  <div>Medical: {match.medical_risk_score}%</div>
                                 </div>
-                                <div>Distance: {match.distance_score}%</div>
+                                {match.explanation && (
+                                  <p className="text-xs text-gray-600 italic">
+                                    {match.explanation}
+                                  </p>
+                                )}
                               </div>
 
                               <div className="flex flex-wrap gap-1 mb-3">
