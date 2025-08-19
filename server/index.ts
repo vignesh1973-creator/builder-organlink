@@ -13,6 +13,7 @@ import hospitalDonorsRoutes from "./routes/hospital-donors";
 import hospitalDashboardRoutes from "./routes/hospital-dashboard";
 import fileUploadRoutes from "./routes/file-upload";
 import hospitalMatchingRoutes from "./routes/hospital-matching";
+import hospitalReportsRoutes from "./routes/hospital-reports";
 
 export function createServer() {
   const app = express();
