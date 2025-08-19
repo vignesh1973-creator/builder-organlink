@@ -94,7 +94,7 @@ export default function HospitalLogin() {
       setSelectedHospital({
         id: hospital.id,
         name: hospital.name,
-        location: `${selectedCity}, ${selectedCountry}`
+        location: `${selectedCity}, ${selectedState}, ${selectedCountry}`
       });
     }
   };
