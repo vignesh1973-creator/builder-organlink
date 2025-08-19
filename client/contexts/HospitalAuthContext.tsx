@@ -95,14 +95,23 @@ export const HospitalAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         body: JSON.stringify({ hospital_id, password }),
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem("hospital_token", data.token);
-        setHospital(data.hospital);
-        return { success: true };
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          localStorage.setItem("hospital_token", data.token);
+          setHospital(data.hospital);
+          return { success: true };
+        } else {
+          return { success: false, error: data.error };
+        }
       } else {
-        return { success: false, error: data.error };
+        // Handle non-ok responses
+        try {
+          const errorData = await response.json();
+          return { success: false, error: errorData.error || "Login failed" };
+        } catch {
+          return { success: false, error: `Login failed with status ${response.status}` };
+        }
       }
     } catch (error) {
       console.error("Login failed:", error);
