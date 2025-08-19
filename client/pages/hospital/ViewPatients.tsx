@@ -319,9 +319,9 @@ export default function ViewPatients() {
                 variant="outline"
                 onClick={() => {
                   setSearchTerm("");
-                  setFilterOrgan("");
-                  setFilterUrgency("");
-                  setFilterBloodType("");
+                  setFilterOrgan("all");
+                  setFilterUrgency("all");
+                  setFilterBloodType("all");
                 }}
               >
                 <Filter className="h-4 w-4 mr-2" />
