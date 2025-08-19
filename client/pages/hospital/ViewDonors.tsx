@@ -60,6 +60,8 @@ export default function ViewDonors() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOrgan, setFilterOrgan] = useState("all");
   const [filterBloodType, setFilterBloodType] = useState("all");
+  const [editingDonor, setEditingDonor] = useState<Donor | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { hospital } = useHospitalAuth();
   const { error: showError } = useToast();
