@@ -133,7 +133,7 @@ router.get("/verify", async (req, res) => {
 
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "hospital-secret",
+      process.env.JWT_SECRET || "organlink_secret_key_2024",
     ) as any;
 
     // Get updated hospital info
