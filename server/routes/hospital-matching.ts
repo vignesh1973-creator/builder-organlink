@@ -2,6 +2,7 @@ import express from "express";
 import { pool } from "../config/database.js";
 import { authenticateHospital } from "../middleware/auth.js";
 import { aiMatchingService } from "../services/aiMatching.js";
+import { findEnhancedMatches, predictTransplantSuccess, generateMatchingInsights } from "../services/enhancedAiMatching";
 
 const router = express.Router();
 
