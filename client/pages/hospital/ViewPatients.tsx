@@ -173,6 +173,25 @@ export default function ViewPatients() {
   const urgencyLevels = ["Low", "Medium", "High", "Critical"];
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
+  const handleEditPatient = (patient: Patient) => {
+    setEditingPatient(patient);
+    setIsEditModalOpen(true);
+  };
+
+  const handlePatientUpdate = (updatedPatient: Patient) => {
+    setPatients(prev =>
+      prev.map(p => p.patient_id === updatedPatient.patient_id ? updatedPatient : p)
+    );
+    setFilteredPatients(prev =>
+      prev.map(p => p.patient_id === updatedPatient.patient_id ? updatedPatient : p)
+    );
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingPatient(null);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
