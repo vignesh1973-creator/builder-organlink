@@ -179,16 +179,12 @@ export default function ViewPatients() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <HospitalLayout title="Patient Management" subtitle="View and manage registered patients">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Patients</h1>
-              <p className="text-gray-600 mt-1">
-                {hospital?.hospital_name} • Manage your patient registrations
-              </p>
+            <div className="flex items-center space-x-4">
             </div>
             <Link to="/hospital/patients/register">
               <Button className="bg-medical-600 hover:bg-medical-700">
@@ -472,6 +468,6 @@ export default function ViewPatients() {
           )}
         </div>
       </div>
-    </div>
+    </HospitalLayout>
   );
 }
