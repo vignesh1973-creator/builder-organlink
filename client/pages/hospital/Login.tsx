@@ -47,7 +47,7 @@ export default function HospitalLogin() {
   const [resetEmail, setResetEmail] = useState("");
 
   const { login, hospital, requestPasswordReset } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function HospitalLogin() {
       setLocations(data);
     } catch (error) {
       console.error("Failed to fetch locations:", error);
-      showToast("Failed to load locations", "error");
+      showError("Failed to load locations");
     } finally {
       setLoadingLocations(false);
     }
@@ -75,7 +75,7 @@ export default function HospitalLogin() {
 
   const handleNextStep = () => {
     if (!selectedCountry || !selectedState || !selectedCity || !selectedHospital) {
-      showToast("Please select country, state, city, and hospital", "error");
+      showError("Please select country, state, city, and hospital");
       return;
     }
     setHospitalId(selectedHospital.id);
@@ -102,7 +102,7 @@ export default function HospitalLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!hospitalId || !password) {
-      showToast("Please enter hospital ID and password", "error");
+      showError("Please enter hospital ID and password");
       return;
     }
 
@@ -111,10 +111,10 @@ export default function HospitalLogin() {
     const result = await login(hospitalId, password);
 
     if (result.success) {
-      showToast("Login successful! Welcome to OrganLink", "success");
+      showSuccess("Login successful! Welcome to OrganLink");
       navigate("/hospital/dashboard");
     } else {
-      showToast(result.error || "Login failed", "error");
+      showError(result.error || "Login failed");
     }
 
     setIsLoading(false);
@@ -122,18 +122,18 @@ export default function HospitalLogin() {
 
   const handleForgotPassword = async () => {
     if (!hospitalId || !resetEmail) {
-      showToast("Please enter hospital ID and email", "error");
+      showError("Please enter hospital ID and email");
       return;
     }
 
     const result = await requestPasswordReset(hospitalId, resetEmail);
     
     if (result.success) {
-      showToast("Password reset request sent to admin for approval", "success");
+      showSuccess("Password reset request sent to admin for approval");
       setShowForgotPassword(false);
       setResetEmail("");
     } else {
-      showToast(result.error || "Failed to send reset request", "error");
+      showError(result.error || "Failed to send reset request");
     }
   };
 
