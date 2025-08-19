@@ -184,6 +184,7 @@ export default function HospitalLogin() {
                         <div className="grid grid-cols-1 gap-3">
                           <Select value={selectedCountry} onValueChange={(value) => {
                             setSelectedCountry(value);
+                            setSelectedState("");
                             setSelectedCity("");
                             setSelectedHospital(null);
                           }}>
@@ -200,12 +201,33 @@ export default function HospitalLogin() {
                           </Select>
 
                           <Select
+                            value={selectedState}
+                            onValueChange={(value) => {
+                              setSelectedState(value);
+                              setSelectedCity("");
+                              setSelectedHospital(null);
+                            }}
+                            disabled={!selectedCountry}
+                          >
+                            <SelectTrigger className="h-12">
+                              <SelectValue placeholder="Select State" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {states.map((state) => (
+                                <SelectItem key={state} value={state}>
+                                  {state.charAt(0).toUpperCase() + state.slice(1)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <Select
                             value={selectedCity}
                             onValueChange={(value) => {
                               setSelectedCity(value);
                               setSelectedHospital(null);
                             }}
-                            disabled={!selectedCountry}
+                            disabled={!selectedState}
                           >
                             <SelectTrigger className="h-12">
                               <SelectValue placeholder="Select City" />
