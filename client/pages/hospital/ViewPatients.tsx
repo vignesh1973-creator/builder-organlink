@@ -65,9 +65,10 @@ export default function ViewPatients() {
   const [filterBloodType, setFilterBloodType] = useState("all");
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
 
   const { hospital } = useHospitalAuth();
-  const { error: showError } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
 
   useEffect(() => {
     fetchPatients();
