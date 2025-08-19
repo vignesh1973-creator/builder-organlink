@@ -61,7 +61,7 @@ export default function ViewDonors() {
   const [filterBloodType, setFilterBloodType] = useState("all");
 
   const { hospital } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError } = useToast();
 
   useEffect(() => {
     fetchDonors();
@@ -84,11 +84,11 @@ export default function ViewDonors() {
         const data = await response.json();
         setDonors(data.donors);
       } else {
-        showToast("Failed to load donors", "error");
+        showError("Failed to load donors");
       }
     } catch (error) {
       console.error("Failed to fetch donors:", error);
-      showToast("Failed to load donors", "error");
+      showError("Failed to load donors");
     } finally {
       setLoading(false);
     }
