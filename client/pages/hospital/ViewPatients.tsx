@@ -111,21 +111,21 @@ export default function ViewPatients() {
     }
 
     // Organ filter
-    if (filterOrgan) {
+    if (filterOrgan && filterOrgan !== "all") {
       filtered = filtered.filter(
         (patient) => patient.organ_needed === filterOrgan,
       );
     }
 
     // Urgency filter
-    if (filterUrgency) {
+    if (filterUrgency && filterUrgency !== "all") {
       filtered = filtered.filter(
         (patient) => patient.urgency_level === filterUrgency,
       );
     }
 
     // Blood type filter
-    if (filterBloodType) {
+    if (filterBloodType && filterBloodType !== "all") {
       filtered = filtered.filter(
         (patient) => patient.blood_type === filterBloodType,
       );
