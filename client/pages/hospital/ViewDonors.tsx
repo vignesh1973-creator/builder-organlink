@@ -63,9 +63,10 @@ export default function ViewDonors() {
   const [filterBloodType, setFilterBloodType] = useState("all");
   const [editingDonor, setEditingDonor] = useState<Donor | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingDonor, setDeletingDonor] = useState<string | null>(null);
 
   const { hospital } = useHospitalAuth();
-  const { error: showError } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
 
   useEffect(() => {
     fetchDonors();
