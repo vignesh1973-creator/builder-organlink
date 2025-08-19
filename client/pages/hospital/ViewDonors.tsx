@@ -398,9 +398,13 @@ export default function ViewDonors() {
                     </div>
 
                     <div className="flex flex-col space-y-2 ml-6">
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditDonor(donor)}
+                      >
                         <Eye className="h-4 w-4 mr-2" />
-                        View Details
+                        Edit Details
                       </Button>
 
                       {donor.signature_ipfs_hash && (
