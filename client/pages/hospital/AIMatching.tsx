@@ -141,7 +141,7 @@ export default function AIMatching() {
           showWarning("No matches found for this patient");
         } else {
           showSuccess(
-            `Found ${data.total_matches} potential matches!`
+            `Found ${data.total_matches} potential matches using Enhanced AI Algorithm!`
           );
         }
       } else {
