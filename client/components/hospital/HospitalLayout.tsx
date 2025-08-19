@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Bell, LogOut, User } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
+import { useHospitalNotifications } from "@/contexts/HospitalNotificationContext";
 import HospitalSidebar from "./HospitalSidebar";
+import HospitalNotificationDropdown from "./HospitalNotificationDropdown";
 
 interface HospitalLayoutProps {
   children: ReactNode;
