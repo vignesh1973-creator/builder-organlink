@@ -275,7 +275,7 @@ export default function ViewPatients() {
                   <SelectValue placeholder="Filter by organ" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Organs</SelectItem>
+                  <SelectItem value="all">All Organs</SelectItem>
                   {organTypes.map((organ) => (
                     <SelectItem key={organ} value={organ}>
                       {organ}
@@ -289,7 +289,7 @@ export default function ViewPatients() {
                   <SelectValue placeholder="Filter by urgency" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Urgency</SelectItem>
+                  <SelectItem value="all">All Urgency</SelectItem>
                   {urgencyLevels.map((level) => (
                     <SelectItem key={level} value={level}>
                       {level}
@@ -306,7 +306,7 @@ export default function ViewPatients() {
                   <SelectValue placeholder="Filter by blood type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Blood Types</SelectItem>
+                  <SelectItem value="all">All Blood Types</SelectItem>
                   {bloodTypes.map((type) => (
                     <SelectItem key={type} value={type}>
                       {type}
