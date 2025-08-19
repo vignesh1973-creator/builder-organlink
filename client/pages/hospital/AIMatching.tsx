@@ -73,7 +73,7 @@ export default function AIMatching() {
   const [searchingMatches, setSearchingMatches] = useState(false);
 
   const { hospital } = useHospitalAuth();
-  const { showToast } = useToast();
+  const { error: showError, success: showSuccess, warning: showWarning } = useToast();
 
   useEffect(() => {
     fetchPatients();
@@ -140,19 +140,18 @@ export default function AIMatching() {
       if (data.success) {
         setMatches(data.matches);
         if (data.total_matches === 0) {
-          showToast("No matches found for this patient", "warning");
+          showWarning("No matches found for this patient");
         } else {
-          showToast(
-            `Found ${data.total_matches} potential matches!`,
-            "success",
+          showSuccess(
+            `Found ${data.total_matches} potential matches!`
           );
         }
       } else {
-        showToast(data.error || "Failed to search matches", "error");
+        showError(data.error || "Failed to search matches");
       }
     } catch (error) {
       console.error("Search matches error:", error);
-      showToast("Failed to search matches", "error");
+      showError("Failed to search matches");
     } finally {
       setSearchingMatches(false);
     }
@@ -178,13 +177,13 @@ export default function AIMatching() {
       const data = await response.json();
 
       if (data.success) {
-        showToast("Matching request sent successfully!", "success");
+        showSuccess("Matching request sent successfully!");
       } else {
-        showToast(data.error || "Failed to send request", "error");
+        showError(data.error || "Failed to send request");
       }
     } catch (error) {
       console.error("Create request error:", error);
-      showToast("Failed to send request", "error");
+      showError("Failed to send request");
     }
   };
 
@@ -211,14 +210,14 @@ export default function AIMatching() {
       const data = await res.json();
 
       if (data.success) {
-        showToast(`Match ${response}ed successfully!`, "success");
+        showSuccess(`Match ${response}ed successfully!`);
         fetchIncomingMatches(); // Refresh incoming matches
       } else {
-        showToast(data.error || "Failed to respond", "error");
+        showError(data.error || "Failed to respond");
       }
     } catch (error) {
       console.error("Respond to match error:", error);
-      showToast("Failed to respond to match", "error");
+      showError("Failed to respond to match");
     }
   };
 
