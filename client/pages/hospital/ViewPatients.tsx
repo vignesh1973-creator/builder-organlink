@@ -194,6 +194,39 @@ export default function ViewPatients() {
     setEditingPatient(null);
   };
 
+  const handleDeletePatient = async (patientId: string) => {
+    setDeletingPatient(patientId);
+    try {
+      const token = localStorage.getItem("hospital_token");
+      const response = await fetch(`/api/hospital/patients/${patientId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        showSuccess("Patient deleted successfully!");
+        // Remove from local state
+        setPatients(prev => prev.filter(p => p.patient_id !== patientId));
+        setFilteredPatients(prev => prev.filter(p => p.patient_id !== patientId));
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      showError("Failed to delete patient");
+    } finally {
+      setDeletingPatient(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
