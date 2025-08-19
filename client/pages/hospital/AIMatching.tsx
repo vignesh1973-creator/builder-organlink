@@ -49,6 +49,8 @@ interface DonorMatch {
   distance_score: number;
   compatibility_score: number;
   urgency_bonus: number;
+  medical_risk_score: number;
+  explanation?: string;
 }
 
 interface IncomingMatch {
