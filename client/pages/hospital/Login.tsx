@@ -30,7 +30,6 @@ export default function HospitalLogin() {
   // Step 1: Location Selection
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedHospital, setSelectedHospital] = useState<SelectedHospital | null>(null);
   const [locations, setLocations] = useState<Locations>({});
