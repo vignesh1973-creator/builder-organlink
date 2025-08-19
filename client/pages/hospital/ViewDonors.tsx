@@ -279,8 +279,8 @@ export default function ViewDonors() {
                 variant="outline"
                 onClick={() => {
                   setSearchTerm("");
-                  setFilterOrgan("");
-                  setFilterBloodType("");
+                  setFilterOrgan("all");
+                  setFilterBloodType("all");
                 }}
               >
                 <Filter className="h-4 w-4 mr-2" />
