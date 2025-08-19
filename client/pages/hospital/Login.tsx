@@ -11,12 +11,10 @@ import { useToast } from "@/contexts/ToastContext";
 
 interface Locations {
   [country: string]: {
-    [state: string]: {
-      [city: string]: Array<{
-        id: string;
-        name: string;
-      }>;
-    };
+    [city: string]: Array<{
+      id: string;
+      name: string;
+    }>;
   };
 }
 
