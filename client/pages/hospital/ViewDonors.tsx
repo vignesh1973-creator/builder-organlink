@@ -156,11 +156,15 @@ export default function ViewDonors() {
   };
 
   const handleDonorUpdate = (updatedDonor: Donor) => {
-    setDonors(prev =>
-      prev.map(d => d.donor_id === updatedDonor.donor_id ? updatedDonor : d)
+    setDonors((prev) =>
+      prev.map((d) =>
+        d.donor_id === updatedDonor.donor_id ? updatedDonor : d,
+      ),
     );
-    setFilteredDonors(prev =>
-      prev.map(d => d.donor_id === updatedDonor.donor_id ? updatedDonor : d)
+    setFilteredDonors((prev) =>
+      prev.map((d) =>
+        d.donor_id === updatedDonor.donor_id ? updatedDonor : d,
+      ),
     );
   };
 
@@ -189,8 +193,8 @@ export default function ViewDonors() {
       if (result.success) {
         showSuccess("Donor deleted successfully!");
         // Remove from local state
-        setDonors(prev => prev.filter(d => d.donor_id !== donorId));
-        setFilteredDonors(prev => prev.filter(d => d.donor_id !== donorId));
+        setDonors((prev) => prev.filter((d) => d.donor_id !== donorId));
+        setFilteredDonors((prev) => prev.filter((d) => d.donor_id !== donorId));
       } else {
         throw new Error(result.error);
       }
@@ -211,13 +215,15 @@ export default function ViewDonors() {
   }
 
   return (
-    <HospitalLayout title="Donor Management" subtitle="View and manage registered donors">
+    <HospitalLayout
+      title="Donor Management"
+      subtitle="View and manage registered donors"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-            </div>
+            <div className="flex items-center space-x-4"></div>
             <Link to="/hospital/donors/register">
               <Button className="bg-medical-600 hover:bg-medical-700">
                 <Plus className="h-4 w-4 mr-2" />
@@ -446,7 +452,11 @@ export default function ViewDonors() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          if (window.confirm(`Are you sure you want to delete donor ${donor.full_name}? This action cannot be undone.`)) {
+                          if (
+                            window.confirm(
+                              `Are you sure you want to delete donor ${donor.full_name}? This action cannot be undone.`,
+                            )
+                          ) {
                             handleDeleteDonor(donor.donor_id);
                           }
                         }}
@@ -454,7 +464,9 @@ export default function ViewDonors() {
                         className="text-red-600 hover:text-red-700 hover:border-red-300"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        {deletingDonor === donor.donor_id ? "Deleting..." : "Delete Donor"}
+                        {deletingDonor === donor.donor_id
+                          ? "Deleting..."
+                          : "Delete Donor"}
                       </Button>
 
                       {donor.signature_ipfs_hash && (

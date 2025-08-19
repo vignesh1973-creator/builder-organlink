@@ -76,7 +76,7 @@ export default function EditPatientModal({
   const organTypes = [
     "Kidney",
     "Liver",
-    "Heart", 
+    "Heart",
     "Lung",
     "Pancreas",
     "Cornea",
@@ -103,7 +103,7 @@ export default function EditPatientModal({
   }, [patient]);
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,14 +113,17 @@ export default function EditPatientModal({
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem("hospital_token");
-      const response = await fetch(`/api/hospital/patients/${patient.patient_id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `/api/hospital/patients/${patient.patient_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`Update failed with status ${response.status}`);
@@ -156,7 +159,8 @@ export default function EditPatientModal({
             </Button>
           </DialogTitle>
           <DialogDescription>
-            Update patient information. Note: Signature and blockchain data cannot be modified.
+            Update patient information. Note: Signature and blockchain data
+            cannot be modified.
           </DialogDescription>
         </DialogHeader>
 
@@ -164,32 +168,39 @@ export default function EditPatientModal({
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="full_name">Full Name *</Label>
                 <Input
                   id="full_name"
                   value={formData.full_name}
-                  onChange={(e) => handleInputChange("full_name", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("full_name", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="age">Age *</Label>
                 <Input
                   id="age"
                   type="number"
                   value={formData.age}
-                  onChange={(e) => handleInputChange("age", parseInt(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange("age", parseInt(e.target.value))
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="gender">Gender *</Label>
-                <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+                <Select
+                  value={formData.gender}
+                  onValueChange={(value) => handleInputChange("gender", value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
@@ -200,16 +211,23 @@ export default function EditPatientModal({
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="blood_type">Blood Type *</Label>
-                <Select value={formData.blood_type} onValueChange={(value) => handleInputChange("blood_type", value)}>
+                <Select
+                  value={formData.blood_type}
+                  onValueChange={(value) =>
+                    handleInputChange("blood_type", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select blood type" />
                   </SelectTrigger>
                   <SelectContent>
                     {bloodTypes.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -220,43 +238,59 @@ export default function EditPatientModal({
           {/* Medical Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Medical Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="organ_needed">Organ Needed *</Label>
-                <Select value={formData.organ_needed} onValueChange={(value) => handleInputChange("organ_needed", value)}>
+                <Select
+                  value={formData.organ_needed}
+                  onValueChange={(value) =>
+                    handleInputChange("organ_needed", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select organ needed" />
                   </SelectTrigger>
                   <SelectContent>
                     {organTypes.map((organ) => (
-                      <SelectItem key={organ} value={organ}>{organ}</SelectItem>
+                      <SelectItem key={organ} value={organ}>
+                        {organ}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="urgency_level">Urgency Level *</Label>
-                <Select value={formData.urgency_level} onValueChange={(value) => handleInputChange("urgency_level", value)}>
+                <Select
+                  value={formData.urgency_level}
+                  onValueChange={(value) =>
+                    handleInputChange("urgency_level", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select urgency level" />
                   </SelectTrigger>
                   <SelectContent>
                     {urgencyLevels.map((level) => (
-                      <SelectItem key={level} value={level}>{level}</SelectItem>
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="medical_condition">Medical Condition *</Label>
               <Textarea
                 id="medical_condition"
                 value={formData.medical_condition}
-                onChange={(e) => handleInputChange("medical_condition", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("medical_condition", e.target.value)
+                }
                 placeholder="Describe the patient's medical condition..."
                 required
                 rows={3}
@@ -267,45 +301,57 @@ export default function EditPatientModal({
           {/* Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="contact_phone">Phone Number *</Label>
                 <Input
                   id="contact_phone"
                   value={formData.contact_phone}
-                  onChange={(e) => handleInputChange("contact_phone", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("contact_phone", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="contact_email">Email Address *</Label>
                 <Input
                   id="contact_email"
                   type="email"
                   value={formData.contact_email}
-                  onChange={(e) => handleInputChange("contact_email", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("contact_email", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
-                <Label htmlFor="emergency_contact">Emergency Contact Name *</Label>
+                <Label htmlFor="emergency_contact">
+                  Emergency Contact Name *
+                </Label>
                 <Input
                   id="emergency_contact"
                   value={formData.emergency_contact}
-                  onChange={(e) => handleInputChange("emergency_contact", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("emergency_contact", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
-                <Label htmlFor="emergency_phone">Emergency Contact Phone *</Label>
+                <Label htmlFor="emergency_phone">
+                  Emergency Contact Phone *
+                </Label>
                 <Input
                   id="emergency_phone"
                   value={formData.emergency_phone}
-                  onChange={(e) => handleInputChange("emergency_phone", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("emergency_phone", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -318,20 +364,32 @@ export default function EditPatientModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <Label className="text-gray-600">Signature Status</Label>
-                <Badge className={patient.signature_verified ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+                <Badge
+                  className={
+                    patient.signature_verified
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }
+                >
                   {patient.signature_verified ? "Verified" : "Pending"}
                 </Badge>
               </div>
               {patient.signature_ipfs_hash && (
                 <div>
                   <Label className="text-gray-600">IPFS Hash</Label>
-                  <p className="font-mono text-xs">{patient.signature_ipfs_hash}</p>
+                  <p className="font-mono text-xs">
+                    {patient.signature_ipfs_hash}
+                  </p>
                 </div>
               )}
               {patient.blockchain_tx_hash && (
                 <div>
-                  <Label className="text-gray-600">Blockchain Transaction</Label>
-                  <p className="font-mono text-xs">{patient.blockchain_tx_hash}</p>
+                  <Label className="text-gray-600">
+                    Blockchain Transaction
+                  </Label>
+                  <p className="font-mono text-xs">
+                    {patient.blockchain_tx_hash}
+                  </p>
                 </div>
               )}
             </div>

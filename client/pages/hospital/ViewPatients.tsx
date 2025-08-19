@@ -181,11 +181,15 @@ export default function ViewPatients() {
   };
 
   const handlePatientUpdate = (updatedPatient: Patient) => {
-    setPatients(prev =>
-      prev.map(p => p.patient_id === updatedPatient.patient_id ? updatedPatient : p)
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.patient_id === updatedPatient.patient_id ? updatedPatient : p,
+      ),
     );
-    setFilteredPatients(prev =>
-      prev.map(p => p.patient_id === updatedPatient.patient_id ? updatedPatient : p)
+    setFilteredPatients((prev) =>
+      prev.map((p) =>
+        p.patient_id === updatedPatient.patient_id ? updatedPatient : p,
+      ),
     );
   };
 
@@ -214,8 +218,10 @@ export default function ViewPatients() {
       if (result.success) {
         showSuccess("Patient deleted successfully!");
         // Remove from local state
-        setPatients(prev => prev.filter(p => p.patient_id !== patientId));
-        setFilteredPatients(prev => prev.filter(p => p.patient_id !== patientId));
+        setPatients((prev) => prev.filter((p) => p.patient_id !== patientId));
+        setFilteredPatients((prev) =>
+          prev.filter((p) => p.patient_id !== patientId),
+        );
       } else {
         throw new Error(result.error);
       }
@@ -236,13 +242,15 @@ export default function ViewPatients() {
   }
 
   return (
-    <HospitalLayout title="Patient Management" subtitle="View and manage registered patients">
+    <HospitalLayout
+      title="Patient Management"
+      subtitle="View and manage registered patients"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-            </div>
+            <div className="flex items-center space-x-4"></div>
             <Link to="/hospital/patients/register">
               <Button className="bg-medical-600 hover:bg-medical-700">
                 <Plus className="h-4 w-4 mr-2" />

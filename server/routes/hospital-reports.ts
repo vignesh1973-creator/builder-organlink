@@ -12,10 +12,10 @@ router.get("/", authenticateHospital, async (req, res) => {
   try {
     const hospitalId = req.hospitalId;
     const range = req.query.range || "6months";
-    
+
     let dateFilter = "";
     const currentDate = new Date();
-    
+
     switch (range) {
       case "1month":
         dateFilter = `AND created_at >= '${new Date(currentDate.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString()}'`;
@@ -72,23 +72,35 @@ router.get("/", authenticateHospital, async (req, res) => {
 
     const [patientsResult, donorsResult] = await Promise.all([
       pool.query(monthlyPatientsQuery, [hospitalId]),
-      pool.query(monthlyDonorsQuery, [hospitalId])
+      pool.query(monthlyDonorsQuery, [hospitalId]),
     ]);
 
     // Combine monthly data
     const monthlyMap = new Map();
-    patientsResult.rows.forEach(row => {
-      monthlyMap.set(row.month, { month: row.month, patients: parseInt(row.patients), donors: 0, matches: 0 });
+    patientsResult.rows.forEach((row) => {
+      monthlyMap.set(row.month, {
+        month: row.month,
+        patients: parseInt(row.patients),
+        donors: 0,
+        matches: 0,
+      });
     });
-    donorsResult.rows.forEach(row => {
+    donorsResult.rows.forEach((row) => {
       if (monthlyMap.has(row.month)) {
         monthlyMap.get(row.month).donors = parseInt(row.donors);
       } else {
-        monthlyMap.set(row.month, { month: row.month, patients: 0, donors: parseInt(row.donors), matches: 0 });
+        monthlyMap.set(row.month, {
+          month: row.month,
+          patients: 0,
+          donors: parseInt(row.donors),
+          matches: 0,
+        });
       }
     });
 
-    const monthlyStats = Array.from(monthlyMap.values()).sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime());
+    const monthlyStats = Array.from(monthlyMap.values()).sort(
+      (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime(),
+    );
 
     // Organ distribution
     const organDistributionQuery = `
@@ -123,19 +135,29 @@ router.get("/", authenticateHospital, async (req, res) => {
 
     const [organPatientsResult, organDonorsResult] = await Promise.all([
       pool.query(organPatientsQuery, [hospitalId]),
-      pool.query(organDonorsQuery, [hospitalId])
+      pool.query(organDonorsQuery, [hospitalId]),
     ]);
 
     // Combine organ data
     const organMap = new Map();
-    organPatientsResult.rows.forEach(row => {
-      organMap.set(row.organ, { organ: row.organ, patients: parseInt(row.patients), donors: 0, matches: 0 });
+    organPatientsResult.rows.forEach((row) => {
+      organMap.set(row.organ, {
+        organ: row.organ,
+        patients: parseInt(row.patients),
+        donors: 0,
+        matches: 0,
+      });
     });
-    organDonorsResult.rows.forEach(row => {
+    organDonorsResult.rows.forEach((row) => {
       if (organMap.has(row.organ)) {
         organMap.get(row.organ).donors = parseInt(row.donors);
       } else {
-        organMap.set(row.organ, { organ: row.organ, patients: 0, donors: parseInt(row.donors), matches: 0 });
+        organMap.set(row.organ, {
+          organ: row.organ,
+          patients: 0,
+          donors: parseInt(row.donors),
+          matches: 0,
+        });
       }
     });
 
@@ -162,30 +184,37 @@ router.get("/", authenticateHospital, async (req, res) => {
 
     const [bloodPatientsResult, bloodDonorsResult] = await Promise.all([
       pool.query(bloodPatientsQuery, [hospitalId]),
-      pool.query(bloodDonorsQuery, [hospitalId])
+      pool.query(bloodDonorsQuery, [hospitalId]),
     ]);
 
     // Combine blood type data
     const bloodTypeMap = new Map();
     const allBloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-    allBloodTypes.forEach(type => {
-      bloodTypeMap.set(type, { bloodType: type, patients: 0, donors: 0, compatibility: 75 });
+    allBloodTypes.forEach((type) => {
+      bloodTypeMap.set(type, {
+        bloodType: type,
+        patients: 0,
+        donors: 0,
+        compatibility: 75,
+      });
     });
 
-    bloodPatientsResult.rows.forEach(row => {
+    bloodPatientsResult.rows.forEach((row) => {
       if (bloodTypeMap.has(row.blood_type)) {
         bloodTypeMap.get(row.blood_type).patients = parseInt(row.patients);
       }
     });
 
-    bloodDonorsResult.rows.forEach(row => {
+    bloodDonorsResult.rows.forEach((row) => {
       if (bloodTypeMap.has(row.blood_type)) {
         bloodTypeMap.get(row.blood_type).donors = parseInt(row.donors);
       }
     });
 
-    const bloodTypeStats = Array.from(bloodTypeMap.values()).filter(item => item.patients > 0 || item.donors > 0);
+    const bloodTypeStats = Array.from(bloodTypeMap.values()).filter(
+      (item) => item.patients > 0 || item.donors > 0,
+    );
 
     // Get actual urgency stats from database
     const urgencyQuery = `
@@ -198,12 +227,18 @@ router.get("/", authenticateHospital, async (req, res) => {
     `;
 
     const urgencyResult = await pool.query(urgencyQuery, [hospitalId]);
-    const totalPatients = urgencyResult.rows.reduce((sum, row) => sum + parseInt(row.count), 0);
+    const totalPatients = urgencyResult.rows.reduce(
+      (sum, row) => sum + parseInt(row.count),
+      0,
+    );
 
-    const urgencyStats = urgencyResult.rows.map(row => ({
+    const urgencyStats = urgencyResult.rows.map((row) => ({
       urgency: row.urgency,
       count: parseInt(row.count),
-      percentage: totalPatients > 0 ? Math.round((parseInt(row.count) / totalPatients) * 100) : 0
+      percentage:
+        totalPatients > 0
+          ? Math.round((parseInt(row.count) / totalPatients) * 100)
+          : 0,
     }));
 
     // Get actual age group stats from database
@@ -253,35 +288,45 @@ router.get("/", authenticateHospital, async (req, res) => {
 
     const [agePatientResult, ageDonorResult] = await Promise.all([
       pool.query(ageGroupPatientsQuery, [hospitalId]),
-      pool.query(ageGroupDonorsQuery, [hospitalId])
+      pool.query(ageGroupDonorsQuery, [hospitalId]),
     ]);
 
     // Combine age group data
     const ageGroupMap = new Map();
     const allAgeGroups = ["0-18", "19-35", "36-50", "51-65", "65+"];
 
-    allAgeGroups.forEach(group => {
+    allAgeGroups.forEach((group) => {
       ageGroupMap.set(group, { ageGroup: group, patients: 0, donors: 0 });
     });
 
-    agePatientResult.rows.forEach(row => {
+    agePatientResult.rows.forEach((row) => {
       ageGroupMap.get(row.age_group).patients = parseInt(row.patients);
     });
 
-    ageDonorResult.rows.forEach(row => {
+    ageDonorResult.rows.forEach((row) => {
       ageGroupMap.get(row.age_group).donors = parseInt(row.donors);
     });
 
-    const ageGroupStats = Array.from(ageGroupMap.values()).filter(item => item.patients > 0 || item.donors > 0);
+    const ageGroupStats = Array.from(ageGroupMap.values()).filter(
+      (item) => item.patients > 0 || item.donors > 0,
+    );
 
     // Get actual matching stats from database (placeholder for now)
-    const patientsCount = await pool.query(`SELECT COUNT(*) as count FROM patients WHERE hospital_id = $1 ${dateFilter}`, [hospitalId]);
-    const donorsCount = await pool.query(`SELECT COUNT(*) as count FROM donors WHERE hospital_id = $1 ${dateFilter}`, [hospitalId]);
+    const patientsCount = await pool.query(
+      `SELECT COUNT(*) as count FROM patients WHERE hospital_id = $1 ${dateFilter}`,
+      [hospitalId],
+    );
+    const donorsCount = await pool.query(
+      `SELECT COUNT(*) as count FROM donors WHERE hospital_id = $1 ${dateFilter}`,
+      [hospitalId],
+    );
 
     const matchingStats = {
       totalRequests: parseInt(patientsCount.rows[0].count) || 0,
-      successfulMatches: Math.floor(parseInt(patientsCount.rows[0].count) * 0.3) || 0, // 30% success rate estimate
-      pendingRequests: Math.floor(parseInt(patientsCount.rows[0].count) * 0.2) || 0, // 20% pending estimate
+      successfulMatches:
+        Math.floor(parseInt(patientsCount.rows[0].count) * 0.3) || 0, // 30% success rate estimate
+      pendingRequests:
+        Math.floor(parseInt(patientsCount.rows[0].count) * 0.2) || 0, // 20% pending estimate
       successRate: parseInt(patientsCount.rows[0].count) > 0 ? 75 : 0, // 75% baseline success rate
     };
 
@@ -312,12 +357,21 @@ router.get("/export", authenticateHospital, async (req, res) => {
       // For PDF export, you would typically use libraries like puppeteer or jsPDF
       // For now, return a simple text response
       res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment; filename="hospital-report-${range}.pdf"`);
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="hospital-report-${range}.pdf"`,
+      );
       res.send("PDF export functionality would be implemented here");
     } else if (format === "excel") {
       // For Excel export, you would use libraries like exceljs
-      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-      res.setHeader("Content-Disposition", `attachment; filename="hospital-report-${range}.xlsx"`);
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="hospital-report-${range}.xlsx"`,
+      );
       res.send("Excel export functionality would be implemented here");
     } else {
       res.status(400).json({ error: "Invalid export format" });

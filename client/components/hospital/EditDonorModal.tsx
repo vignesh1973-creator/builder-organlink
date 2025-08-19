@@ -73,14 +73,14 @@ export default function EditDonorModal({
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
   const organTypes = [
     "Kidney",
-    "Liver", 
+    "Liver",
     "Heart",
     "Lung",
     "Pancreas",
     "Cornea",
     "Bone Marrow",
     "Skin",
-    "Bone"
+    "Bone",
   ];
 
   useEffect(() => {
@@ -90,7 +90,9 @@ export default function EditDonorModal({
         age: donor.age,
         gender: donor.gender,
         blood_type: donor.blood_type,
-        organs_to_donate: donor.organs_to_donate ? donor.organs_to_donate.split(',').map(o => o.trim()) : [],
+        organs_to_donate: donor.organs_to_donate
+          ? donor.organs_to_donate.split(",").map((o) => o.trim())
+          : [],
         medical_history: donor.medical_history,
         contact_phone: donor.contact_phone,
         contact_email: donor.contact_email,
@@ -101,15 +103,15 @@ export default function EditDonorModal({
   }, [donor]);
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleOrganToggle = (organ: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       organs_to_donate: prev.organs_to_donate.includes(organ)
-        ? prev.organs_to_donate.filter(o => o !== organ)
-        : [...prev.organs_to_donate, organ]
+        ? prev.organs_to_donate.filter((o) => o !== organ)
+        : [...prev.organs_to_donate, organ],
     }));
   };
 
@@ -128,7 +130,7 @@ export default function EditDonorModal({
         },
         body: JSON.stringify({
           ...formData,
-          organs_to_donate: formData.organs_to_donate.join(', ')
+          organs_to_donate: formData.organs_to_donate.join(", "),
         }),
       });
 
@@ -166,7 +168,8 @@ export default function EditDonorModal({
             </Button>
           </DialogTitle>
           <DialogDescription>
-            Update donor information. Note: Signature and blockchain data cannot be modified.
+            Update donor information. Note: Signature and blockchain data cannot
+            be modified.
           </DialogDescription>
         </DialogHeader>
 
@@ -174,32 +177,39 @@ export default function EditDonorModal({
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="full_name">Full Name *</Label>
                 <Input
                   id="full_name"
                   value={formData.full_name}
-                  onChange={(e) => handleInputChange("full_name", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("full_name", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="age">Age *</Label>
                 <Input
                   id="age"
                   type="number"
                   value={formData.age}
-                  onChange={(e) => handleInputChange("age", parseInt(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange("age", parseInt(e.target.value))
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="gender">Gender *</Label>
-                <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+                <Select
+                  value={formData.gender}
+                  onValueChange={(value) => handleInputChange("gender", value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
@@ -210,16 +220,23 @@ export default function EditDonorModal({
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="blood_type">Blood Type *</Label>
-                <Select value={formData.blood_type} onValueChange={(value) => handleInputChange("blood_type", value)}>
+                <Select
+                  value={formData.blood_type}
+                  onValueChange={(value) =>
+                    handleInputChange("blood_type", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select blood type" />
                   </SelectTrigger>
                   <SelectContent>
                     {bloodTypes.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -253,7 +270,9 @@ export default function EditDonorModal({
             <Textarea
               id="medical_history"
               value={formData.medical_history}
-              onChange={(e) => handleInputChange("medical_history", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("medical_history", e.target.value)
+              }
               placeholder="Any relevant medical history, allergies, or conditions..."
               rows={3}
             />
@@ -262,45 +281,57 @@ export default function EditDonorModal({
           {/* Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="contact_phone">Phone Number *</Label>
                 <Input
                   id="contact_phone"
                   value={formData.contact_phone}
-                  onChange={(e) => handleInputChange("contact_phone", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("contact_phone", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="contact_email">Email Address *</Label>
                 <Input
                   id="contact_email"
                   type="email"
                   value={formData.contact_email}
-                  onChange={(e) => handleInputChange("contact_email", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("contact_email", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
-                <Label htmlFor="emergency_contact">Emergency Contact Name *</Label>
+                <Label htmlFor="emergency_contact">
+                  Emergency Contact Name *
+                </Label>
                 <Input
                   id="emergency_contact"
                   value={formData.emergency_contact}
-                  onChange={(e) => handleInputChange("emergency_contact", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("emergency_contact", e.target.value)
+                  }
                   required
                 />
               </div>
-              
+
               <div>
-                <Label htmlFor="emergency_phone">Emergency Contact Phone *</Label>
+                <Label htmlFor="emergency_phone">
+                  Emergency Contact Phone *
+                </Label>
                 <Input
                   id="emergency_phone"
                   value={formData.emergency_phone}
-                  onChange={(e) => handleInputChange("emergency_phone", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("emergency_phone", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -313,20 +344,32 @@ export default function EditDonorModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <Label className="text-gray-600">Signature Status</Label>
-                <Badge className={donor.signature_verified ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+                <Badge
+                  className={
+                    donor.signature_verified
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }
+                >
                   {donor.signature_verified ? "Verified" : "Pending"}
                 </Badge>
               </div>
               {donor.signature_ipfs_hash && (
                 <div>
                   <Label className="text-gray-600">IPFS Hash</Label>
-                  <p className="font-mono text-xs">{donor.signature_ipfs_hash}</p>
+                  <p className="font-mono text-xs">
+                    {donor.signature_ipfs_hash}
+                  </p>
                 </div>
               )}
               {donor.blockchain_tx_hash && (
                 <div>
-                  <Label className="text-gray-600">Blockchain Transaction</Label>
-                  <p className="font-mono text-xs">{donor.blockchain_tx_hash}</p>
+                  <Label className="text-gray-600">
+                    Blockchain Transaction
+                  </Label>
+                  <p className="font-mono text-xs">
+                    {donor.blockchain_tx_hash}
+                  </p>
                 </div>
               )}
             </div>
