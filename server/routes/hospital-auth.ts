@@ -11,28 +11,32 @@ router.get("/locations", async (req, res) => {
     const result = await pool.query(`
       SELECT DISTINCT
         country,
+        state,
         city,
         hospital_id,
         name as hospital_name
       FROM hospitals
       WHERE status = 'active'
-      ORDER BY country, city, name
+      ORDER BY country, state, city, name
     `);
 
     // Group data hierarchically
     const locations: any = {};
 
     result.rows.forEach((row) => {
-      const { country, city, hospital_id, hospital_name } = row;
+      const { country, state, city, hospital_id, hospital_name } = row;
 
       if (!locations[country]) {
         locations[country] = {};
       }
-      if (!locations[country][city]) {
-        locations[country][city] = [];
+      if (!locations[country][state]) {
+        locations[country][state] = {};
+      }
+      if (!locations[country][state][city]) {
+        locations[country][state][city] = [];
       }
 
-      locations[country][city].push({
+      locations[country][state][city].push({
         id: hospital_id,
         name: hospital_name,
       });
