@@ -57,9 +57,9 @@ export default function ViewPatients() {
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterOrgan, setFilterOrgan] = useState("");
-  const [filterUrgency, setFilterUrgency] = useState("");
-  const [filterBloodType, setFilterBloodType] = useState("");
+  const [filterOrgan, setFilterOrgan] = useState("all");
+  const [filterUrgency, setFilterUrgency] = useState("all");
+  const [filterBloodType, setFilterBloodType] = useState("all");
 
   const { hospital } = useHospitalAuth();
   const { showToast } = useToast();
