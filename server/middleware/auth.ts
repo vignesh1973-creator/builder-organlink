@@ -13,8 +13,10 @@ export interface AuthRequest extends Request {
     hospital_id: string;
     hospital_name: string;
     email: string;
-    wallet_address: string;
+    city: string;
+    country: string;
   };
+  hospitalId?: string; // For convenience
 }
 
 export const authenticateToken = (
