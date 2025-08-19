@@ -47,8 +47,9 @@ const App = () => (
     <TooltipProvider>
       <AdminAuthProvider>
         <HospitalAuthProvider>
-          <NotificationProvider>
-            <ToastProvider>
+          <HospitalNotificationProvider>
+            <NotificationProvider>
+              <ToastProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
@@ -125,8 +126,9 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </ToastProvider>
-          </NotificationProvider>
+              </ToastProvider>
+            </NotificationProvider>
+          </HospitalNotificationProvider>
         </HospitalAuthProvider>
       </AdminAuthProvider>
     </TooltipProvider>
