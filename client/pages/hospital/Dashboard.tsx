@@ -98,11 +98,11 @@ export default function HospitalDashboard() {
         setOrganDistribution(data.organDistribution);
         setBloodTypeDistribution(data.bloodTypeDistribution);
       } else {
-        showToast("Failed to load dashboard data", "error");
+        showError("Failed to load dashboard data");
       }
     } catch (error) {
       console.error("Dashboard data fetch error:", error);
-      showToast("Failed to load dashboard data", "error");
+      showError("Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
