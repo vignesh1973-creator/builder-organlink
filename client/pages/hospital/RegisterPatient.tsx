@@ -122,6 +122,10 @@ export default function RegisterPatient() {
         body: formData,
       });
 
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
