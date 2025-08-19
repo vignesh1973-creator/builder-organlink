@@ -117,6 +117,10 @@ export default function RegisterDonor() {
         body: formDataForUpload
       });
 
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
