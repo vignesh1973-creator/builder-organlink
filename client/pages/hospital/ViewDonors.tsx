@@ -442,6 +442,21 @@ export default function ViewDonors() {
                         Edit Details
                       </Button>
 
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          if (window.confirm(`Are you sure you want to delete donor ${donor.full_name}? This action cannot be undone.`)) {
+                            handleDeleteDonor(donor.donor_id);
+                          }
+                        }}
+                        disabled={deletingDonor === donor.donor_id}
+                        className="text-red-600 hover:text-red-700 hover:border-red-300"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {deletingDonor === donor.donor_id ? "Deleting..." : "Delete Donor"}
+                      </Button>
+
                       {donor.signature_ipfs_hash && (
                         <Button
                           variant="outline"
