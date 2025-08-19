@@ -102,8 +102,12 @@ router.post("/login", async (req, res) => {
       { expiresIn: "24h" },
     );
 
-    // Return hospital info without password
-    const { password: hospitalPassword, ...hospitalInfo } = hospital;
+    // Return hospital info without password and map name to hospital_name
+    const { password: hospitalPassword, ...hospitalData } = hospital;
+    const hospitalInfo = {
+      ...hospitalData,
+      hospital_name: hospitalData.name // Map name to hospital_name for frontend compatibility
+    };
 
     res.json({
       success: true,
