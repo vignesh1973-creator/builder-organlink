@@ -494,6 +494,13 @@ export default function ViewPatients() {
           )}
         </div>
       </div>
+
+      <EditPatientModal
+        patient={editingPatient}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onUpdate={handlePatientUpdate}
+      />
     </HospitalLayout>
   );
 }
