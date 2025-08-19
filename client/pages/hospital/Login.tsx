@@ -74,8 +74,8 @@ export default function HospitalLogin() {
   };
 
   const handleNextStep = () => {
-    if (!selectedCountry || !selectedCity || !selectedHospital) {
-      showToast("Please select country, city, and hospital", "error");
+    if (!selectedCountry || !selectedState || !selectedCity || !selectedHospital) {
+      showToast("Please select country, state, city, and hospital", "error");
       return;
     }
     setHospitalId(selectedHospital.id);
