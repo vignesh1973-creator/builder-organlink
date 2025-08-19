@@ -169,6 +169,39 @@ export default function ViewDonors() {
     setEditingDonor(null);
   };
 
+  const handleDeleteDonor = async (donorId: string) => {
+    setDeletingDonor(donorId);
+    try {
+      const token = localStorage.getItem("hospital_token");
+      const response = await fetch(`/api/hospital/donors/${donorId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        showSuccess("Donor deleted successfully!");
+        // Remove from local state
+        setDonors(prev => prev.filter(d => d.donor_id !== donorId));
+        setFilteredDonors(prev => prev.filter(d => d.donor_id !== donorId));
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      showError("Failed to delete donor");
+    } finally {
+      setDeletingDonor(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
