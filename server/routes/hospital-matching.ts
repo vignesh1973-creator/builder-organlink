@@ -267,4 +267,94 @@ router.get("/stats", authenticateHospital, async (req, res) => {
   }
 });
 
+// Enhanced AI matching endpoint
+router.post("/enhanced-matches", authenticateHospital, async (req, res) => {
+  try {
+    const hospital_id = req.hospital?.hospital_id;
+    const { patient_id } = req.body;
+
+    if (!patient_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Patient ID is required",
+      });
+    }
+
+    // Verify patient belongs to this hospital
+    const patientResult = await pool.query(
+      "SELECT patient_id FROM patients WHERE patient_id = $1 AND hospital_id = $2",
+      [patient_id, hospital_id],
+    );
+
+    if (patientResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Patient not found or doesn't belong to your hospital",
+      });
+    }
+
+    const enhancedMatches = await findEnhancedMatches(patient_id);
+
+    res.json({
+      success: true,
+      matches: enhancedMatches,
+      total_matches: enhancedMatches.length,
+      algorithm: "enhanced_ai_v2",
+    });
+  } catch (error) {
+    console.error("Enhanced AI matching error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to find enhanced matches",
+    });
+  }
+});
+
+// Predict transplant success
+router.post("/predict-success", authenticateHospital, async (req, res) => {
+  try {
+    const { patient_id, donor_id } = req.body;
+
+    if (!patient_id || !donor_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Patient ID and Donor ID are required",
+      });
+    }
+
+    const prediction = await predictTransplantSuccess(patient_id, donor_id);
+
+    res.json({
+      success: true,
+      prediction,
+    });
+  } catch (error) {
+    console.error("Transplant success prediction error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to predict transplant success",
+    });
+  }
+});
+
+// Get matching insights for hospital
+router.get("/insights", authenticateHospital, async (req, res) => {
+  try {
+    const hospital_id = req.hospital?.hospital_id;
+
+    const insights = await generateMatchingInsights(hospital_id!);
+
+    res.json({
+      success: true,
+      insights,
+    });
+  } catch (error) {
+    console.error("Matching insights error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate matching insights",
+    });
+  }
+});
+
 export default router;
