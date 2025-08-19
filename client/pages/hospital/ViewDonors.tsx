@@ -56,8 +56,8 @@ export default function ViewDonors() {
   const [filteredDonors, setFilteredDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterOrgan, setFilterOrgan] = useState("");
-  const [filterBloodType, setFilterBloodType] = useState("");
+  const [filterOrgan, setFilterOrgan] = useState("all");
+  const [filterBloodType, setFilterBloodType] = useState("all");
 
   const { hospital } = useHospitalAuth();
   const { showToast } = useToast();
