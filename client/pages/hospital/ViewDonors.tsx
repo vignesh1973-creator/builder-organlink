@@ -466,6 +466,13 @@ export default function ViewDonors() {
           )}
         </div>
       </div>
+
+      <EditDonorModal
+        donor={editingDonor}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onUpdate={handleDonorUpdate}
+      />
     </HospitalLayout>
   );
 }
