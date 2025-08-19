@@ -251,6 +251,10 @@ export default function RegisterPatient() {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        throw new Error(`Registration failed with status ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
