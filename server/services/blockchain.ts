@@ -32,10 +32,10 @@ export class BlockchainService {
     const privateKey = process.env.METAMASK_PRIVATE_KEY || "";
     this.wallet = new ethers.Wallet(privateKey, this.provider);
 
-    // Contract address (you'll need to deploy and update this)
+    // Contract address - OrganLink Registry deployed on Sepolia
     this.contractAddress =
       process.env.CONTRACT_ADDRESS ||
-      "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      "0x2ed506da0a5f375833176d51b73f3d0ca5e66c8a";
 
     // Initialize contract
     this.contract = new ethers.Contract(
