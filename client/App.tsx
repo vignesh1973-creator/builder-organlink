@@ -76,6 +76,9 @@ const App = () => (
                   />
                   <Route path="/hospital/patients" element={<ViewPatients />} />
                   <Route path="/hospital/donors" element={<ViewDonors />} />
+                  <Route path="/hospital/ai-matching" element={<AIMatching />} />
+                  <Route path="/hospital/reports" element={<HospitalReports />} />
+                  <Route path="/hospital/faqs" element={<HospitalFAQs />} />
 
                   {/* Organization Routes */}
                   <Route
