@@ -49,15 +49,46 @@ router.get("/", authenticateHospital, async (req, res) => {
       ORDER BY date_trunc('month', created_at)
     `;
 
-    // Simplified monthly stats with actual data
-    const monthlyStats = [
-      { month: "Jan 2024", patients: 15, donors: 8, matches: 3 },
-      { month: "Feb 2024", patients: 22, donors: 12, matches: 5 },
-      { month: "Mar 2024", patients: 18, donors: 15, matches: 7 },
-      { month: "Apr 2024", patients: 25, donors: 18, matches: 6 },
-      { month: "May 2024", patients: 20, donors: 14, matches: 8 },
-      { month: "Jun 2024", patients: 28, donors: 20, matches: 9 },
-    ];
+    // Get actual monthly stats from database
+    const monthlyPatientsQuery = `
+      SELECT
+        TO_CHAR(date_trunc('month', created_at), 'Mon YYYY') as month,
+        COUNT(*) as patients
+      FROM patients
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY date_trunc('month', created_at)
+      ORDER BY date_trunc('month', created_at)
+    `;
+
+    const monthlyDonorsQuery = `
+      SELECT
+        TO_CHAR(date_trunc('month', created_at), 'Mon YYYY') as month,
+        COUNT(*) as donors
+      FROM donors
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY date_trunc('month', created_at)
+      ORDER BY date_trunc('month', created_at)
+    `;
+
+    const [patientsResult, donorsResult] = await Promise.all([
+      pool.query(monthlyPatientsQuery, [hospitalId]),
+      pool.query(monthlyDonorsQuery, [hospitalId])
+    ]);
+
+    // Combine monthly data
+    const monthlyMap = new Map();
+    patientsResult.rows.forEach(row => {
+      monthlyMap.set(row.month, { month: row.month, patients: parseInt(row.patients), donors: 0, matches: 0 });
+    });
+    donorsResult.rows.forEach(row => {
+      if (monthlyMap.has(row.month)) {
+        monthlyMap.get(row.month).donors = parseInt(row.donors);
+      } else {
+        monthlyMap.set(row.month, { month: row.month, patients: 0, donors: parseInt(row.donors), matches: 0 });
+      }
+    });
+
+    const monthlyStats = Array.from(monthlyMap.values()).sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime());
 
     // Organ distribution
     const organDistributionQuery = `
