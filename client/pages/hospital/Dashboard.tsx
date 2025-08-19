@@ -126,34 +126,25 @@ export default function HospitalDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Welcome back, {hospital?.hospital_name}
-              </h1>
-              <p className="text-gray-600 mt-1">
-                {hospital?.city}, {hospital?.state} • {hospital?.country}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Link to="/hospital/patients/register">
-                <Button className="bg-medical-600 hover:bg-medical-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Register Patient
-                </Button>
-              </Link>
-              <Link to="/hospital/donors/register">
-                <Button variant="outline">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Register Donor
-                </Button>
-              </Link>
-            </div>
-          </div>
+    <HospitalLayout
+      title={`Welcome back, ${hospital?.hospital_name || "Hospital"}`}
+      subtitle={`${hospital?.city}, ${hospital?.state} • ${hospital?.country}`}
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Quick Action Buttons */}
+        <div className="mb-8 flex gap-3">
+          <Link to="/hospital/patients/register">
+            <Button className="bg-medical-600 hover:bg-medical-700">
+              <Plus className="h-4 w-4 mr-2" />
+              Register Patient
+            </Button>
+          </Link>
+          <Link to="/hospital/donors/register">
+            <Button variant="outline">
+              <Heart className="h-4 w-4 mr-2" />
+              Register Donor
+            </Button>
+          </Link>
         </div>
 
         {/* Stats Grid */}
@@ -440,6 +431,6 @@ export default function HospitalDashboard() {
           </Card>
         </div>
       </div>
-    </div>
+    </HospitalLayout>
   );
 }
