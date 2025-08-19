@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(401).json({
         success: false,
-        error: "Invalid hospital ID or password",
+        error: "Hospital ID not found or inactive",
       });
     }
 
@@ -85,7 +85,7 @@ router.post("/login", async (req, res) => {
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        error: "Invalid hospital ID or password",
+        error: "Invalid password. Please check your credentials and try again.",
       });
     }
 
