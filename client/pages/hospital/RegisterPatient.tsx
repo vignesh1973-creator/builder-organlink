@@ -203,6 +203,10 @@ export default function RegisterPatient() {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`Blockchain registration failed with status ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
