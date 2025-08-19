@@ -153,7 +153,11 @@ router.get("/verify", async (req, res) => {
       });
     }
 
-    const { password: hospitalPassword, ...hospitalInfo } = result.rows[0];
+    const { password: hospitalPassword, ...hospitalData } = result.rows[0];
+    const hospitalInfo = {
+      ...hospitalData,
+      hospital_name: hospitalData.name // Map name to hospital_name for frontend compatibility
+    };
 
     res.json({
       success: true,
