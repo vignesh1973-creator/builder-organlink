@@ -122,7 +122,7 @@ export default function AIMatching() {
 
     try {
       const token = localStorage.getItem("hospital_token");
-      const response = await fetch("/api/hospital/matching/find-matches", {
+      const response = await fetch("/api/hospital/matching/enhanced-matches", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,9 +130,6 @@ export default function AIMatching() {
         },
         body: JSON.stringify({
           patient_id: patient.patient_id,
-          organ_type: patient.organ_needed,
-          blood_type: patient.blood_type,
-          urgency_level: patient.urgency_level,
         }),
       });
 
