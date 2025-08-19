@@ -227,4 +227,73 @@ router.delete("/:donor_id", authenticateHospital, async (req, res) => {
   }
 });
 
+// Update donor
+router.put("/:donor_id", authenticateHospital, async (req, res) => {
+  try {
+    const hospital_id = req.hospital?.hospital_id;
+    const { donor_id } = req.params;
+    const {
+      full_name,
+      age,
+      gender,
+      blood_type,
+      organs_to_donate,
+      medical_history,
+      contact_phone,
+      contact_email,
+      emergency_contact,
+      emergency_phone,
+    } = req.body;
+
+    // Verify donor belongs to this hospital
+    const donorCheck = await pool.query(
+      "SELECT donor_id FROM donors WHERE donor_id = $1 AND hospital_id = $2",
+      [donor_id, hospital_id],
+    );
+
+    if (donorCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Donor not found or doesn't belong to your hospital",
+      });
+    }
+
+    const result = await pool.query(
+      `UPDATE donors SET
+        full_name = $1, age = $2, gender = $3, blood_type = $4,
+        organs_to_donate = $5, medical_history = $6, contact_phone = $7,
+        contact_email = $8, emergency_contact = $9, emergency_phone = $10,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE donor_id = $11 AND hospital_id = $12
+      RETURNING *`,
+      [
+        full_name,
+        age,
+        gender,
+        blood_type,
+        organs_to_donate,
+        medical_history,
+        contact_phone,
+        contact_email,
+        emergency_contact,
+        emergency_phone,
+        donor_id,
+        hospital_id,
+      ],
+    );
+
+    res.json({
+      success: true,
+      message: "Donor updated successfully",
+      donor: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error updating donor:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to update donor",
+    });
+  }
+});
+
 export default router;
