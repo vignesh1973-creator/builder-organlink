@@ -47,6 +47,7 @@ export function createServer() {
   app.use("/api/hospital/upload", fileUploadRoutes);
   app.use("/api/hospital/matching", hospitalMatchingRoutes);
   app.use("/api/hospital/reports", hospitalReportsRoutes);
+  app.use("/api/hospital/notifications", hospitalNotificationsRoutes);
 
   return app;
 }
