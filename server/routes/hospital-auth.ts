@@ -98,7 +98,7 @@ router.post("/login", async (req, res) => {
         city: hospital.city,
         country: hospital.country,
       },
-      process.env.JWT_SECRET || "hospital-secret",
+      process.env.JWT_SECRET || "organlink_secret_key_2024",
       { expiresIn: "24h" },
     );
 
