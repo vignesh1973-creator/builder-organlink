@@ -32,8 +32,11 @@ import RegisterDonor from "./pages/hospital/RegisterDonor";
 import ViewPatients from "./pages/hospital/ViewPatients";
 import ViewDonors from "./pages/hospital/ViewDonors";
 import AIMatching from "./pages/hospital/AIMatching";
+import HospitalReports from "./pages/hospital/Reports";
+import HospitalFAQs from "./pages/hospital/FAQs";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { HospitalAuthProvider } from "./contexts/HospitalAuthContext";
+import { HospitalNotificationProvider } from "./contexts/HospitalNotificationContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { ToastProvider } from "./contexts/ToastContext";
 
