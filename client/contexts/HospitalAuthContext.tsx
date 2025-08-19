@@ -134,8 +134,17 @@ export const HospitalAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         body: JSON.stringify({ hospital_id, email }),
       });
 
-      const data = await response.json();
-      return { success: data.success, error: data.error };
+      if (response.ok) {
+        const data = await response.json();
+        return { success: data.success, error: data.error };
+      } else {
+        try {
+          const errorData = await response.json();
+          return { success: false, error: errorData.error || "Password reset request failed" };
+        } catch {
+          return { success: false, error: `Request failed with status ${response.status}` };
+        }
+      }
     } catch (error) {
       console.error("Password reset request failed:", error);
       return { success: false, error: "Network error occurred" };
