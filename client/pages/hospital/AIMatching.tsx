@@ -242,18 +242,8 @@ export default function AIMatching() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            AI Organ Matching
-          </h1>
-          <p className="text-gray-600 mt-1">
-            {hospital?.hospital_name} • Advanced AI-powered organ matching
-            system
-          </p>
-        </div>
+    <HospitalLayout title="AI Organ Matching" subtitle="Advanced AI-powered organ matching system">
+      <div className="max-w-7xl mx-auto">
 
         <Tabs defaultValue="search" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
@@ -564,6 +554,6 @@ export default function AIMatching() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </HospitalLayout>
   );
 }
