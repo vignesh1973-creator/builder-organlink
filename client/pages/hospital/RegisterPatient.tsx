@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useHospitalAuth } from "@/contexts/HospitalAuthContext";
 import { useToast } from "@/contexts/ToastContext";
+import HospitalLayout from "@/components/hospital/HospitalLayout";
 
 interface PatientFormData {
   full_name: string;
