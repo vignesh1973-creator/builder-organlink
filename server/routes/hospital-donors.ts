@@ -296,4 +296,42 @@ router.put("/:donor_id", authenticateHospital, async (req, res) => {
   }
 });
 
+// Delete donor
+router.delete("/:donor_id", authenticateHospital, async (req, res) => {
+  try {
+    const hospital_id = req.hospital?.hospital_id;
+    const { donor_id } = req.params;
+
+    // Verify donor belongs to this hospital
+    const donorCheck = await pool.query(
+      "SELECT donor_id FROM donors WHERE donor_id = $1 AND hospital_id = $2",
+      [donor_id, hospital_id],
+    );
+
+    if (donorCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Donor not found or doesn't belong to your hospital",
+      });
+    }
+
+    // Delete the donor
+    await pool.query(
+      "DELETE FROM donors WHERE donor_id = $1 AND hospital_id = $2",
+      [donor_id, hospital_id],
+    );
+
+    res.json({
+      success: true,
+      message: "Donor deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting donor:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to delete donor",
+    });
+  }
+});
+
 export default router;
