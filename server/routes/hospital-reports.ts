@@ -102,13 +102,44 @@ router.get("/", authenticateHospital, async (req, res) => {
       GROUP BY organ_needed
     `;
 
-    const organDistribution = [
-      { organ: "Heart", patients: 45, donors: 12, matches: 8 },
-      { organ: "Kidney", patients: 38, donors: 25, matches: 15 },
-      { organ: "Liver", patients: 22, donors: 8, matches: 4 },
-      { organ: "Lung", patients: 18, donors: 6, matches: 3 },
-      { organ: "Cornea", patients: 12, donors: 15, matches: 9 },
-    ];
+    // Get actual organ distribution from database
+    const organPatientsQuery = `
+      SELECT
+        organ_needed as organ,
+        COUNT(*) as patients
+      FROM patients
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY organ_needed
+    `;
+
+    const organDonorsQuery = `
+      SELECT
+        TRIM(unnest(string_to_array(organs_to_donate, ','))) as organ,
+        COUNT(*) as donors
+      FROM donors
+      WHERE hospital_id = $1 ${dateFilter}
+      GROUP BY TRIM(unnest(string_to_array(organs_to_donate, ',')))
+    `;
+
+    const [organPatientsResult, organDonorsResult] = await Promise.all([
+      pool.query(organPatientsQuery, [hospitalId]),
+      pool.query(organDonorsQuery, [hospitalId])
+    ]);
+
+    // Combine organ data
+    const organMap = new Map();
+    organPatientsResult.rows.forEach(row => {
+      organMap.set(row.organ, { organ: row.organ, patients: parseInt(row.patients), donors: 0, matches: 0 });
+    });
+    organDonorsResult.rows.forEach(row => {
+      if (organMap.has(row.organ)) {
+        organMap.get(row.organ).donors = parseInt(row.donors);
+      } else {
+        organMap.set(row.organ, { organ: row.organ, patients: 0, donors: parseInt(row.donors), matches: 0 });
+      }
+    });
+
+    const organDistribution = Array.from(organMap.values());
 
     // Blood type stats
     const bloodTypeStats = [
