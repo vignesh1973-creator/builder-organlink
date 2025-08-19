@@ -135,6 +135,10 @@ export default function AIMatching() {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`Search failed with status ${response.status}`);
+      }
+
       const data = await response.json();
 
       if (data.success) {
