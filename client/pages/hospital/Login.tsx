@@ -63,6 +63,11 @@ export default function HospitalLogin() {
   const fetchLocations = async () => {
     try {
       const response = await fetch("/api/hospital/auth/locations");
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch locations: ${response.status}`);
+      }
+
       const data = await response.json();
       setLocations(data);
     } catch (error) {
