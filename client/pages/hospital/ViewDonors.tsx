@@ -148,6 +148,25 @@ export default function ViewDonors() {
   ];
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
+  const handleEditDonor = (donor: Donor) => {
+    setEditingDonor(donor);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDonorUpdate = (updatedDonor: Donor) => {
+    setDonors(prev =>
+      prev.map(d => d.donor_id === updatedDonor.donor_id ? updatedDonor : d)
+    );
+    setFilteredDonors(prev =>
+      prev.map(d => d.donor_id === updatedDonor.donor_id ? updatedDonor : d)
+    );
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingDonor(null);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
