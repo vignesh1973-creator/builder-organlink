@@ -172,7 +172,7 @@ export default function HospitalLogin() {
                     <div className="space-y-4">
                       <Label className="text-sm font-medium text-gray-700 flex items-center">
                         <MapPin className="h-4 w-4 mr-2" />
-                        Select Country, City & Hospital
+                        Select Country, State, City & Hospital
                       </Label>
                       
                       {loadingLocations ? (
