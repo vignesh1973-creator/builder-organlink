@@ -2,6 +2,8 @@ import express from "express";
 import { pool } from "../config/database.js";
 import { authenticateHospital } from "../middleware/auth.js";
 
+const router = express.Router();
+
 // Get all notifications for the hospital
 router.get("/", authenticateHospital, async (req, res) => {
   try {
