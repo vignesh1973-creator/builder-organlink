@@ -15,6 +15,7 @@ import fileUploadRoutes from "./routes/file-upload";
 import hospitalMatchingRoutes from "./routes/hospital-matching";
 import hospitalReportsRoutes from "./routes/hospital-reports";
 import hospitalNotificationsRoutes from "./routes/hospital-notifications";
+import hospitalCleanupRoutes from "./routes/hospital-cleanup";
 
 export function createServer() {
   const app = express();
