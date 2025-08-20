@@ -5,7 +5,7 @@ import { authenticateHospital } from "../middleware/auth.js";
 // Get all notifications for the hospital
 router.get("/", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -34,7 +34,7 @@ router.get("/", authenticateHospital, async (req, res) => {
 // Get unread notification count
 router.get("/unread-count", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
 
     const result = await pool.query(
       "SELECT COUNT(*) as count FROM notifications WHERE hospital_id = $1 AND is_read = false",
@@ -57,7 +57,7 @@ router.get("/unread-count", authenticateHospital, async (req, res) => {
 // Mark a notification as read
 router.put("/:notificationId/read", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
     const { notificationId } = req.params;
 
     const result = await pool.query(
@@ -90,7 +90,7 @@ router.put("/:notificationId/read", authenticateHospital, async (req, res) => {
 // Mark all notifications as read
 router.put("/mark-all-read", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
 
     await pool.query(
       `UPDATE notifications 
@@ -115,7 +115,7 @@ router.put("/mark-all-read", authenticateHospital, async (req, res) => {
 // Delete a notification
 router.delete("/:notificationId", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
     const { notificationId } = req.params;
 
     const result = await pool.query(
@@ -180,7 +180,7 @@ router.post("/", authenticateHospital, async (req, res) => {
 // Test notification creation (for development)
 router.post("/test", authenticateHospital, async (req, res) => {
   try {
-    const hospitalId = req.hospitalId;
+    const hospitalId = req.hospital?.hospital_id;
     
     const testNotifications = [
       {
