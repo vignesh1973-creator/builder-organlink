@@ -5,6 +5,7 @@ import { authenticateHospital } from "../middleware/auth.js";
 import { ipfsService } from "../services/ipfs.js";
 import { ocrService } from "../services/ocr.js";
 import { blockchainService } from "../services/blockchain.js";
+import { pool } from "../config/database.js";
 
 const router = express.Router();
 
@@ -128,7 +129,7 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
       );
 
       // Update patient record with blockchain hash
-      await req.app.locals.pool.query(
+      await pool.query(
         `UPDATE patients
          SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
          WHERE patient_id = $2 AND hospital_id = $3`,
@@ -143,7 +144,7 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
       );
 
       // Update donor record with blockchain hash
-      await req.app.locals.pool.query(
+      await pool.query(
         `UPDATE donors
          SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
          WHERE donor_id = $2 AND hospital_id = $3`,
