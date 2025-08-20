@@ -49,7 +49,7 @@ export function createServer() {
   app.use("/api/hospital/matching", hospitalMatchingRoutes);
   app.use("/api/hospital/reports", hospitalReportsRoutes);
   app.use("/api/hospital/notifications", hospitalNotificationsRoutes);
-  // app.use("/api/hospital/cleanup", hospitalCleanupRoutes);
+  app.use("/api/hospital/cleanup", hospitalCleanupRoutes);
 
   return app;
 }
