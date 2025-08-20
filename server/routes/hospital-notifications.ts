@@ -16,7 +16,7 @@ router.get("/", authenticateHospital, async (req, res) => {
        WHERE hospital_id = $1 
        ORDER BY created_at DESC 
        LIMIT $2 OFFSET $3`,
-      [hospitalId, limit, offset]
+      [hospitalId, limit, offset],
     );
 
     res.json({
@@ -40,7 +40,7 @@ router.get("/unread-count", authenticateHospital, async (req, res) => {
 
     const result = await pool.query(
       "SELECT COUNT(*) as count FROM notifications WHERE hospital_id = $1 AND is_read = false",
-      [hospitalId]
+      [hospitalId],
     );
 
     res.json({
@@ -66,7 +66,7 @@ router.put("/:notificationId/read", authenticateHospital, async (req, res) => {
       `UPDATE notifications 
        SET is_read = true, updated_at = CURRENT_TIMESTAMP 
        WHERE notification_id = $1 AND hospital_id = $2`,
-      [notificationId, hospitalId]
+      [notificationId, hospitalId],
     );
 
     if (result.rowCount === 0) {
@@ -98,7 +98,7 @@ router.put("/mark-all-read", authenticateHospital, async (req, res) => {
       `UPDATE notifications 
        SET is_read = true, updated_at = CURRENT_TIMESTAMP 
        WHERE hospital_id = $1 AND is_read = false`,
-      [hospitalId]
+      [hospitalId],
     );
 
     res.json({
@@ -122,7 +122,7 @@ router.delete("/:notificationId", authenticateHospital, async (req, res) => {
 
     const result = await pool.query(
       "DELETE FROM notifications WHERE notification_id = $1 AND hospital_id = $2",
-      [notificationId, hospitalId]
+      [notificationId, hospitalId],
     );
 
     if (result.rowCount === 0) {
@@ -162,7 +162,7 @@ router.post("/", authenticateHospital, async (req, res) => {
     await pool.query(
       `INSERT INTO notifications (notification_id, hospital_id, type, title, message, related_id, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-      [notificationId, hospital_id, type, title, message, related_id || null]
+      [notificationId, hospital_id, type, title, message, related_id || null],
     );
 
     res.json({
@@ -183,41 +183,52 @@ router.post("/", authenticateHospital, async (req, res) => {
 router.post("/test", authenticateHospital, async (req, res) => {
   try {
     const hospitalId = req.hospital?.hospital_id;
-    
+
     const testNotifications = [
       {
         type: "organ_match",
         title: "New Organ Match Found!",
-        message: "A potential heart donor has been found for Patient ID: P001. Blood type O+ with 95% compatibility.",
-        related_id: "P001"
+        message:
+          "A potential heart donor has been found for Patient ID: P001. Blood type O+ with 95% compatibility.",
+        related_id: "P001",
       },
       {
-        type: "match_response", 
+        type: "match_response",
         title: "Match Request Accepted",
-        message: "Your organ request for kidney transplant has been accepted by City General Hospital.",
-        related_id: "REQ001"
+        message:
+          "Your organ request for kidney transplant has been accepted by City General Hospital.",
+        related_id: "REQ001",
       },
       {
         type: "urgent_case",
         title: "Critical Patient Alert",
-        message: "Patient John Doe (ID: P002) condition has been upgraded to critical. Immediate attention required.",
-        related_id: "P002"
+        message:
+          "Patient John Doe (ID: P002) condition has been upgraded to critical. Immediate attention required.",
+        related_id: "P002",
       },
       {
         type: "system",
         title: "System Maintenance",
-        message: "Scheduled maintenance will occur tonight from 2:00 AM to 4:00 AM. Some features may be unavailable.",
-        related_id: null
-      }
+        message:
+          "Scheduled maintenance will occur tonight from 2:00 AM to 4:00 AM. Some features may be unavailable.",
+        related_id: null,
+      },
     ];
 
     for (const notification of testNotifications) {
       const notificationId = `TEST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       await pool.query(
         `INSERT INTO notifications (notification_id, hospital_id, type, title, message, related_id, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-        [notificationId, hospitalId, notification.type, notification.title, notification.message, notification.related_id]
+        [
+          notificationId,
+          hospitalId,
+          notification.type,
+          notification.title,
+          notification.message,
+          notification.related_id,
+        ],
       );
     }
 

@@ -204,7 +204,9 @@ export default function RegisterPatient() {
       });
 
       if (!response.ok) {
-        throw new Error(`Blockchain registration failed with status ${response.status}`);
+        throw new Error(
+          `Blockchain registration failed with status ${response.status}`,
+        );
       }
 
       const result = await response.json();
@@ -285,13 +287,15 @@ export default function RegisterPatient() {
   const urgencyLevels = ["Low", "Medium", "High", "Critical"];
 
   return (
-    <HospitalLayout title="Register Patient" subtitle="Complete patient registration with blockchain verification">
+    <HospitalLayout
+      title="Register Patient"
+      subtitle="Complete patient registration with blockchain verification"
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-            </div>
+            <div></div>
             <Badge variant="outline" className="text-medical-600">
               Step {currentStep} of 3
             </Badge>

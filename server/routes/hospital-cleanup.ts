@@ -10,23 +10,29 @@ router.delete("/clear-all", authenticateHospital, async (req, res) => {
     const hospital_id = req.hospital?.hospital_id;
 
     // Delete all patients for this hospital
-    await pool.query("DELETE FROM patients WHERE hospital_id = $1", [hospital_id]);
+    await pool.query("DELETE FROM patients WHERE hospital_id = $1", [
+      hospital_id,
+    ]);
 
-    // Delete all donors for this hospital  
-    await pool.query("DELETE FROM donors WHERE hospital_id = $1", [hospital_id]);
+    // Delete all donors for this hospital
+    await pool.query("DELETE FROM donors WHERE hospital_id = $1", [
+      hospital_id,
+    ]);
 
     // Delete all notifications for this hospital
-    await pool.query("DELETE FROM notifications WHERE hospital_id = $1", [hospital_id]);
+    await pool.query("DELETE FROM notifications WHERE hospital_id = $1", [
+      hospital_id,
+    ]);
 
     res.json({
       success: true,
-      message: "All hospital data cleared successfully"
+      message: "All hospital data cleared successfully",
     });
   } catch (error) {
     console.error("Error clearing hospital data:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to clear hospital data"
+      error: "Failed to clear hospital data",
     });
   }
 });
@@ -36,17 +42,20 @@ router.delete("/clear-donors", authenticateHospital, async (req, res) => {
   try {
     const hospital_id = req.hospital?.hospital_id;
 
-    const result = await pool.query("DELETE FROM donors WHERE hospital_id = $1", [hospital_id]);
+    const result = await pool.query(
+      "DELETE FROM donors WHERE hospital_id = $1",
+      [hospital_id],
+    );
 
     res.json({
       success: true,
-      message: `Deleted ${result.rowCount} donors successfully`
+      message: `Deleted ${result.rowCount} donors successfully`,
     });
   } catch (error) {
     console.error("Error clearing donors:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to clear donors"
+      error: "Failed to clear donors",
     });
   }
 });
@@ -56,17 +65,20 @@ router.delete("/clear-patients", authenticateHospital, async (req, res) => {
   try {
     const hospital_id = req.hospital?.hospital_id;
 
-    const result = await pool.query("DELETE FROM patients WHERE hospital_id = $1", [hospital_id]);
+    const result = await pool.query(
+      "DELETE FROM patients WHERE hospital_id = $1",
+      [hospital_id],
+    );
 
     res.json({
       success: true,
-      message: `Deleted ${result.rowCount} patients successfully`
+      message: `Deleted ${result.rowCount} patients successfully`,
     });
   } catch (error) {
     console.error("Error clearing patients:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to clear patients"
+      error: "Failed to clear patients",
     });
   }
 });

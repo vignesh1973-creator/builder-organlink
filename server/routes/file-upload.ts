@@ -133,7 +133,7 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
         `UPDATE patients
          SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
          WHERE patient_id = $2 AND hospital_id = $3`,
-        [blockchainTxHash, record_id, hospital_id]
+        [blockchainTxHash, record_id, hospital_id],
       );
     } else if (record_type === "donor") {
       blockchainTxHash = await blockchainService.registerDonor(
@@ -148,7 +148,7 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
         `UPDATE donors
          SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
          WHERE donor_id = $2 AND hospital_id = $3`,
-        [blockchainTxHash, record_id, hospital_id]
+        [blockchainTxHash, record_id, hospital_id],
       );
     } else {
       return res.status(400).json({

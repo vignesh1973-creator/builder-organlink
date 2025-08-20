@@ -20,14 +20,14 @@ router.get("/status", async (req, res) => {
         isConnected,
         isAuthorized,
         contractOwner,
-        isOwner: walletAddress.toLowerCase() === contractOwner.toLowerCase()
-      }
+        isOwner: walletAddress.toLowerCase() === contractOwner.toLowerCase(),
+      },
     });
   } catch (error) {
     console.error("Blockchain status error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to get blockchain status"
+      error: "Failed to get blockchain status",
     });
   }
 });
@@ -36,17 +36,19 @@ router.get("/status", async (req, res) => {
 router.post("/authorize", async (req, res) => {
   try {
     const txHash = await blockchainService.authorizeAdminWallet();
-    
+
     res.json({
       success: true,
-      message: txHash ? "Admin wallet authorized successfully" : "Admin wallet was already authorized",
-      txHash
+      message: txHash
+        ? "Admin wallet authorized successfully"
+        : "Admin wallet was already authorized",
+      txHash,
     });
   } catch (error) {
     console.error("Authorization error:", error);
     res.status(500).json({
       success: false,
-      error: error.message || "Failed to authorize admin wallet"
+      error: error.message || "Failed to authorize admin wallet",
     });
   }
 });
@@ -55,16 +57,16 @@ router.post("/authorize", async (req, res) => {
 router.get("/stats", async (req, res) => {
   try {
     const stats = await blockchainService.getStats();
-    
+
     res.json({
       success: true,
-      stats
+      stats,
     });
   } catch (error) {
     console.error("Stats error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to get blockchain stats"
+      error: "Failed to get blockchain stats",
     });
   }
 });
