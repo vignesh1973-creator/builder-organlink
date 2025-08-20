@@ -9,10 +9,15 @@ const CONTRACT_ABI = [
   "function getPatient(string _patientId) external view returns (tuple(string patientId, string fullName, string bloodType, string organNeeded, string urgencyLevel, string signatureIpfsHash, address hospitalAddress, uint256 registrationTime, bool isActive, bool signatureVerified))",
   "function getDonor(string _donorId) external view returns (tuple(string donorId, string fullName, string bloodType, string signatureIpfsHash, address hospitalAddress, uint256 registrationTime, bool isActive, bool signatureVerified))",
   "function isAuthorized(address _hospital) external view returns (bool)",
+  "function authorizeHospital(address _hospital) external",
+  "function revokeHospital(address _hospital) external",
   "function getStats() external view returns (uint256, uint256)",
+  "function owner() external view returns (address)",
   "event PatientRegistered(string indexed patientId, string fullName, string signatureIpfsHash, address indexed hospital, uint256 timestamp)",
   "event DonorRegistered(string indexed donorId, string fullName, string signatureIpfsHash, address indexed hospital, uint256 timestamp)",
   "event SignatureVerified(string indexed recordId, bool isPatient, bool verified)",
+  "event HospitalAuthorized(address indexed hospital)",
+  "event HospitalRevoked(address indexed hospital)",
 ];
 
 export class BlockchainService {
