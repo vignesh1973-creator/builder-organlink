@@ -40,6 +40,7 @@ export function createServer() {
   app.use("/api/admin/organizations", organizationRoutes);
   app.use("/api/admin/dashboard", dashboardRoutes);
   app.use("/api/admin/logs", logsRoutes);
+  app.use("/api/admin/blockchain", adminBlockchainRoutes);
 
   // Hospital routes
   app.use("/api/hospital/auth", hospitalAuthRoutes);
