@@ -159,7 +159,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 text-sm">
-            © 2024 OrganLink. All rights reserved. Saving lives through
+            © 2025 OrganLink. All rights reserved. Saving lives through
             technology.
           </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
