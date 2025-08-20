@@ -113,6 +113,8 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
       ipfs_hash,
     } = req.body;
 
+    const hospital_id = req.hospital?.hospital_id;
+
     let blockchainTxHash;
 
     if (record_type === "patient") {
@@ -124,12 +126,28 @@ router.post("/blockchain-register", authenticateHospital, async (req, res) => {
         urgency_level || "Medium",
         ipfs_hash,
       );
+
+      // Update patient record with blockchain hash
+      await req.app.locals.pool.query(
+        `UPDATE patients
+         SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
+         WHERE patient_id = $2 AND hospital_id = $3`,
+        [blockchainTxHash, record_id, hospital_id]
+      );
     } else if (record_type === "donor") {
       blockchainTxHash = await blockchainService.registerDonor(
         record_id,
         full_name,
         blood_type,
         ipfs_hash,
+      );
+
+      // Update donor record with blockchain hash
+      await req.app.locals.pool.query(
+        `UPDATE donors
+         SET blockchain_tx_hash = $1, signature_verified = true, updated_at = CURRENT_TIMESTAMP
+         WHERE donor_id = $2 AND hospital_id = $3`,
+        [blockchainTxHash, record_id, hospital_id]
       );
     } else {
       return res.status(400).json({
