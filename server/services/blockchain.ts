@@ -69,6 +69,18 @@ export class BlockchainService {
         signatureIpfsHash,
       });
 
+      // Check if admin wallet is authorized
+      const isAuthorized = await this.checkAuthorization();
+      if (!isAuthorized) {
+        console.log("Admin wallet not authorized, attempting to authorize...");
+        try {
+          await this.authorizeAdminWallet();
+        } catch (authError) {
+          console.error("Failed to authorize admin wallet:", authError);
+          throw new Error("Admin wallet is not authorized and auto-authorization failed. Please authorize the admin wallet manually.");
+        }
+      }
+
       const tx = await this.contract.registerPatient(
         patientId,
         fullName,
