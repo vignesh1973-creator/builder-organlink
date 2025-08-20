@@ -1,11 +1,6 @@
 import express from "express";
-import { Pool } from "pg";
-import { authenticateHospital } from "../middleware/auth";
-
-const router = express.Router();
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { pool } from "../config/database.js";
+import { authenticateHospital } from "../middleware/auth.js";
 
 // Get all notifications for the hospital
 router.get("/", authenticateHospital, async (req, res) => {
