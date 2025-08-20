@@ -251,6 +251,50 @@ export class BlockchainService {
       return false;
     }
   }
+
+  // Check if current wallet is authorized
+  async checkAuthorization(): Promise<boolean> {
+    try {
+      return await this.contract.isAuthorized(this.wallet.address);
+    } catch (error) {
+      console.error("Authorization check error:", error);
+      return false;
+    }
+  }
+
+  // Authorize the admin wallet (must be called by contract owner)
+  async authorizeAdminWallet(): Promise<string | null> {
+    try {
+      console.log("Attempting to authorize admin wallet:", this.wallet.address);
+
+      // First check if already authorized
+      const isAuthorized = await this.checkAuthorization();
+      if (isAuthorized) {
+        console.log("Admin wallet is already authorized");
+        return null;
+      }
+
+      // Try to authorize (this will only work if we're the contract owner)
+      const tx = await this.contract.authorizeHospital(this.wallet.address);
+      const receipt = await tx.wait();
+
+      console.log("Admin wallet authorized successfully:", receipt.hash);
+      return receipt.hash;
+    } catch (error) {
+      console.error("Authorization error:", error);
+      throw error;
+    }
+  }
+
+  // Get contract owner
+  async getOwner(): Promise<string> {
+    try {
+      return await this.contract.owner();
+    } catch (error) {
+      console.error("Get owner error:", error);
+      return "";
+    }
+  }
 }
 
 export const blockchainService = new BlockchainService();
