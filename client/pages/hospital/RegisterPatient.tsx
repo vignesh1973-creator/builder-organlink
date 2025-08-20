@@ -111,7 +111,7 @@ export default function RegisterPatient() {
       formData.append("signature", file);
       formData.append("record_type", "patient");
       formData.append("record_id", registeredPatientId);
-      formData.append("patient_name", patientData.full_name);
+      formData.append("patient_name", formData.full_name);
 
       const token = localStorage.getItem("hospital_token");
       const response = await fetch("/api/hospital/upload/signature", {
