@@ -16,6 +16,7 @@ import hospitalMatchingRoutes from "./routes/hospital-matching";
 import hospitalReportsRoutes from "./routes/hospital-reports";
 import hospitalNotificationsRoutes from "./routes/hospital-notifications";
 import hospitalCleanupRoutes from "./routes/hospital-cleanup";
+import adminBlockchainRoutes from "./routes/admin-blockchain";
 
 export function createServer() {
   const app = express();
