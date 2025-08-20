@@ -8,25 +8,6 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-      {/* Top bar */}
-      <div className="bg-medical-600 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <Phone className="h-4 w-4" />
-              <span>Emergency: +1-800-ORGAN</span>
-            </div>
-            <div className="hidden md:flex items-center space-x-2">
-              <Mail className="h-4 w-4" />
-              <span>support@organlink.org</span>
-            </div>
-          </div>
-          <div className="hidden md:block">
-            <span>Saving lives, one match at a time</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main header */}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
